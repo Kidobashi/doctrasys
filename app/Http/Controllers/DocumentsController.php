@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Documents;
 use Illuminate\Http\Request;
+use App\Models\Offices;
 
 class DocumentsController extends Controller
 {
@@ -14,6 +16,8 @@ class DocumentsController extends Controller
     public function index()
     {
         //
+
+        return view('users.index', $docs = Documents::all());
     }
 
     /**
@@ -24,6 +28,9 @@ class DocumentsController extends Controller
     public function create()
     {
         //
+        $offices = Offices::all();
+
+        return view('users.add')->with('offices', $offices);
     }
 
     /**

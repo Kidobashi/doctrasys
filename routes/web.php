@@ -7,6 +7,8 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\OfficeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
@@ -93,4 +95,13 @@ Route::get('/test1', function () {
     return view('users.index');
 });
 
+
+Route::get('/test2', function () {
+    return view('users.add');
+});
+
+
 Route::get('user-management', [UserController::class, 'index'])->name('user');
+// Route::post('add-document', [DocumentsController::class, 'create'])->name('offices');
+Route::get('add-document', [DocumentsController::class, 'create'])->name('offices');
+// Route::get('add-document', [DocumentsController::class, 'index']);

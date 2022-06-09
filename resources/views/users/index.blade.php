@@ -1,6 +1,8 @@
-@extends('layouts.user_type.auth')
+@extends('templates.user')
 @section('content')
 <div>
-    <h1>hello</h1>
+    {{-- @foreach($docs as $doc)
+
+    @endforeach --}}
 </div>
 @endsection
