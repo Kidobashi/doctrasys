@@ -9,16 +9,25 @@
                     <!-- Name -->
                     <form role="form text-left" method="POST" action="/register">
                         @csrf
+                        <label for="">Sender Name</label>
                         <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Name" name="name" id="name" aria-label="Name" aria-describedby="name" value="{{ old('name') }}">
-                        @error('name')
+                        <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}"disabled>
+                        @error('senderName')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
+                        </div>
+
+                        <label for="">Receiver Name</label>
+                        <div class="mb-3">
+                        <input type="text" class="form-control" name="receiverName" id="name" aria-label="Name" aria-describedby="name">
+                        @error('receiverName')
                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="">Sender Office</label>
-                            <select class="form-control" id="assignedOffice" name="assignedOffice">
+                            <select class="form-control" id="assignedOffice" name="senderOffice">
                                 <option value="" selected disabled>Select Office
                                     @foreach ($offices as $row)
                                     <option value="{{ $row->id }}">{{ $row->officeName }}</option>
@@ -29,7 +38,7 @@
 
                         <div class="mb-3">
                             <label for="">Receiver Office</label>
-                            <select class="form-control" id="assignedOffice" name="assignedOffice">
+                            <select class="form-control" id="assignedOffice" name="receiverOffice">
                                 <option value="" selected disabled>Select Office
                                     @foreach ($offices as $row)
                                     <option value="{{ $row->id }}">{{ $row->officeName }}</option>

@@ -91,17 +91,18 @@ Route::get('/login', function () {
 })->name('login');
 
 
-Route::get('/test1', function () {
-    return view('users.index');
-});
+// Route::get('/test1', function () {
+//     return view('users.index');
+// });
 
 
-Route::get('/test2', function () {
-    return view('users.add');
-});
+// Route::get('/test2', function () {
+//      return view('users.add');
+// });
 
 
 Route::get('user-management', [UserController::class, 'index'])->name('user');
-// Route::post('add-document', [DocumentsController::class, 'create'])->name('offices');
+Route::get('user-documents', [DocumentsController::class, 'index'])->name('docs');
 Route::get('add-document', [DocumentsController::class, 'create'])->name('offices');
+// Route::post('add-document', [DocumentsController::class, 'create'])->name('offices');
 // Route::get('add-document', [DocumentsController::class, 'index']);

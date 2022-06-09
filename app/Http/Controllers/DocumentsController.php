@@ -16,8 +16,9 @@ class DocumentsController extends Controller
     public function index()
     {
         //
+        $docs = Documents::all();
 
-        return view('users.index', $docs = Documents::all());
+        return view('users.index', compact(['docs']));
     }
 
     /**

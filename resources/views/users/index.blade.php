@@ -1,8 +1,9 @@
 @extends('templates.user')
 @section('content')
 <div>
-    {{-- @foreach($docs as $doc)
+    <h1>Index</h1>
+    @foreach($docs as $doc)
 
-    @endforeach --}}
+    @endforeach
 </div>
 @endsection
