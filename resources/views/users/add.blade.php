@@ -15,11 +15,11 @@
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="card-body">
-                            <form method="POST" action="#">
+                            <form method="POST" action="/add-document">
                                 @csrf
                                     <label for="">Sender Name</label>
                                     <div class="mb-3">
-                                    <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}"disabled>
+                                    <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" >
                                     @error('senderName')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
@@ -54,8 +54,8 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <button type="submit">Submit</button>
                                 </form>
-                            <input id="genBtn" type="submit" value="Submit" onclick=alertMsg()>
 
                             @if(session('message'))
                                 <div class="alert alert-success">{{session('message')}}</div>
