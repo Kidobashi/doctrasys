@@ -11,7 +11,8 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.6",
-        "laravel/ui": "^3.4"
+        "laravel/ui": "^3.4",
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",

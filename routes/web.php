@@ -9,6 +9,7 @@ use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\OfficeController;
+use App\Http\Controllers\QrController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
@@ -96,14 +97,15 @@ Route::get('/login', function () {
 // });
 
 
-// Route::get('/test2', function () {
-//      return view('users.add');
-// });
+Route::get('/test', function () {
+return view('partials.qrcode');
+});
 
-
+Route::get('test', [QrController::class, 'generateQr'])->name('qr');
 Route::get('user-management', [UserController::class, 'index'])->name('user');
 Route::get('user-documents', [DocumentsController::class, 'index'])->name('docs');
 Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
 Route::post('add-document', [DocumentsController::class, 'store']);
+
 // Route::post('add-document', [DocumentsController::class, 'create'])->name('offices');
 // Route::get('add-document', [DocumentsController::class, 'index']);

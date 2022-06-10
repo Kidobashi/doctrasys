@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Offices;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DocumentsController extends Controller
 {
@@ -48,10 +49,10 @@ class DocumentsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         //
-
         $sender = Auth::user()->email;
 
         $last = DB::table('documents')->latest('id')->first();
