@@ -56,21 +56,8 @@
                                     </div>
                                     <label for="">QR Code</label>
                                     <div>
-                                        {{-- @include('partials.qrcode') --}}
-                                    <?php
-                                    $last = DB::table('documents')->latest('id')->first();
-
-                                            $identity = $last->id + 1;
-                                            $number = sprintf('%04d', $identity);
-                                            $prefix = strval(strftime("%Y"));
-                                            $stringVal = strval($number);
-                                            $refNo = "$prefix$stringVal";
-
-                                            $qr =  QrCode::size(100)->generate(url($refNo));
-
-                                            QrCode::format('png')->size(100)->generate(url($refNo), '../public/qrcodes/qrcode.png');
-                                    ?>
-                                        {{ $qr }}
+                                        @include('partials.qrcode')
+                                        {{-- {{ $qr }} --}}
                                     </div>
 
                                     <button type="submit">Submit</button>

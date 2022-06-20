@@ -1,19 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Composers;
 
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-class QrController extends Controller
+class QrComposer
 {
-    //
-    public function index(){
-
-    }
-
-    public function generateQr(){
+    public function compose(View $view)
+    {
         $last = DB::table('documents')->latest('id')->first();
 
         $identity = $last->id + 1;
@@ -22,8 +18,10 @@ class QrController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::size(100)->generate(url($refNo));
+        $qr =  QrCode::size(100)->generate(url($refNo));
 
-        return view('users.add');
+        // QrCode::format('png')->size(100)->generate(url($refNo));
+
+        $view->with('qr', $qr);
     }
 }
