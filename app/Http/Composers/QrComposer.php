@@ -18,7 +18,9 @@ class QrComposer
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr =  QrCode::size(100)->generate(url($refNo));
+        $qr = QrCode::format('svg')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo));
+
+        // $qr =  QrCode::size(200)->generate(url($refNo));
 
         // QrCode::format('png')->size(100)->generate(url($refNo));
 
