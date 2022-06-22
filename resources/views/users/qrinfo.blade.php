@@ -17,13 +17,17 @@
         </thead>
         <tbody>
           <tr>
-
             <td>{{$data->referenceNo}}</td>
             <td>{{$data->senderName}}</td>
             <td>{{$data->officeName}}</td>
-
           </tr>
         </tbody>
       </table>
+      <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag">
+      <form action="">
+          <Label>Options</Label>
+          <a href="">Forward</a>
+          <a href="">Receive</a>
+      </form>
 </body>
 </html>
