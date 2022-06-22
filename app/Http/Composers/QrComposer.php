@@ -5,6 +5,7 @@ namespace App\Http\Composers;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Http\Request;
 
 class QrComposer
 {
@@ -18,11 +19,8 @@ class QrComposer
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::format('svg')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo));
-
-        // $qr =  QrCode::size(200)->generate(url($refNo));
-
-        // QrCode::format('png')->size(100)->generate(url($refNo));
+        $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo));
+        $qr = base64_encode($qr);
 
         $view->with('qr', $qr);
     }

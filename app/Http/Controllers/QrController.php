@@ -14,6 +14,12 @@ class QrController extends Controller
     }
 
     public function generateQr(){
+
+
+        return view('users.add');
+    }
+
+    public function saveQr(){
         $last = DB::table('documents')->latest('id')->first();
 
         $identity = $last->id + 1;
@@ -22,8 +28,9 @@ class QrController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::size(100)->generate(url($refNo));
+        $qr = QrCode::size(100)->generate(url($refNo),);
 
         return view('users.add');
     }
+
 }
