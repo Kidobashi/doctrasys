@@ -21,7 +21,7 @@ class QrController extends Controller
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
         ->first();
 
-        dd($data);
+        // dd($data);
 
         return view('users.qrinfo')->with('data', $data);
     }

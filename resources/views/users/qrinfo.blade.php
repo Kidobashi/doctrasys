@@ -17,11 +17,11 @@
         </thead>
         <tbody>
           <tr>
-        @foreach ($data as $dat)
-            <td>{{$dat->referenceNo}}</td>
-            <td>{{$dat->senderName}}</td>
-            <td>{{$dat->officeName}}</td>
-        @endforeach
+
+            <td>{{$data->referenceNo}}</td>
+            <td>{{$data->senderName}}</td>
+            <td>{{$data->officeName}}</td>
+
           </tr>
         </tbody>
       </table>
