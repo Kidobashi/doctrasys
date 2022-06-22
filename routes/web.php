@@ -106,6 +106,7 @@ Route::get('user-management', [UserController::class, 'index'])->name('user');
 Route::get('user-documents', [DocumentsController::class, 'index'])->name('docs');
 Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
 Route::post('add-document', [DocumentsController::class, 'store']);
+Route::get('{referenceNo}', [App\Http\Controllers\QrController::class, 'qrInfo']);
 
 // Route::post('add-document', [DocumentsController::class, 'create'])->name('offices');
 // Route::get('add-document', [DocumentsController::class, 'index']);

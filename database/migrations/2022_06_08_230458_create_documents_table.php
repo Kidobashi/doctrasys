@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('referenceNo');
+            $table->string('referenceNo');
             $table->string('senderName');
             $table->string('receiverName');
             $table->bigInteger('senderOffice');
