@@ -38,4 +38,20 @@ class QrController extends Controller
         return view('users.add');
     }
 
+    public function forward($referenceNo){
+
+        $doc = Documents::where('referenceNo', $referenceNo)->first();
+
+        return view('partials.forward')->with('doc', $doc)->with('message', 'Successfully Added!');;
+    }
+
+    public function update($referenceNo,Request $request){
+
+        $doc = Documents::find($referenceNo);
+        $doc->receiverName = $request->input('receiverName');
+        $doc->save();
+
+        return view('users.qrinfo')->with('message', 'Successfully Forwarded!');;
+    }
+
 }
