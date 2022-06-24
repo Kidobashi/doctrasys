@@ -48,10 +48,10 @@ class QrController extends Controller
     public function update($referenceNo,Request $request){
 
         $doc = Documents::find($referenceNo);
-        $doc->receiverName = $request->input('receiverName');
-        $doc->save();
+        $newReceiver = $request->input('receiverName');
+        Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver));
 
-        return view('users.qrinfo')->with('message', 'Successfully Forwarded!');;
+        return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');
     }
 
 }
