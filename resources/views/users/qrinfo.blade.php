@@ -24,14 +24,24 @@
                         <h5>Sender: {{$data->senderName}}</h5>
                         <h5>Receiver: {{$data->receiverName}}</>
                         <h5>From Office: {{$data->officeName}}</h5>
+                        @if( $data->status == '1')
+                        <h5>Status: Ongoing </h5>
+                        @endif
+                        @if($data->status == '2')
+                        <h5>Status: Forwarded </h5>
+                        @endif
+                        @if( $data->status == '3')
+                        <h5>Status: Received </h5>
+                        @endif
+
                         <Label>Options</Label>
                         <a href="{{ url('forward/'.$data->referenceNo) }}"><button type="button" class="btn btn-primary">Forward</button></a>
-                        <a href=""><button type="button" class="btn btn-success">Receive</button></a>
+                        <a href="{{ url('receive/'.$data->referenceNo) }}"><button type="button" class="btn btn-success">Receive</button></a>
                     </div>
                     <div class="">
                         <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag" style="margin-left:160px;">
                     </div>
             </div>
         </div>
-</body>
+ </body>
 </html>
