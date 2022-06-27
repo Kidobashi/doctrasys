@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Documents;
 use App\Models\Offices;
+use App\Models\TrackingLogs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -22,7 +23,16 @@ class QrController extends Controller
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
         ->first();
 
-        return view('users.qrinfo')->with('data', $data);
+        $alt = DB::table('documents')
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('referenceNo','LIKE', "%{$referenceNo}%")
+        ->first();
+
+        $trackings = DB::table('tracking_logs')
+        ->where('referenceNo', $referenceNo)->get();
+
+
+        return view('users.qrinfo')->with('data', $data)->with(['trackings' => $trackings])->with('alt', $alt);
     }
 
     public function saveQr(){
@@ -54,10 +64,19 @@ class QrController extends Controller
 
     public function update($referenceNo,Request $request){
 
-        $doc = Documents::find($referenceNo);
+        $doc = Documents::where('referenceNo', $referenceNo)->first();
         $newReceiver = $request->input('receiverName');
         $newOfficeReceiver = $request->input('receiverOffice');
         Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
+
+        TrackingLogs::create([
+            'senderName' => $doc->senderName,
+            'receiverName' => $newReceiver,
+            'senderOffice' => $doc->senderOffice,
+            'receiverOffice' => $newOfficeReceiver,
+            'referenceNo' => $referenceNo,
+            'action' => $request->input('action'),
+        ]);
 
         return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');
     }

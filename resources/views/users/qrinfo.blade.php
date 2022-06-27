@@ -38,8 +38,42 @@
                         <a href="{{ url('forward/'.$data->referenceNo) }}"><button type="button" class="btn btn-primary">Forward</button></a>
                         <a href="{{ url('receive/'.$data->referenceNo) }}"><button type="button" class="btn btn-success">Receive</button></a>
                     </div>
+
                     <div class="">
                         <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag" style="margin-left:160px;">
+                    </div>
+
+                    <h3>TRACKING</h3>
+                    <div class="d-flex justify-content-center" style="width: 80%;">
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Reference No.: </th>
+                                <th scope="col">Sender: </th>
+                                <th scope="col">Forwarded to: </th>
+                                <th scope="col">From Office: </th>
+                                <th scope="col">Forwarded to Office: </th>
+                                <th scope="col">Destination Office: </th>
+                                <th scope="col">Status: </th>
+                                <th>Updated at: </th>
+                              </tr>
+                            </thead>
+                            @foreach($trackings as $tracking)
+                            <tbody>
+                              <tr>
+                                <td>{{ $tracking->referenceNo }}</td>
+                                <td>{{ $tracking->senderName }}</td>
+                                <td>{{ $tracking->receiverName }}</td>
+                                <td>{{ $tracking->senderOffice }}</td>
+                                <td>{{ $tracking->receiverOffice }}</td>
+                                {{-- Add new column for destination --}}
+                                <td>{{$alt->officeName}}</td>
+                                <td>{{ $tracking->status }}</td>
+                                <td>{{ $tracking->updated_at }}</td>
+                              </tr>
+                            </tbody>
+                            @endforeach
+                        </table>
                     </div>
             </div>
         </div>

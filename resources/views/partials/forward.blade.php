@@ -1,3 +1,6 @@
+
+@extends('templates.user')
+@section('content')
 <form action="forwarded/{{ $doc->referenceNo }}" method="post">
     @csrf
     <label for="">Forward to:</label>
@@ -8,8 +11,9 @@
             @enderror
         </div>
         <div class="mb-3">
-            <label for="">Sender Office</label>
-            <input type="text" value="{{ $officeN->officeName }}" disabled> Current Office Receiver
+            <label for="">Current Office Receiver</label>
+            <input class="form-control" type="text" value="{{ $officeN->officeName }}" disabled>
+            <label for="">Forward Office</label>
             <select class="form-control" id="assignedOffice" name="receiverOffice">
                 <option value="" selected disabled>Select Office
                     @foreach ($offices as $row)
@@ -17,6 +21,9 @@
                 </option>
                 @endforeach
             </select>
+
+            <input class="form-control "type="text" style="display: none;" name='action' value="2">
         </div>
     <button type="submit">Submit</button>
 </form>
+@endsection
