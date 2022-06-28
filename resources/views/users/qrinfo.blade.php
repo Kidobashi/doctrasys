@@ -44,10 +44,11 @@
                     </div>
 
                     <h3>TRACKING</h3>
-                    <div class="d-flex justify-content-center" style="width: 80%;">
+                    <div class="d-flex justify-content-center" style="position:absolute; width: 80%; left:200px;">
                         <table class="table">
                             <thead>
                               <tr>
+                                <th scope="col">Action: </th>
                                 <th scope="col">Reference No.: </th>
                                 <th scope="col">Sender: </th>
                                 <th scope="col">Forwarded to: </th>
@@ -61,14 +62,28 @@
                             @foreach($trackings as $tracking)
                             <tbody>
                               <tr>
+                                <td>
+                                    @if( $tracking->action == 1)
+                                        <h4>Receive</h4>
+                                    @endif
+                                    @if( $tracking->action  == 2)
+                                        <h4>Forward</h4>
+                                    @endif
+                                </td>
                                 <td>{{ $tracking->referenceNo }}</td>
                                 <td>{{ $tracking->senderName }}</td>
                                 <td>{{ $tracking->receiverName }}</td>
                                 <td>{{ $secAlt->officeName }}</td>
                                 <td>{{ $tracking->officeName }}</td>
-                                {{-- Add new column for destination --}}
-                                <td>{{$alt->officeName}}</td>
-                                <td>{{ $tracking->status }}</td>
+                                <td>{{ $alt->officeName }}</td>
+                                <td>
+                                    @if($tracking->status == 1)
+                                        <h4>Ongoing</h4>
+                                    @endif
+                                    @if($tracking->status == 2)
+                                        <h4>Tagged</h4>
+                                    @endif
+                                </td>
                                 <td>{{ $tracking->updated_at }}</td>
                               </tr>
                             </tbody>

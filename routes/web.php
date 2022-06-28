@@ -109,6 +109,8 @@ Route::post('add-document', [DocumentsController::class, 'store']);
 Route::get('qrinfo/{referenceNo}', [App\Http\Controllers\QrController::class, 'qrInfo']);
 Route::get('forward/{referenceNo}', [QrController::class, 'forward']);
 Route::post('forward/forwarded/{referenceNo}', [QrController::class, 'update']);
+Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
+Route::post('receive/received/{referenceNo}', [QrController::class, 'update']);
 
 // Route::post('add-document', [DocumentsController::class, 'create'])->name('offices');
 // Route::get('add-document', [DocumentsController::class, 'index']);
