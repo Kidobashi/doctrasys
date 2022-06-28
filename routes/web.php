@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\QrController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
@@ -33,13 +34,13 @@ Route::group(['middleware' => 'auth'], function () {
 		return view('dashboard');
 	})->name('dashboard');
 
-	Route::get('billing', function () {
-		return view('billing');
-	})->name('billing');
+	// Route::get('billing', function () {
+	// 	return view('billing');
+	// })->name('billing');
 
-	Route::get('profile', function () {
-		return view('profile');
-	})->name('profile');
+	// Route::get('profile', function () {
+	// 	return view('profile');
+	// })->name('profile');
 
 	Route::get('rtl', function () {
 		return view('rtl');
@@ -102,6 +103,8 @@ Route::get('/login', function () {
 // });
 
 Route::get('test', [QrController::class, 'generateQr'])->name('qr');
+Route::get('/user-profile', [ProfileController::class, 'create']);
+Route::post('/user-profile', [ProfileController::class, 'store']);
 Route::get('user-management', [UserController::class, 'index'])->name('user');
 Route::get('user-documents', [DocumentsController::class, 'index'])->name('docs');
 Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
