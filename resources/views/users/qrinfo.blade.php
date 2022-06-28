@@ -64,8 +64,8 @@
                                 <td>{{ $tracking->referenceNo }}</td>
                                 <td>{{ $tracking->senderName }}</td>
                                 <td>{{ $tracking->receiverName }}</td>
-                                <td>{{ $tracking->senderOffice }}</td>
-                                <td>{{ $tracking->receiverOffice }}</td>
+                                <td>{{ $secAlt->officeName }}</td>
+                                <td>{{ $tracking->officeName }}</td>
                                 {{-- Add new column for destination --}}
                                 <td>{{$alt->officeName}}</td>
                                 <td>{{ $tracking->status }}</td>
