@@ -16,6 +16,7 @@
     <title>Document</title>
 </head>
 <body>
+    @include('layouts.navbars.auth.nav')
         <div class="row">
             <div class="col-md">
                     <div class="card-body">

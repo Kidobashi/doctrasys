@@ -55,12 +55,15 @@
                                         </select>
                                     </div>
                                     <label for="">QR Code</label>
-                                    <div>
+                                    <button onclick="showQr()">Generate QR</button>
+                                    <div id="qr" style="display: none;">
                                         @include('partials.qrcode')
-                                        {{-- {{ $qr }} --}}
                                     </div>
 
-                                    <button type="submit">Submit</button>
+                                    <div>
+                                        <button type="submit">Submit</button>
+                                    </div>
+
                                 </form>
 
                             @if(session('message'))
@@ -74,4 +77,15 @@
         </div>
     </div>
 </div>
+
+<script>
+function showQr() {
+  var x = document.getElementById("qr");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+</script>
 @endsection
