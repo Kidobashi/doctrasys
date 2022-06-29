@@ -1,18 +1,8 @@
 @extends('templates.user')
 @section('content')
-<div>
-    <div>
-        <div class="row">
-            <div class="col-12">
+        <div class="row" style="position: relative; right: 30px; bottom:60px;">
+            <div class="col-sm-12 col-md-6 col-lg-6">
                 <div class="card mb-4 mx-4">
-                    <div class="card-header pb-0">
-                        <div class="d-flex flex-row justify-content-between">
-                            <div>
-                                <h5 class="mb-0">Add Document</h5>
-                            </div>
-                            <a href="#" class="btn bg-gradient-primary btn-sm mb-0" type="button">+&nbsp; New Document</a>
-                        </div>
-                    </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="card-body">
                             <form method="POST" action="/add-document">
@@ -54,17 +44,16 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <label for="">QR Code</label>
-                                    <button onclick="showQr()">Generate QR</button>
-                                    <div id="qr" style="display: none;">
-                                        @include('partials.qrcode')
-                                    </div>
-
                                     <div>
                                         <button type="submit">Submit</button>
                                     </div>
 
                                 </form>
+                                <label for="">QR Code</label>
+                                <button onclick="showQr()">Generate QR</button>
+                                <div id="qr" style="display: none;">
+                                    @include('partials.qrcode')
+                                </div>
 
                             @if(session('message'))
                                 <div class="alert alert-success">{{session('message')}}</div>
@@ -75,8 +64,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
 <script>
 function showQr() {
