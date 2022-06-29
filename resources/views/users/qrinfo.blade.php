@@ -18,7 +18,7 @@
 <body>
     @include('layouts.navbars.auth.nav')
         <div class="row">
-            <div class="col-md">
+            <div class="col-md-6">
                     <div class="card-body">
                         <h4 class="card-title">QR Document Details</h4>
                         <h5>Reference No.: {{$data->referenceNo}}</h5>

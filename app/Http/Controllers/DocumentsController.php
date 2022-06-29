@@ -59,7 +59,10 @@ class DocumentsController extends Controller
 
         $identity = $last->id + 1;
         $number = sprintf('%04d', $identity);
-        $prefix = strval(strftime("%Y"));
+        $prefix = date('Ymd');
+        // $prefix = strval(strftime("%Y%m%d"));
+        $month = strval(strftime("%M"));
+        $day = strval(strftime("%D"));
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
