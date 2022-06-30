@@ -32,7 +32,7 @@ ul:first-child{
         <div class="row">
             <div class="col-md-3">
                     <div class="card-body my-auto" style="margin-left: 12px; border: 1px solid black">
-                        <h4 class="card-title">QR Document Details</h4>
+                        <h4 class="card-title">Document Details</h4>
                         <hr>
                         <h5>Reference No.: {{$data->referenceNo}}</h5>
                         <h5>Sender: {{$data->senderName}}</h5>
