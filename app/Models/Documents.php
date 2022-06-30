@@ -17,5 +17,7 @@ class Documents extends Model
         'receiverName',
         'senderOffice',
         'receiverOffice',
+        'updated_at',
+        'createad_at'
     ];
 }

@@ -33,10 +33,10 @@ class QrController extends Controller
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
         ->first();
 
-        $trackings = DB::table('tracking_logs')
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('referenceNo', $referenceNo)->get();
-
+        $trackings = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
+        ->where('referenceNo', $referenceNo)
+        ->orderBy('updated_at', 'DESC')
+        ->get();
 
         return view('users.qrinfo')->with('data', $data)->with(['trackings' => $trackings])->with('alt', $alt)->with('secAlt', $secAlt);
     }
@@ -102,32 +102,4 @@ class QrController extends Controller
 
         return view('users.receive')->with('officeN', $officeN)->with('offices', $offices)->with('doc', $doc)->with('message', 'Successfully Added!');
     }
-
-    // public function receive($referenceNo, Request $request)
-    // {
-    //     $doc = Documents::where('referenceNo', $referenceNo)->first();
-    //     $offices = Offices::all();
-
-    //     $officeN = DB::table('documents')
-    //     ->join('offices', 'receiverOffice', 'offices.id')
-    //     ->where('documents.referenceNo', $referenceNo)
-    //     ->first();
-
-    //     $newReceiver = $request->input('receiverName');
-    //     $newOfficeReceiver = $request->input('receiverOffice');
-
-    //     Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
-
-    //     TrackingLogs::create([
-    //         'senderName' => $doc->senderName,
-    //         'receiverName' => $newReceiver,
-    //         'senderOffice' => $doc->senderOffice,
-    //         'receiverOffice' => $newOfficeReceiver,
-    //         'referenceNo' => $referenceNo,
-    //         'action' => $request->input('action'),
-    //     ]);
-
-    //     return view('users.receive')->with('officeN', $officeN)->with('offices', $offices)->with('doc', $doc)->with('message', 'Successfully Added!');
-    // }
-
 }

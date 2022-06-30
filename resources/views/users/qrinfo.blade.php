@@ -18,80 +18,57 @@
 <body>
     @include('layouts.navbars.auth.nav')
         <div class="row">
-            <div class="col-md-6">
-                    <div class="card-body">
+            <div class="col-md-3">
+                    <div class="card-body my-auto" style="margin-left: 12px; border: 1px solid black">
                         <h4 class="card-title">QR Document Details</h4>
+                        <hr>
                         <h5>Reference No.: {{$data->referenceNo}}</h5>
                         <h5>Sender: {{$data->senderName}}</h5>
-                        <h5>Receiver: {{$data->receiverName}}</>
+
                         <h5>From Office: {{$data->officeName}}</h5>
-                        @if( $data->status == '1')
-                        <h5>Status: Ongoing </h5>
-                        @endif
-                        @if($data->status == '2')
-                        <h5>Status: Forwarded </h5>
-                        @endif
-                        @if( $data->status == '3')
-                        <h5>Status: Received </h5>
-                        @endif
 
                         <Label>Options</Label>
                         <a href="{{ url('forward/'.$data->referenceNo) }}"><button type="button" class="btn btn-primary">Forward</button></a>
                         <a href="{{ url('receive/'.$data->referenceNo) }}"><button type="button" class="btn btn-success">Receive</button></a>
                     </div>
-
                     <div class="">
                         <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag" style="margin-left:160px;">
                     </div>
+            </div>
 
-                    <h3>TRACKING</h3>
-                    <div class="d-flex justify-content-center" style="position:absolute; width: 80%; left:200px;">
-                        <table class="table">
-                            <thead>
-                              <tr>
-                                <th scope="col">Action: </th>
-                                <th scope="col">Reference No.: </th>
-                                <th scope="col">Sender: </th>
-                                <th scope="col">Forwarded to: </th>
-                                <th scope="col">From Office: </th>
-                                <th scope="col">Forwarded to Office: </th>
-                                <th scope="col">Destination Office: </th>
-                                <th scope="col">Status: </th>
-                                <th>Updated at: </th>
-                              </tr>
-                            </thead>
-                            @foreach($trackings as $tracking)
-                            <tbody>
-                              <tr>
-                                <td>
-                                    @if( $tracking->action == 1)
-                                        <h4>Receive</h4>
-                                    @endif
-                                    @if( $tracking->action  == 2)
-                                        <h4>Forward</h4>
-                                    @endif
-                                </td>
-                                <td>{{ $tracking->referenceNo }}</td>
-                                <td>{{ $tracking->senderName }}</td>
-                                <td>{{ $tracking->receiverName }}</td>
-                                <td>{{ $secAlt->officeName }}</td>
-                                <td>{{ $tracking->officeName }}</td>
-                                <td>{{ $alt->officeName }}</td>
-                                <td>
-                                    @if($tracking->status == 1)
-                                        <h4>Ongoing</h4>
-                                    @endif
-                                    @if($tracking->status == 2)
-                                        <h4>Tagged</h4>
-                                    @endif
-                                </td>
-                                <td>{{ $tracking->updated_at }}</td>
-                              </tr>
-                            </tbody>
-                            @endforeach
-                        </table>
-                    </div>
+            <div class="col-md-6">
+                <h3>TRACKING</h3>
+                <div class="card" style="width: 30rem;">
+                    <ul class="list-group list-group-flush">
+                    @foreach($trackings as $tracking)
+                        @if( $tracking->action == 1)
+                        <h5>Received by {{ $tracking->receiverName }}</h5>
+                            <li class="list-group-item">Office: <i>{{ $tracking->officeName }}</i></li>
+                            <li class="list-group-item">Date Received: <i>{{ date_format($tracking->updated_at,'M d Y h:i')}}</i></li>
+                            @if($tracking->action == 2)
+                            <p><li class="list-group-item">Status: <i>In Circulation</i></p>
+                            @endif
+                            @if($tracking->action == 1)
+                                <p><li class="list-group-item">Status: <i>On Hold</i></p>
+                            @endif
+                        @endif
+                        @if( $tracking->action == 2)
+                        <h5>Forwarded by {{ $tracking->receiverName }}</h5>
+                            <li class="list-group-item">Office: <i>{{ $tracking->officeName }}</i></li>
+                            <li class="list-group-item">Date Forwarded: <i>{{ date_format($tracking->updated_at,'M d Y h:i')}}</i></li>
+                            @if($tracking->action == 2)
+                            <p><li class="list-group-item">Status: <i>In Circulation</i></p>
+                            @endif
+                            @if($tracking->action == 1)
+                                <p><li class="list-group-item">Status: <i>On Hold</i></p>
+                            @endif
+                            </li>
+                        @endif
+
+                    @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
- </body>
+    </body>
 </html>
