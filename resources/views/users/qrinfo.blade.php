@@ -16,6 +16,18 @@
     <title>Document</title>
 </head>
 <body>
+<style>
+.section-header {
+  justify-content: space-between;
+}
+
+ul:first-child{
+    color: red;
+    background: aquamarine;
+}
+
+</style>
+
     @include('layouts.navbars.auth.nav')
         <div class="row">
             <div class="col-md-3">
@@ -39,12 +51,14 @@
             <div class="col-md-6">
                 <h3>TRACKING</h3>
                 <div class="card" style="width: 30rem;">
-                    <ul class="list-group list-group-flush">
                     @foreach($trackings as $tracking)
+                    <ul class="list-group list-group-flush">
+                    <div class="section-header">
+                        <li>
                         @if( $tracking->action == 1)
                         <h5>Received by {{ $tracking->receiverName }}</h5>
                             <li class="list-group-item">Office: <i>{{ $tracking->officeName }}</i></li>
-                            <li class="list-group-item">Date Received: <i>{{ date_format($tracking->updated_at,'M d Y h:i')}}</i></li>
+                            <li class="list-group-item">Date Received: <i>{{ date_format($tracking->created_at,'M d Y h:i')}}</i></li>
                             @if($tracking->action == 2)
                             <p><li class="list-group-item">Status: <i>In Circulation</i></p>
                             @endif
@@ -55,7 +69,7 @@
                         @if( $tracking->action == 2)
                         <h5>Forwarded by {{ $tracking->receiverName }}</h5>
                             <li class="list-group-item">Office: <i>{{ $tracking->officeName }}</i></li>
-                            <li class="list-group-item">Date Forwarded: <i>{{ date_format($tracking->updated_at,'M d Y h:i')}}</i></li>
+                            <li class="list-group-item">Date Forwarded: <i>{{ date_format($tracking->created_at,'M d Y h:i')}}</i></li>
                             @if($tracking->action == 2)
                             <p><li class="list-group-item">Status: <i>In Circulation</i></p>
                             @endif
@@ -64,9 +78,11 @@
                             @endif
                             </li>
                         @endif
+                    </li>
+                        </div>
 
-                    @endforeach
                     </ul>
+                    @endforeach
                 </div>
             </div>
         </div>

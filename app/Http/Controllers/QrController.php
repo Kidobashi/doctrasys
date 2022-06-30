@@ -35,7 +35,7 @@ class QrController extends Controller
 
         $trackings = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
         ->where('referenceNo', $referenceNo)
-        ->orderBy('updated_at', 'DESC')
+        ->orderBy('created_at', 'DESC')
         ->get();
 
         return view('users.qrinfo')->with('data', $data)->with(['trackings' => $trackings])->with('alt', $alt)->with('secAlt', $secAlt);
