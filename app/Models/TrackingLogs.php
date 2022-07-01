@@ -21,6 +21,7 @@ class TrackingLogs extends Model
         'updated_at',
         'createad_at',
         'prevOffice',
-        'prevReceiver'
+        'prevReceiver',
+        'officeName'
     ];
 }

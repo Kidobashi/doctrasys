@@ -51,29 +51,30 @@ ul:first-child{
             <div class="col-md-6">
                 <h3>TRACKING</h3>
                 <div class="card" style="width: 30rem;">
-                    @foreach($trackings as $tracking)
+                    @foreach($altdata['prev'] as $key => $prev)
                     <ul class="list-group list-group-flush">
                     <div class="section-header">
                         <li>
-                        @if( $tracking->action == 1)
-                        <h5>Received by {{ $tracking->receiverName }}</h5>
-                            <li class="list-group-item">Office: <i>{{ $tracking->officeName }}</i></li>
-                            <li class="list-group-item">Date Received: <i>{{ date_format($tracking->created_at,'M d Y h:i')}}</i></li>
-                            @if($tracking->action == 2)
+                        @if( $altdata['trackings'][$key]->action == 1)
+                        <h5>Received by {{ $altdata['trackings'][$key]->receiverName }}</h5>
+                            <li class="list-group-item">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
+                            <li class="list-group-item">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i')}}</i></li>
+                            @if($altdata['trackings'][$key]->action == 2)
                             <p><li class="list-group-item">Status: <i>In Circulation</i></p>
                             @endif
-                            @if($tracking->action == 1)
+                            @if($altdata['trackings'][$key]->action == 1)
                                 <p><li class="list-group-item">Status: <i>On Hold</i></p>
                             @endif
                         @endif
-                        @if( $tracking->action == 2)
-                        <h5>Forwarded by {{ $tracking->receiverName }}</h5>
-                            <li class="list-group-item">Office: <i>{{ $tracking->officeName }}</i></li>
-                            <li class="list-group-item">Date Forwarded: <i>{{ date_format($tracking->created_at,'M d Y h:i')}}</i></li>
-                            @if($tracking->action == 2)
+                        @if( $altdata['trackings'][$key]->action == 2)
+                        <h5>Forwarded by {{ $altdata['trackings'][$key]->receiverName }}</h5>
+                            <li class="list-group-item">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
+                            <li class="list-group-item">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i')}}</i></li>
+                            <li class="list-group-item">Forwarded from: <p><b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></p></li>
+                            @if($altdata['trackings'][$key]->action == 2)
                             <p><li class="list-group-item">Status: <i>In Circulation</i></p>
                             @endif
-                            @if($tracking->action == 1)
+                            @if($altdata['trackings'][$key]->action == 1)
                                 <p><li class="list-group-item">Status: <i>On Hold</i></p>
                             @endif
                             </li>
@@ -84,6 +85,15 @@ ul:first-child{
                     @endforeach
                 </div>
             </div>
+            @foreach($altdata['prev'] as $key => $prev)
+            <dd>
+                <ul>
+                <li>Prev: {{ $altdata['prev'][$key]->officeName }}</li>
+                <li>Receiver: {{ $altdata['trackings'][$key]->officeName }}</li>
+                <li>Action {{ $altdata['trackings'][$key]->action }}</li>
+                </ul>
+            </dd>
+            @endforeach
         </div>
     </body>
 </html>

@@ -23,22 +23,20 @@ class QrController extends Controller
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
         ->first();
 
-        $alt = DB::table('documents')
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('referenceNo','LIKE', "%{$referenceNo}%")
-        ->first();
-
-        $secAlt = DB::table('documents')
-        ->join('offices', 'senderOffice', 'offices.id')
-        ->where('referenceNo','LIKE', "%{$referenceNo}%")
-        ->first();
-
         $trackings = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
         ->where('referenceNo', $referenceNo)
         ->orderBy('created_at', 'DESC')
         ->get();
 
-        return view('users.qrinfo')->with('data', $data)->with(['trackings' => $trackings])->with('alt', $alt)->with('secAlt', $secAlt);
+        $prev = DB::table('tracking_logs')
+        ->join('offices', 'prevOffice', 'offices.id')
+        ->where('referenceNo','LIKE', "%{$referenceNo}%")
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
+        $altdata = array_merge(['prev' => $prev] , ['trackings' => $trackings]);
+
+        return view('users.qrinfo')->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
     }
 
     public function saveQr(){
