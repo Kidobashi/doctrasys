@@ -40,8 +40,14 @@ ul:first-child{
                         <h5>From Office: {{$data->officeName}}</h5>
 
                         <Label>Options</Label>
-                        <a href="{{ url('forward/'.$data->referenceNo) }}"><button type="button" class="btn btn-primary">Forward</button></a>
-                        <a href="{{ url('receive/'.$data->referenceNo) }}"><button type="button" class="btn btn-success">Receive</button></a>
+                        @if($light->action == 2)
+                            <button type="button" class="btn btn-primary" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
+                            <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                        @endif
+                        @if($light->action == 1)
+                            <button type="button" class="btn btn-primary"><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
+                            <button type="button" class="btn btn-success" disabled><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                        @endif
                     </div>
                     <div class="">
                         <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag" style="margin-left:160px;">
@@ -85,15 +91,6 @@ ul:first-child{
                     @endforeach
                 </div>
             </div>
-            @foreach($altdata['prev'] as $key => $prev)
-            <dd>
-                <ul>
-                <li>Prev: {{ $altdata['prev'][$key]->officeName }}</li>
-                <li>Receiver: {{ $altdata['trackings'][$key]->officeName }}</li>
-                <li>Action {{ $altdata['trackings'][$key]->action }}</li>
-                </ul>
-            </dd>
-            @endforeach
         </div>
     </body>
 </html>

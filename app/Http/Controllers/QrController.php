@@ -8,6 +8,7 @@ use App\Models\TrackingLogs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Arr;
 
 class QrController extends Controller
 {
@@ -23,6 +24,8 @@ class QrController extends Controller
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
         ->first();
 
+        $light = TrackingLogs::where('referenceNo', 'LIKE', "%{$referenceNo}%")->latest()->first();
+
         $trackings = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
         ->where('referenceNo', $referenceNo)
         ->orderBy('created_at', 'DESC')
@@ -36,7 +39,7 @@ class QrController extends Controller
 
         $altdata = array_merge(['prev' => $prev] , ['trackings' => $trackings]);
 
-        return view('users.qrinfo')->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
+        return view('users.qrinfo')->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
     }
 
     public function saveQr(){
