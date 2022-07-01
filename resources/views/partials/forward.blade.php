@@ -5,6 +5,7 @@
     @csrf
     <label for="">Forward to:</label>
         <div class="mb-3">
+            <input type="text" class="form-control" name="prevReceiver" id="name" value="{{ $doc->receiverName }}"aria-label="Name" aria-describedby="name" style="display: block;">
             <input type="text" class="form-control" name="receiverName" id="name" value="{{ $doc->receiverName }}"aria-label="Name" aria-describedby="name">
             @error('receiverName')
                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
@@ -12,6 +13,7 @@
         </div>
         <div class="mb-3">
             <label for="">Current Office Receiver</label>
+            <input class="form-control" type="text" name="prevOffice" value="{{ $doc->receiverOffice }}" style="display: none;" disabled>
             <input class="form-control" type="text" value="{{ $officeN->officeName }}" disabled>
             <label for="">Forward Office</label>
             <select class="form-control" id="assignedOffice" name="receiverOffice">

@@ -78,9 +78,8 @@ ul:first-child{
                             @endif
                             </li>
                         @endif
-                    </li>
+                            </li>
                         </div>
-
                     </ul>
                     @endforeach
                 </div>

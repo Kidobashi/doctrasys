@@ -76,6 +76,9 @@ class QrController extends Controller
         $doc = Documents::where('referenceNo', $referenceNo)->first();
         $newReceiver = $request->input('receiverName');
         $newOfficeReceiver = $request->input('receiverOffice');
+        // $prevOffice = $request->input('prevOffice');
+        // $prevReceiver = $request->input('prevReceiver');
+
         Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
 
         TrackingLogs::create([
@@ -85,6 +88,8 @@ class QrController extends Controller
             'receiverOffice' => $newOfficeReceiver,
             'referenceNo' => $referenceNo,
             'action' => $request->input('action'),
+            'prevOffice' => $doc->receiverOffice,
+            'prevReceiver' => $request->input('prevReceiver'),
         ]);
 
         return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');
@@ -101,5 +106,24 @@ class QrController extends Controller
         ->first();
 
         return view('users.receive')->with('officeN', $officeN)->with('offices', $offices)->with('doc', $doc)->with('message', 'Successfully Added!');
+    }
+
+    public function receiveDoc($referenceNo,Request $request){
+
+        $doc = Documents::where('referenceNo', $referenceNo)->first();
+        $newReceiver = $request->input('receiverName');
+        $newOfficeReceiver = $request->input('receiverOffice');
+        Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
+
+        TrackingLogs::create([
+            'senderName' => $doc->senderName,
+            'receiverName' => $newReceiver,
+            'senderOffice' => $doc->senderOffice,
+            'receiverOffice' => $newOfficeReceiver,
+            'referenceNo' => $referenceNo,
+            'action' => $request->input('action'),
+        ]);
+
+        return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');
     }
 }

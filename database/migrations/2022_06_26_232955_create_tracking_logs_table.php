@@ -21,8 +21,10 @@ return new class extends Migration
             $table->bigInteger('senderOffice');
             $table->bigInteger('receiverOffice');
             $table->bigInteger('status');
+            $table->string('prevReceiver')->nullable();
+            $table->string('prevOffice')->nullable();
             $table->bigInteger('action');
-            $table->timestamps(); 
+            $table->timestamps();
         });
     }
 
