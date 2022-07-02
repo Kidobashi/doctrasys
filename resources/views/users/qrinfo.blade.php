@@ -25,40 +25,29 @@ ul:first-child{
     color: red;
     background: aquamarine;
 }
-.float-container {
-    border: 3px solid #fff;
-    padding: 20px;
-}
-
-.float-child {
-    float: left;
-    padding: 20px;
-}
 
 
 </style>
 
     @include('layouts.navbars.auth.nav')
-    <div class="container" style="position: absolute; right:4%;">
-        <div class="row g-3">
-                <div class="col-xs-7 col-sm-6 col-lg-8">
-                    <div class="d-flex float-container">
-                        <div class="float-child">
-                        <div class="d-flex flex-column" style="width: 100%;">
-                            <h4 class="card-title">Document Details</h4>
+    <div class="container-fluid col-lg-6">
+        <div class="row">
+            <div class="col-xxs-6 col-xs-4">
+                <h4 class="card-title">Document Details</h4>
                             <hr>
+                        <div class="d-flex flex-column" style="display: flex; align-items: center; justify-content: center;">
                             <h5>Reference No.: {{$data->referenceNo}}</h5>
                             <h5>Sender: {{$data->senderName}}</h5>
 
                             <h5>From Office: {{$data->officeName}}</h5>
 
-                            <div class="" style="">
-                                <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag" style="margin-left:160px;">
+                            <div class="col-xxs-6">
+                                <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag">
                             </div>
 
                             <hr style="border: 3px solid">
 
-                            <Label>Options</Label>
+                            <h3>Options</h3>
                             @if($light->action == 2)
                                 <button type="button" class="btn btn-secondary" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
                                 <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
@@ -68,12 +57,10 @@ ul:first-child{
                                 <button type="button" class="btn btn-secondary" disabled><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
                             @endif
                         </div>
-                        </div>
-
-                <div class="float-child">
-                <div class="col-xs-7 col-sm-6 col-lg-8">
-                    <h3>Tracking Information</h3>
-                    <div class="card" style="width: 30rem;">
+            </div>
+            <div class="col-xxs-6 col-xs-4">
+                <h3>Tracking Information</h3>
+                    <div class="card" style="">
                         @foreach($altdata['prev'] as $key => $prev)
                         <ul class="list-group list-group-flush">
                         <div class="section-header">
@@ -106,11 +93,21 @@ ul:first-child{
                             </div>
                         </ul>
                         @endforeach
-                    </div>
-                </div>
-            </div>
             </div>
         </div>
+        <hr>
+        <footer>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Copyright &copy; 2021 Tutorial Republic</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-dark">Terms of Use</a>
+                    <span class="text-muted mx-2">|</span>
+                    <a href="#" class="text-dark">Privacy Policy</a>
+                </div>
+            </div>
+        </footer>
     </div>
     </body>
 </html>
