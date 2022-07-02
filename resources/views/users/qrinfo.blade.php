@@ -26,11 +26,18 @@ ul:first-child{
     background: aquamarine;
 }
 
+#tracking {
+  display: none;
+}
 
+#tracking:target{
+  display: block;
+}
 </style>
 
     @include('layouts.navbars.auth.nav')
-    <div class="container-fluid col-lg-6">
+
+    <div class="container-fluid col-lg-4">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
                 <h4 class="card-title">Document Details</h4>
@@ -58,7 +65,9 @@ ul:first-child{
                             @endif
                         </div>
             </div>
-            <div class="col-xxs-6 col-xs-4">
+            <hr>
+            <button class="btn btn-primary"><a href="#tracking">Show Tracking</a></button>
+            <div class="col-xxs-6 col-xs-4" id="tracking">
                 <h3>Tracking Information</h3>
                     <div class="card" style="">
                         @foreach($altdata['prev'] as $key => $prev)
@@ -92,7 +101,7 @@ ul:first-child{
                                 </li>
                             </div>
                         </ul>
-                        @endforeach
+                    @endforeach
             </div>
         </div>
         <hr>
