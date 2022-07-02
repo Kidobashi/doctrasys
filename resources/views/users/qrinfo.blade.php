@@ -68,7 +68,7 @@ ul:first-child{
                             @if( $altdata['trackings'][$key]->action == 1)
                             <h5>Received by {{ $altdata['trackings'][$key]->receiverName }}</h5>
                                 <li class="list-group-item">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
-                                <li class="list-group-item">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i')}}</i></li>
+                                <li class="list-group-item">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                                 @if($altdata['trackings'][$key]->action == 2)
                                 <p><li class="list-group-item">Status: <i>In Circulation</i></p>
                                 @endif
@@ -79,7 +79,7 @@ ul:first-child{
                             @if( $altdata['trackings'][$key]->action == 2)
                             <h5>Forwarded by {{ $altdata['trackings'][$key]->receiverName }}</h5>
                                 <li class="list-group-item">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
-                                <li class="list-group-item">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i')}}</i></li>
+                                <li class="list-group-item">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
                                 <li class="list-group-item">Forwarded from: <p><b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></p></li>
                                 @if($altdata['trackings'][$key]->action == 2)
                                 <p><li class="list-group-item">Status: <i>In Circulation</i></p>

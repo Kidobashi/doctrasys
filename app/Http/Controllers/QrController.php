@@ -90,7 +90,7 @@ class QrController extends Controller
             'referenceNo' => $referenceNo,
             'action' => $request->input('action'),
             'prevOffice' => $doc->receiverOffice,
-            'prevReceiver' => $request->input('prevReceiver'),
+            'prevReceiver' => $doc->receiverName,
         ]);
 
         return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');
