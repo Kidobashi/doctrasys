@@ -101,6 +101,9 @@ Route::get('/login', function () {
 // Route::get('/forward', function () {
 //     return view('partials.forward');
 // });
+Route::get('/coming', function () {
+    return view('unused.coming');
+});
 
 Route::get('test', [QrController::class, 'generateQr'])->name('qr');
 Route::get('/user-profile', [ProfileController::class, 'create']);

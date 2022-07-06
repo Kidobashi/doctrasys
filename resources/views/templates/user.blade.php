@@ -138,11 +138,6 @@ div.content {
     float: none;
   }
 }
-/* #menu-btn {
-  background-color: #100901;
-  color: #fff;
-  margin-left: -62px;
-} */
 </style>
 
 <div class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column" id="sidebar">
@@ -156,7 +151,7 @@ div.content {
         </a>
       </li>
       <li href="#" class="nav-link">
-        <a class="nav-link" href="{{ url('user-profile') }}">
+        <a class="nav-link" href="{{ url('coming') }}">
             <span class="mx-2">Profile</span>
         </a>
       </li>
