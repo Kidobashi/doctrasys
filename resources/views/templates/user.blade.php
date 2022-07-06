@@ -25,29 +25,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  @if (env('IS_DEMO'))
-      <x-demo-metas></x-demo-metas>
-  @endif
-
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <title>
-    Soft UI Dashboard by Creative Tim
-  </title>
-  <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-  <!-- Nucleo Icons -->
-  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-  <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Nucleo Icons -->
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
 </head>
 
 <body class="g-sidenav-show  bg-gray-100 {{ (\Request::is('rtl') ? 'rtl' : (Request::is('virtual-reality') ? 'virtual-reality' : '')) }} ">
-  @auth
+  {{-- @auth
     @yield('auth')
   @endauth
   @guest
@@ -85,24 +74,10 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
-
+ --}}
 
 @include('layouts.navbars.auth.nav')
   <style>
-    .side-navbar {
-  width: 300px;
-  height: 100%;
-  position: fixed;
-  margin-left: -300px;
-  background-color: #100901;
-  transition: 0.5s;
-  z-index: 2;
-}
-.nav-link:active,
-.nav-link:focus,
-.nav-link:hover {
-  background-color: #ffffff26;
-}
 .my-container {
   transition: 0.4s;
 }
@@ -112,6 +87,56 @@
 /* for main section */
 .active-cont {
   margin-left: 180px;
+}
+
+.side-navbar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.side-navbar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.side-navbar a.active {
+  background-color: #1B3FAB;
+  color: white;
+}
+
+.side-navbar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+@media screen and (max-width: 700px) {
+  .side-navbar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .side-navbar {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .side-navbar a {
+    text-align: center;
+    float: none;
+  }
 }
 /* #menu-btn {
   background-color: #100901;
@@ -123,7 +148,7 @@
 <div class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column" id="sidebar">
     <ul class="nav flex-column text-white w-100">
       <a href="{{ route('dashboard') }}" class="nav-link h3 text-white my-2">
-        Side Nav
+        <span>Document Tracking System</span>
       </a>
       <li href="#" class="nav-link">
         <a class="nav-link {{ (Request::is('user-documents') ? 'active' : '') }}" href="{{ url('user-documents') }}">
@@ -144,7 +169,7 @@
     </ul>
 </div>
 
-  <div style="width: 80%; float:right; margin-top:80px;">
+  <div class="content" style="width: 100%; float:right; margin-top:20px;">
         @yield('content')
   </div>
 

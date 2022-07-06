@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +15,9 @@
     <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
     <title>Document</title>
 </head>
-<body>
+<body> --}}
+@extends('templates.user')
+@section('content')
 <style>
 .section-header {
   justify-content: space-between;
@@ -52,9 +54,6 @@ ul:not(first-child) ul{
   display: block;
 }
 </style>
-
-    @include('layouts.navbars.auth.nav')
-
     <div class="container-fluid col-lg-4">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
@@ -93,7 +92,6 @@ ul:not(first-child) ul{
                         <div class="section-header">
                             <li>
                             @if( $altdata['trackings'][$key]->action == 1)
-                            <hr>
                             <h5>&nbsp;Received by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
                                 <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
                                 <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
@@ -105,7 +103,6 @@ ul:not(first-child) ul{
                                 @endif
                             @endif
                             @if( $altdata['trackings'][$key]->action == 2)
-                            <hr>
                             <h5>&nbsp;Forwarded by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
                                 <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
                                 <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
@@ -121,6 +118,7 @@ ul:not(first-child) ul{
                                 </li>
                             </div>
                         </ul>
+                        <hr>
                     @endforeach
             </div>
         </div>
@@ -140,3 +138,4 @@ ul:not(first-child) ul{
     </div>
     </body>
 </html>
+@endsection

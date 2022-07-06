@@ -1,9 +1,9 @@
 @extends('templates.user')
 @section('content')
-        <div class="row" style="position: relative; right: 30px; bottom:60px;">
-            <div class="col-sm-12 col-md-6 col-lg-6">
-                <div class="card mb-4 mx-4">
-                    <div class="card-body px-0 pt-0 pb-2">
+<div class="container-fluid col-lg-4">
+        <div class="row">
+                <div class="card">
+                    <div class="card-body">
                         <div class="card-body">
                             <form method="POST" action="/add-document">
                                 @csrf
