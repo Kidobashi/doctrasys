@@ -9,7 +9,7 @@
                                 @csrf
                                     <label for="">Sender Name</label>
                                     <div class="mb-3">
-                                    <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" >
+                                    <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="" >
                                     @error('senderName')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror

@@ -23,11 +23,14 @@
 
 ul:first-child{
     color: black;
-    background: #9cacbf;
+    background:#1B3FAB;
     align-items: center;
     padding-bottom: 15px;
     border-radius: 20px;
     list-style-type: circle;
+}
+ul:first-child h5{
+    color: white;
 }
 
 ul:not(first-child){
