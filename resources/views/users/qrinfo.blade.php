@@ -21,20 +21,26 @@
   justify-content: space-between;
 }
 
-ul:first-child{
-    color: black;
+ul:first-child, ul:first-child li{
+    color: white;
     background:#1B3FAB;
-    align-items: center;
     padding-bottom: 15px;
     border-radius: 20px;
-    list-style-type: circle;
+    padding: 10px;
+    text-align: center;
 }
 ul:first-child h5{
     color: white;
 }
 
-ul:not(first-child){
+ul:not(first-child) li{
     color: black;
+    list-style-type: none;
+}
+
+ul:not(first-child) ul{
+    color: black;
+    list-style-type: circle;
 }
 
 
@@ -75,7 +81,7 @@ ul:not(first-child){
                                 <button type="button" class="btn btn-primary"><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
                                 <button type="button" class="btn btn-secondary" disabled><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
                             @endif
-                            <a href="#tracking"><button class="btn btn-primary">Show Tracking</button></a>
+                            <a href="#tracking"><button class="btn btn-primary" style="background:#1B3FAB;">Show Tracking</button></a>
                         </div>
             </div>
             <hr>
@@ -87,26 +93,28 @@ ul:not(first-child){
                         <div class="section-header">
                             <li>
                             @if( $altdata['trackings'][$key]->action == 1)
+                            <hr>
                             <h5>&nbsp;Received by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
-                                <li class="list-group-item">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
-                                <li class="list-group-item">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
+                                <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
+                                <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                                 @if($altdata['trackings'][$key]->action == 2)
-                                <p><li class="list-group-item">Status: <i>In Circulation</i></p>
+                                <p><li class="">Status: <i>In Circulation</i></p>
                                 @endif
                                 @if($altdata['trackings'][$key]->action == 1)
-                                    <p><li class="list-group-item">Status: <i>On Hold</i></p>
+                                    <p><li class="">Status: <i>On Hold</i></p>
                                 @endif
                             @endif
                             @if( $altdata['trackings'][$key]->action == 2)
+                            <hr>
                             <h5>&nbsp;Forwarded by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
-                                <li class="list-group-item">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
-                                <li class="list-group-item">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
-                                <li class="list-group-item">Forwarded from: <p><b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></p></li>
+                                <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
+                                <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
+                                <li class="">Forwarded from: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
                                 @if($altdata['trackings'][$key]->action == 2)
-                                <p><li class="list-group-item">Status: <i>In Circulation</i></p>
+                                <p><li class="">Status: <i>In Circulation</i></p>
                                 @endif
                                 @if($altdata['trackings'][$key]->action == 1)
-                                    <p><li class="list-group-item">Status: <i>On Hold</i></p>
+                                    <p><li class="">Status: <i>On Hold</i></p>
                                 @endif
                                 </li>
                             @endif
