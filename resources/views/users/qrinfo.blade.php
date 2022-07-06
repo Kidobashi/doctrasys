@@ -22,9 +22,18 @@
 }
 
 ul:first-child{
-    color: red;
-    background: aquamarine;
+    color: black;
+    background: #9cacbf;
+    align-items: center;
+    padding-bottom: 15px;
+    border-radius: 20px;
+    list-style-type: circle;
 }
+
+ul:not(first-child){
+    color: black;
+}
+
 
 #tracking {
   display: none;
@@ -63,10 +72,10 @@ ul:first-child{
                                 <button type="button" class="btn btn-primary"><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
                                 <button type="button" class="btn btn-secondary" disabled><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
                             @endif
+                            <a href="#tracking"><button class="btn btn-primary">Show Tracking</button></a>
                         </div>
             </div>
             <hr>
-            <button class="btn btn-primary"><a href="#tracking">Show Tracking</a></button>
             <div class="col-xxs-6 col-xs-4" id="tracking">
                 <h3>Tracking Information</h3>
                     <div class="card" style="">
@@ -75,7 +84,7 @@ ul:first-child{
                         <div class="section-header">
                             <li>
                             @if( $altdata['trackings'][$key]->action == 1)
-                            <h5>Received by {{ $altdata['trackings'][$key]->receiverName }}</h5>
+                            <h5>&nbsp;Received by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
                                 <li class="list-group-item">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
                                 <li class="list-group-item">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                                 @if($altdata['trackings'][$key]->action == 2)
@@ -86,7 +95,7 @@ ul:first-child{
                                 @endif
                             @endif
                             @if( $altdata['trackings'][$key]->action == 2)
-                            <h5>Forwarded by {{ $altdata['trackings'][$key]->receiverName }}</h5>
+                            <h5>&nbsp;Forwarded by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
                                 <li class="list-group-item">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
                                 <li class="list-group-item">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
                                 <li class="list-group-item">Forwarded from: <p><b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></p></li>
