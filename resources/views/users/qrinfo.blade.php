@@ -19,6 +19,13 @@
 @extends('templates.user')
 @section('content')
 <style>
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
 .section-header {
   justify-content: space-between;
 }
@@ -47,9 +54,8 @@ ul:not(first-child) li{
 
 ul:not(first-child) ul{
     color: black;
-    list-style-type: circle;
+    list-style-type: square;
 }
-
 
 #tracking {
   display: none;
@@ -59,6 +65,20 @@ ul:not(first-child) ul{
   display: block;
 }
 </style>
+<div class="stepper-wrapper">
+    <div class="stepper-item completed">
+      <div class="step-counter">1</div>
+    </div>
+    <div class="stepper-item completed">
+      <div class="step-counter">2</div>
+    </div>
+    <div class="stepper-item active">
+      <div class="step-counter">3</div>
+    </div>
+    <div class="stepper-item">
+      <div class="step-counter">4</div>
+    </div>
+  </div>
     <div class="container-fluid col-lg-4">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
@@ -154,6 +174,7 @@ ul:not(first-child) ul{
 
     <div class="card" style="" id="tracking">
             @foreach($altdata['prev'] as $key => $prev)
+            <span class="float-end dot"></span>
             <ul class="list-group list-group-flush">
             <div class="section-header">
                 <li>
