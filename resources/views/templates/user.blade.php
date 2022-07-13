@@ -116,6 +116,10 @@
   color: white;
 }
 
+.side-navbar ul{
+    background: lightblue;
+}
+
 div.content {
   margin-left: 200px;
   padding: 1px 16px;

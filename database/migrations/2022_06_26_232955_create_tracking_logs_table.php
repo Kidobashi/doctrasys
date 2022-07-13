@@ -23,7 +23,7 @@ return new class extends Migration
             $table->bigInteger('status');
             $table->string('prevReceiver')->nullable();
             $table->string('prevOffice')->nullable();
-            $table->bigInteger('action');
+            $table->bigInteger('action')->nullable();
             $table->timestamps();
         });
     }

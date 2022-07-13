@@ -12,6 +12,7 @@ class Documents extends Model
     protected $table='documents';
 
     protected $fillable = [
+        'id',
         'referenceNo',
         'senderName',
         'receiverName',

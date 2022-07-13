@@ -77,6 +77,10 @@ ul:not(first-child) ul{
                             <hr style="border: 3px solid">
 
                             <h3>Options</h3>
+                            @if($light->action == 3)
+                                <button type="button" class="btn btn-secondary" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
+                                <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                            @endif
                             @if($light->action == 2)
                                 <button type="button" class="btn btn-secondary" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
                                 <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
@@ -91,7 +95,9 @@ ul:not(first-child) ul{
             <h3>Tracking Information</h3>
             <div class="col-xxs-6 col-xs-4" id="latestTrack">
                     <div>
-                        @if( $light->action == 1)
+                        @if ($light->action == 3)
+                            <h5>In Circulation...</h5>
+                        @elseif( $light->action == 1)
                             <h5>&nbsp;Received by <i>{{ $light->receiverName }}</i></h5>
                                 <li class="">Office: <i>{{ $light->officeName }}</i></li>
                                 <li class="">Date Received: <i>{{ date_format($light->created_at,'M d Y h:i A')}}</i></li>
@@ -100,9 +106,10 @@ ul:not(first-child) ul{
                                 @endif
                                 @if($light->action == 1)
                                     <p><li class="">Status: <i>Processing...</i></p>
+                                <a href="#tracking"><button class="btn btn-primary" style="background:white; color:#1B3FAB;">Show Tracking</button></a>
                                 @endif
-                            @endif
-                            @if( $light->action == 2)
+                            {{-- @endif --}}
+                            @elseif( $light->action == 2)
                             <h5>&nbsp;Forwarded by <i>{{ $light->receiverName }}</i></h5>
                                 <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li>
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
@@ -114,10 +121,37 @@ ul:not(first-child) ul{
                                     <p><li class="">Status: <i>Processing...</i></p>
                                 @endif
                                 </li>
+                                <a href="#tracking"><button class="btn btn-primary" style="background:white; color:#1B3FAB;">Show Tracking</button></a>
                             @endif
-                            <a href="#tracking"><button class="btn btn-primary" style="background:white; color:#1B3FAB;">Show Tracking</button></a>
                     </div>
             </div>
+            <div class="justify-content-center">
+                @include('partials.comments')
+                @foreach ($comments as $comment)
+                    <div class="m-3 bg-white p-3 pt-5 rounded shadow">
+                        <div class="d-flex">
+                            <div class="mr-2 d-flex flex-col justify-center">
+                                <div>
+                                    <?php
+                                        $parts = explode(' ', $comment->author);
+                                        $initials = strtoupper($parts[0][0] . $parts[count($parts) - 1][0]);
+                                    ?>
+                                    <span class="bg-gray-300 p-3 rounded-circle"><strong>{{ $initials }}</strong></span>
+                                </div>
+
+                                <div class="d-flex flex-col justify-content-center">
+                                    <p class="mr-2"><strong>&nbsp;&nbsp;{{ $comment->author }}</strong> &nbsp;&nbsp;&nbsp;</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2 ">
+                            <p>{{ $comment->text }}</p>
+                        </div>
+                        <p class="text-gray-600" style="font-family: Helvetica, sans-serif; font-size:13px;position: relative; left: 1px;">{{ $comment->created_at->diffForHumans() }}</p>
+                    </div>
+                @endforeach
+            </div>
+
     <div class="card" style="" id="tracking">
             @foreach($altdata['prev'] as $key => $prev)
             <ul class="list-group list-group-flush">
@@ -167,6 +201,7 @@ ul:not(first-child) ul{
             </div>
         </footer>
     </div>
+    <script id="dsq-count-scr" src="//testcomment-6.disqus.com/count.js" async></script>
     </body>
 </html>
 @endsection

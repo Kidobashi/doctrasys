@@ -24,4 +24,9 @@ class TrackingLogs extends Model
         'prevReceiver',
         'officeName'
     ];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->whereNull('tracking_id');
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Documents;
 use Illuminate\Http\Request;
 use App\Models\Offices;
+use App\Models\TrackingLogs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -76,6 +77,14 @@ class DocumentsController extends Controller
         ]);
 
         Documents::create([
+            'senderName' => $sender,
+            'receiverName' => request('receiverName'),
+            'senderOffice' => request('senderOffice'),
+            'receiverOffice' => request('receiverOffice'),
+            'referenceNo' => $refNo,
+        ]);
+
+        TrackingLogs::create([
             'senderName' => $sender,
             'receiverName' => request('receiverName'),
             'senderOffice' => request('senderOffice'),

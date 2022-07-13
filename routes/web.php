@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetController;
@@ -113,6 +114,8 @@ Route::get('user-documents', [DocumentsController::class, 'index'])->name('docs'
 Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
 Route::post('add-document', [DocumentsController::class, 'store']);
 Route::get('qrinfo/{referenceNo}', [App\Http\Controllers\QrController::class, 'qrInfo']);
+// Route::get('qrinfo/{referenceNo}', [App\Http\Controllers\CommentsController::class, 'showComment']);
+Route::post('qrinfo/{referenceNo}/comment', [App\Http\Controllers\CommentsController::class, 'store']);
 Route::get('forward/{referenceNo}', [QrController::class, 'forward']);
 Route::post('forward/forwarded/{referenceNo}', [QrController::class, 'update']);
 Route::get('receive/{referenceNo}', [QrController::class, 'receive']);

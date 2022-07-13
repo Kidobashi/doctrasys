@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Arr;
+use App\Models\Comments;
 
 class QrController extends Controller
 {
@@ -18,13 +19,17 @@ class QrController extends Controller
     }
 
     public function qrInfo($referenceNo){
+        $id = Documents::where('referenceNo', $referenceNo)->pluck('id')->first();
+
+        $comments = Comments::where('documents_id', $id)->get();
 
         $data = DB::table('documents')
         ->join('offices', 'senderOffice', 'offices.id')
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
         ->first();
 
-        $light = TrackingLogs::where('referenceNo', 'LIKE', "%{$referenceNo}%")->latest()->first();
+        $light = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
+        ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->latest()->first();
 
         $lightPrev = DB::table('tracking_logs')
         ->join('offices', 'prevOffice', 'offices.id')
@@ -47,7 +52,7 @@ class QrController extends Controller
 
         $altdata = array_merge(['prev' => $prev] , ['trackings' => $trackings]);
 
-        return view('users.qrinfo')->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
+        return view('users.qrinfo')->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
     }
 
     public function saveQr(){

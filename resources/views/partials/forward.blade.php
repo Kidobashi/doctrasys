@@ -3,6 +3,7 @@
 @section('content')
 <form action="forwarded/{{ $doc->referenceNo }}" method="post">
     @csrf
+    <div class="col-lg-10 float-end">
     <label for="">Forward to:</label>
         <div class="mb-3">
             <input type="text" class="form-control" name="receiverName" id="name" value="{{ $doc->receiverName }}"aria-label="Name" aria-describedby="name">
@@ -25,5 +26,6 @@
             <input class="form-control "type="text" style="display: none;" name='action' value="2">
         </div>
     <button type="submit">Submit</button>
+    </div>
 </form>
 @endsection

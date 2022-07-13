@@ -1,8 +1,8 @@
 @extends('templates.user')
 @section('content')
-@include('layouts.navbars.auth.nav')
 <form action="received/{{ $doc->referenceNo }}" method="post">
     @csrf
+    <div class="col-lg-10 float-end">
     <H1>Receive</H1>
     <label for="">Received By:</label>
         <div class="mb-3">
@@ -23,8 +23,9 @@
             </select>
 
             <input class="form-control "type="text" style="display: none;" name='action' value="1">
-        </div>
-    <button type="submit">Submit</button>
+            </div>
+        <button type="submit">Submit</button>
+    </div>
 </form>
 @endsection
 
