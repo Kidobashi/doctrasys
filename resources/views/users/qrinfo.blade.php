@@ -19,15 +19,28 @@
 @extends('templates.user')
 @section('content')
 <style>
-.dot {
-  height: 25px;
-  width: 25px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
+.top-arrow {
+    border: 3px solid #22303c;
+    background-color: #D3D3D3;
+    border-radius: 100%;
+	display: inline-block;
+	width: 1.75rem;
+	height: 1.75rem;
+	color: #222;
+	transform: rotate(-135deg);
+    z-index: 10;
+}
+.card ul{
+  border-left: 2px solid gray;
+  padding-left: 50px;
+  padding-top: 0 !important;
 }
 .section-header {
   justify-content: space-between;
+  /* border-left: 2px solid black;
+  position: relative;
+  padding-left: 100px;
+  right: 54px; */
 }
 
 #latestTrack, #latestTrack h5{
@@ -42,43 +55,35 @@
 
 #tracking ul:first-child{
     display: none;
+    z-index: 1;
 }
 ul:first-child h5{
     color: white;
+    z-index: 1;
 }
 
 ul:not(first-child) li{
     color: black;
     list-style-type: none;
+    z-index: 1;
 }
 
 ul:not(first-child) ul{
     color: black;
     list-style-type: square;
+    z-index: 1;
 }
 
 #tracking {
   display: none;
+  z-index: 1;
 }
 
 #tracking:target{
   display: block;
+  z-index: 1;
 }
 </style>
-<div class="stepper-wrapper">
-    <div class="stepper-item completed">
-      <div class="step-counter">1</div>
-    </div>
-    <div class="stepper-item completed">
-      <div class="step-counter">2</div>
-    </div>
-    <div class="stepper-item active">
-      <div class="step-counter">3</div>
-    </div>
-    <div class="stepper-item">
-      <div class="step-counter">4</div>
-    </div>
-  </div>
     <div class="container-fluid col-lg-4">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
@@ -171,15 +176,14 @@ ul:not(first-child) ul{
                     </div>
                 @endforeach
             </div>
-
-    <div class="card" style="" id="tracking">
+    <div class="card" style="border-radius: 0px 6px 6px 0px;" id="tracking">
             @foreach($altdata['prev'] as $key => $prev)
-            <span class="float-end dot"></span>
-            <ul class="list-group list-group-flush">
+            <ul class="unor list-group list-group-flush">
             <div class="section-header">
                 <li>
                 @if( $altdata['trackings'][$key]->action == 1)
-                <h5>&nbsp;Received by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
+                <h5><div class="top-arrow center" style="position:relative; right:65px;">
+                </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
                     <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
                     <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                     @if($altdata['trackings'][$key]->action == 2)
@@ -190,7 +194,8 @@ ul:not(first-child) ul{
                     @endif
                 @endif
                 @if( $altdata['trackings'][$key]->action == 2)
-                <h5>&nbsp;Forwarded by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
+                <h5><div class="top-arrow center" style="position:relative; right:65px;">
+                </div>Forwarded by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
                     <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
                     <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
                     <li class="">Forwarded from: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
@@ -205,7 +210,7 @@ ul:not(first-child) ul{
                     </li>
                 </div>
             </ul>
-            <hr>
+
         @endforeach
         </div>
         <hr>
