@@ -15,7 +15,7 @@
        <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
 </head>
 <body>
-    <a href="{{ url('add-document') }}" style="text-decoration: underline;">Go Back</a>
+    <a href="{{ url('/') }}" style="text-decoration: underline;">Go Back</a>
     <h1 style="position: absolute; top: 43%; right: 40%;">Coming Soon......</h1>
 </body>
 </html>
