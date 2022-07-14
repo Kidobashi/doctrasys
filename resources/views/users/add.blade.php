@@ -1,9 +1,10 @@
 @extends('templates.user')
 @section('content')
-<div class="container-fluid col-lg-4">
+<div class="container-fluid col-lg-6 col-md-4">
         <div class="row">
                 <div class="card">
                     <div class="card-body">
+                        <span class="d-block display-6 text-center"><strong>Create&nbsp;Traceable Document</strong></span>
                         <div class="card-body">
                             <form method="POST" action="/add-document">
                                 @csrf
@@ -45,15 +46,15 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <button type="submit">Submit</button>
+                                        <button class="btn btn-primary shadow" type="submit">Submit</button>
                                     </div>
 
                                 </form>
-                                <label for="">QR Code</label>
+                                {{-- <label for="">QR Code</label>
                                 <button onclick="showQr()">Generate QR</button>
                                 <div id="qr" style="display: none;">
                                     @include('partials.qrcode')
-                                </div>
+                                </div> --}}
 
                             @if(session('message'))
                                 <div class="alert alert-success">{{session('message')}}</div>

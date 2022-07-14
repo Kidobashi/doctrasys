@@ -39,6 +39,10 @@
 
 @include('layouts.navbars.auth.nav')
   <style>
+.content {
+    width: 100%;
+    float: right;
+}
 .my-container {
   transition: 0.4s;
 }
@@ -58,7 +62,7 @@
   position: absolute;
   top:0;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .side-navbar a {
@@ -96,6 +100,10 @@ div.content {
   }
   .side-navbar {float: left;}
   div.content {margin-left: 0;}
+  .content{
+      position: relative;
+      justify-content: center;
+  }
 }
 
 @media screen and (max-width: 400px) {
@@ -106,7 +114,7 @@ div.content {
 }
 </style>
 
-<div class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column" id="sidebar">
+<div class="side-navbar active-nav d-flex justify-content-between" id="sidebar">
     <ul class="nav flex-column text-white w-100">
       <a href="{{ route('dashboard') }}" class="nav-link h3 text-white my-2">
         <span>Document Tracking System</span>
@@ -123,14 +131,14 @@ div.content {
       </li>
       <li href="#" class="nav-link">
         <a class="nav-link {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
-            <span class="mx-2">Add Document</span>
+            <span class="mx-2">Create&nbsp;Document</span>
         </a>
         </a>
       </li>
     </ul>
 </div>
 
-  <div class="content" style="width: 100%; float:right; margin-top:20px;">
+  <div class="content">
         @yield('content')
   </div>
 
@@ -143,6 +151,7 @@ div.content {
       container.classList.toggle("active-cont");
     });
   </script>
+  @include('layouts.footers.auth.footer')
 </body>
 
 </html>
