@@ -1,23 +1,8 @@
-{{-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <!--     Fonts and icons     -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <!-- Nucleo Icons -->
-    <!-- Font Awesome Icons -->
-    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-    <!-- CSS Files -->
-    <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
-    <title>Document</title>
-</head>
-<body> --}}
 @extends('templates.user')
 @section('content')
+<head>
+    <title>Tracking Information</title>
+</head>
 <style>
 .top-arrow {
     border: 3px solid #22303c;
@@ -34,6 +19,10 @@
   border-left: 2px solid gray;
   padding-left: 50px;
   padding-top: 0 !important;
+}
+
+.card ul:last-child {
+    border-width: 0;
 }
 .section-header {
   justify-content: space-between;

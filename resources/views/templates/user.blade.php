@@ -121,7 +121,7 @@ div.content {
       </a>
       <li href="#" class="nav-link">
         <a class="nav-link {{ (Request::is('user-documents') ? 'active' : '') }}" href="{{ url('user-documents') }}">
-            <span class="mx-2">Dashboard</span>
+            <span class="mx-2">Tracking</span>
         </a>
       </li>
       <li href="#" class="nav-link">

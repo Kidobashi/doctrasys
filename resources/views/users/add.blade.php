@@ -1,5 +1,8 @@
 @extends('templates.user')
 @section('content')
+<head>
+    <title>Create Traceable Document</title>
+</head>
 <div class="container-fluid col-lg-6 col-md-4">
         <div class="row">
                 <div class="card">
