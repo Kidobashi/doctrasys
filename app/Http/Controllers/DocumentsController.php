@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\PDF as DomPDFPDF;
+use Dompdf\Dompdf;
 
 class DocumentsController extends Controller
 {
@@ -55,7 +57,7 @@ class DocumentsController extends Controller
     public function store(Request $request)
     {
         //
-        $sender = Auth::user()->email;
+        // $sender = Auth::user()->email;
 
         $last = DB::table('documents')->latest('id')->first();
 
@@ -68,7 +70,7 @@ class DocumentsController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::format('png')->size('50')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
+        $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
 
         $request->validate([
             'senderName' => 'required',
@@ -78,7 +80,7 @@ class DocumentsController extends Controller
         ]);
 
         Documents::create([
-            'senderName' => $sender,
+            'senderName' => request('senderName'),
             'receiverName' => request('receiverName'),
             'senderOffice' => request('senderOffice'),
             'receiverOffice' => request('receiverOffice'),
@@ -86,7 +88,7 @@ class DocumentsController extends Controller
         ]);
 
         TrackingLogs::create([
-            'senderName' => $sender,
+            'senderName' => request('senderName'),
             'receiverName' => request('receiverName'),
             'senderOffice' => request('senderOffice'),
             'receiverOffice' => request('receiverOffice'),
@@ -143,9 +145,20 @@ class DocumentsController extends Controller
 
     public function fileGenerator()
     {
+        $last = DB::table('documents')->latest('id')->first();
+        $identity = $last->id;
+        $number = sprintf('%04d', $identity);
+        $prefix = date('Ymd');
+        // $prefix = strval(strftime("%Y%m%d"));
+        $month = strval(strftime("%M"));
+        $day = strval(strftime("%D"));
+        $stringVal = strval($number);
+        $refNo = "$prefix$stringVal";
+
         $pdf = PDF::loadView('users.testpdf')->setOptions(['defaultFont' => 'sans-serif']);
 
-        return $pdf->download('laratutorials.pdf');
+        // return Pdf->loadHtml($html);
+        return $pdf->download('doc_qr_'.$refNo.'.pdf');
         // return $pdf->stream();
     }
 }

@@ -100,7 +100,7 @@ Route::get('/coming', function () {
     return view('unused.coming');
 });
 
-Route::get('test', [DocumentsController::class, 'fileGenerator']);
+
 // Route::get('test', [QrController::class, 'generateQr'])->name('qr');
 Route::get('/user-profile', [ProfileController::class, 'create']);
 Route::post('/user-profile', [ProfileController::class, 'store']);
@@ -108,8 +108,9 @@ Route::get('user-management', [UserController::class, 'index'])->name('user');
 Route::get('user-documents', [DocumentsController::class, 'index'])->name('docs');
 Route::get('user-documents', [SearchController::class, 'search']);
 Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
+Route::get('add-document', [DocumentsController::class, 'fileGenerator']);
 Route::post('add-document', [DocumentsController::class, 'store']);
-Route::get('qrinfo/{referenceNo}', [App\Http\Controllers\QrController::class, 'qrInfo']);
+Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo']);
 // Route::get('qrinfo/{referenceNo}', [App\Http\Controllers\CommentsController::class, 'showComment']);
 Route::post('qrinfo/{referenceNo}/comment', [App\Http\Controllers\CommentsController::class, 'store']);
 Route::get('forward/{referenceNo}', [QrController::class, 'forward']);

@@ -13,7 +13,7 @@ class QrComposer
     {
         $last = DB::table('documents')->latest('id')->first();
 
-        $identity = $last->id + 1;
+        $identity = $last->id;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
         // $prefix = strval(strftime("%Y%m%d"));
@@ -22,7 +22,7 @@ class QrComposer
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo));
+        $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$refNo));
         $qr = base64_encode($qr);
 
         $view->with('qr', $qr);

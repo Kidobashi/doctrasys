@@ -84,9 +84,9 @@ ul:not(first-child) ul{
 
                             <h5>From Office: {{$data->officeName}}</h5>
 
-                            <div class="col-xxs-6">
+                            {{-- <div class="col-xxs-6">
                                 <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag">
-                            </div>
+                            </div> --}}
 
                             <hr style="border: 3px solid">
 

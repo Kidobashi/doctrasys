@@ -58,7 +58,7 @@ class QrController extends Controller
     public function saveQr(){
         $last = DB::table('documents')->latest('id')->first();
 
-        $identity = $last->id + 1;
+        $identity = $last->id;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
         // $prefix = strval(strftime("%Y%m%d"));
@@ -67,7 +67,7 @@ class QrController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::size(50)->generate(url($refNo),);
+        $qr = QrCode::size(200)->generate(url($refNo),);
 
         return view('users.add');
     }
