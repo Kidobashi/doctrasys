@@ -53,11 +53,11 @@
                                     </div>
 
                                 </form>
-                                {{-- <label for="">QR Code</label>
+                                <label for="">QR Code</label>
                                 <button onclick="showQr()">Generate QR</button>
-                                <div id="qr" style="display: none;">
+                                <div id="qr">
                                     @include('partials.qrcode')
-                                </div> --}}
+                                </div>
 
                             @if(session('message'))
                                 <div class="alert alert-success">{{session('message')}}</div>

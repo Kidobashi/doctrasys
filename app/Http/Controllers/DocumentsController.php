@@ -9,6 +9,7 @@ use App\Models\TrackingLogs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DocumentsController extends Controller
 {
@@ -67,7 +68,7 @@ class DocumentsController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
+        $qr = QrCode::format('png')->size('50')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
 
         $request->validate([
             'senderName' => 'required',
@@ -138,5 +139,13 @@ class DocumentsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function fileGenerator()
+    {
+        $pdf = PDF::loadView('users.testpdf')->setOptions(['defaultFont' => 'sans-serif']);
+
+        return $pdf->download('laratutorials.pdf');
+        // return $pdf->stream();
     }
 }

@@ -98,7 +98,7 @@ button {
     <a class="bg-white w-20 border" style="border: 1px solid black; text-align: center;" href="http://127.0.0.1:8000/qrinfo/{{ $data->referenceNo }}"><div>
         {{ $data->referenceNo }}</div></a>
     @else
-    <p class="display-4">Search 'Document' with reference number...</td></p>
+    <p class="display-4">Track 'Document' with reference number...</td></p>
     @endif
 </div>
 @if(Session::has('message'))

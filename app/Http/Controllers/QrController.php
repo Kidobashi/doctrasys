@@ -67,7 +67,7 @@ class QrController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::size(100)->generate(url($refNo),);
+        $qr = QrCode::size(50)->generate(url($refNo),);
 
         return view('users.add');
     }
@@ -140,4 +140,5 @@ class QrController extends Controller
 
         return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');
     }
+
 }

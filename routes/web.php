@@ -90,24 +90,18 @@ Route::group(['middleware' => 'guest'], function () {
 
 });
 
+Route::get('/', [HomeController::class, 'home']);
+
 Route::get('/login', function () {
     return view('session/login-session');
 })->name('login');
 
-
-// Route::get('/test1', function () {
-//     return view('users.index');
-// });
-
-
-// Route::get('/forward', function () {
-//     return view('partials.forward');
-// });
 Route::get('/coming', function () {
     return view('unused.coming');
 });
 
-Route::get('test', [QrController::class, 'generateQr'])->name('qr');
+Route::get('test', [DocumentsController::class, 'fileGenerator']);
+// Route::get('test', [QrController::class, 'generateQr'])->name('qr');
 Route::get('/user-profile', [ProfileController::class, 'create']);
 Route::post('/user-profile', [ProfileController::class, 'store']);
 Route::get('user-management', [UserController::class, 'index'])->name('user');
