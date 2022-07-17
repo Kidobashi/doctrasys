@@ -108,7 +108,7 @@ Route::get('user-management', [UserController::class, 'index'])->name('user');
 Route::get('user-documents', [DocumentsController::class, 'index'])->name('docs');
 Route::get('user-documents', [SearchController::class, 'search']);
 Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
-Route::get('download', [DocumentsController::class, 'fileGenerator']);
+Route::get('download/{token}', [DocumentsController::class, 'fileGenerator'])->name('download');
 Route::post('add-documents', [DocumentsController::class, 'store']);
 Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo']);
 // Route::get('qrinfo/{referenceNo}', [App\Http\Controllers\CommentsController::class, 'showComment']);

@@ -38,7 +38,18 @@ class DocumentsController extends Controller
         //
         $offices = Offices::all();
 
-        return view('users.add')->with('offices', $offices);
+        $last = DB::table('documents')->latest('id')->first();
+
+        $identity = $last->id + 1;
+        $number = sprintf('%04d', $identity);
+        $prefix = date('Ymd');
+        // $prefix = strval(strftime("%Y%m%d"));
+        $month = strval(strftime("%M"));
+        $day = strval(strftime("%D"));
+        $stringVal = strval($number);
+        $refNo = "$prefix$stringVal";
+
+        return view('users.add')->with('offices', $offices)->with('refNo', $refNo);
     }
 
     public function create()
@@ -143,7 +154,7 @@ class DocumentsController extends Controller
         //
     }
 
-    public function fileGenerator()
+    public function fileGenerator($token)
     {
         $last = DB::table('documents')->latest('id')->first();
         $identity = $last->id + 1;

@@ -48,6 +48,7 @@
                                             @endforeach
                                         </select>
                                     </div>
+
                                     <div class="btn-toolbar">
                                         <button onclick="downloadQr()" class="btn btn-primary shadow" type="submit">Submit</button>
                                         {{-- <div id="qr" style="display:none;">
@@ -80,9 +81,9 @@ function showQr() {
     x.style.display = "block";
   }
 }
-
+// 'http://127.0.0.1:8000/download'
 function downloadQr() {
-    window.open('http://127.0.0.1:8000/download');
+    window.open('http://127.0.0.1:8000/download/'+{{ $refNo }});
     alert('Document is being downloaded...');
 }
 </script>
