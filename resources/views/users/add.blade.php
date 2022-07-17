@@ -3,13 +3,13 @@
 <head>
     <title>Create Traceable Document</title>
 </head>
-<div class="container-fluid col-lg-6 col-md-4">
+<div class="container-fluid col-lg-6 col-md-6">
         <div class="row">
                 <div class="card">
                     <div class="card-body">
                         <span class="d-block display-6 text-center"><strong>Create&nbsp;Traceable Document</strong></span>
                         <div class="card-body">
-                            <form method="POST" action="/add-document">
+                            <form method="POST" action="/add-documents">
                                 @csrf
                                     <label for="">Sender Name</label>
                                     <div class="mb-3">
@@ -48,10 +48,12 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div>
-                                        <button class="btn btn-primary shadow" type="submit">Submit</button>
+                                    <div class="btn-toolbar">
+                                        <button onclick="downloadQr()" class="btn btn-primary shadow" type="submit">Submit</button>
+                                        {{-- <div id="qr" style="display:none;">
+                                            <a  href="http://127.0.0.1:8000/download">Download</a>
+                                        </div> --}}
                                     </div>
-
                                 </form>
                                 {{-- <label for="">QR Code</label>
                                 <button onclick="showQr()">Generate QR</button>
@@ -60,7 +62,7 @@
                                 </div> --}}
 
                             @if(session('message'))
-                                <div class="alert alert-success">{{session('message')}}</div>
+                                <div class="alert alert-success"><strong>{{session('message')}}</strong></div>
                             @endif
                             </div>
                         </div>
@@ -77,6 +79,11 @@ function showQr() {
   } else {
     x.style.display = "block";
   }
+}
+
+function downloadQr() {
+    window.open('http://127.0.0.1:8000/download');
+    alert('Document is being downloaded...');
 }
 </script>
 @endsection

@@ -146,7 +146,7 @@ class DocumentsController extends Controller
     public function fileGenerator()
     {
         $last = DB::table('documents')->latest('id')->first();
-        $identity = $last->id;
+        $identity = $last->id + 1;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
         // $prefix = strval(strftime("%Y%m%d"));

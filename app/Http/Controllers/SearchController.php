@@ -18,9 +18,11 @@ class SearchController extends Controller
     public function search(Request $request){
         $search = $request['search'];
         $data = Documents::where('referenceNo', $search)->first();
+        // $data = "Input Reference Number";
 
         if($data === null){
-            return view('users.index')->with(Session::flash('message', 'Document does not exist'));
+            // return Redirect::to("/")->withFail('Error message');
+            return view('users.index')->with(Session::flash('message', 'No results found'));
         }
         else{
             return view('users.index')->with('data', $data);

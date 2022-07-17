@@ -25,6 +25,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Biryani&family=Raleway:wght@600&display=swap" rel="stylesheet">
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Nucleo Icons -->
@@ -39,6 +42,10 @@
 
 @include('layouts.navbars.auth.nav')
   <style>
+    *{
+        font-family: 'Biryani', sans-serif;
+font-family: 'Raleway', sans-serif;
+    }
 .content {
     width: 100%;
     float: right;
@@ -67,7 +74,7 @@
 
 .side-navbar a {
   display: block;
-  color: black;
+  color: white;
   padding: 16px;
   text-decoration: none;
 }
@@ -83,7 +90,7 @@
 }
 
 .side-navbar ul{
-    background: lightblue;
+    background: #04426E;
 }
 
 div.content {
@@ -124,11 +131,11 @@ div.content {
             <span class="mx-2">Tracking</span>
         </a>
       </li>
-      <li href="#" class="nav-link">
+      {{-- <li href="#" class="nav-link">
         <a class="nav-link" href="{{ url('coming') }}">
             <span class="mx-2">Profile</span>
         </a>
-      </li>
+      </li> --}}
       <li href="#" class="nav-link">
         <a class="nav-link {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
             <span class="mx-2">Create&nbsp;Document</span>

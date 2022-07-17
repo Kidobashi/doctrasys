@@ -5,6 +5,8 @@
 </head>
 <style>
 .top-arrow {
+    position: relative;
+    right: 65px;
     border: 3px solid #22303c;
     background-color: #D3D3D3;
     border-radius: 100%;
@@ -34,7 +36,7 @@
 
 #latestTrack, #latestTrack h5{
     color: white;
-    background:#1B3FAB;
+    background: #04426E;
     padding-bottom: 15px;
     border-radius: 20px;
     padding: 10px;
@@ -72,11 +74,29 @@ ul:not(first-child) ul{
   display: block;
   z-index: 1;
 }
+
+@media screen and (max-width: 700px) {
+  #latestTrack li{
+    font-size: 14px;
+  }
+  .section-header h5{
+      font-size: 20px;
+  }
+    #tracking li{
+      font-size: 14px;
+  }
+  .top-arrow {
+    /* position: relative; */
+    right: 63px;
+	width: 1.45rem;
+	height: 1.45rem;
+    }
+}
 </style>
     <div class="container-fluid col-lg-4">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
-                <h4 class="card-title">Document Details</h4>
+                <h4 class="card-title" style="margin-top: 10px;">Document Details</h4>
                             <hr>
                         <div class="d-flex flex-column" style="display: flex; align-items: center; justify-content: center;">
                             <h5>Reference No.: {{$data->referenceNo}}</h5>
@@ -88,20 +108,26 @@ ul:not(first-child) ul{
                                 <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag">
                             </div> --}}
 
-                            <hr style="border: 3px solid">
+                            {{-- <hr style="border: 3px solid"> --}}
 
                             <h3>Options</h3>
                             @if($light->action == 3)
-                                <button type="button" class="btn btn-secondary" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
                                 <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                            </div>
                             @endif
                             @if($light->action == 2)
-                                <button type="button" class="btn btn-secondary" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-secondary"  style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
                                 <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                            </div>
                             @endif
                             @if($light->action == 1)
-                                <button type="button" class="btn btn-primary"><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
-                                <button type="button" class="btn btn-secondary" disabled><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-secondary"  style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
+                                <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                            </div>
                             @endif
                         </div>
             </div>
@@ -120,7 +146,7 @@ ul:not(first-child) ul{
                                 @endif
                                 @if($light->action == 1)
                                     <p><li class="">Status: <i>Processing...</i></p>
-                                <a href="#tracking"><button class="btn btn-primary" style="background:white; color:#1B3FAB;">Show Tracking</button></a>
+                                <a href="#tracking"><button class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button></a>
                                 @endif
                             {{-- @endif --}}
                             @elseif( $light->action == 2)
@@ -135,7 +161,7 @@ ul:not(first-child) ul{
                                     <p><li class="">Status: <i>Processing...</i></p>
                                 @endif
                                 </li>
-                                <a href="#tracking"><button class="btn btn-primary" style="background:white; color:#1B3FAB;">Show Tracking</button></a>
+                                <a href="#tracking"><button class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button></a>
                             @endif
                     </div>
             </div>
@@ -165,13 +191,13 @@ ul:not(first-child) ul{
                     </div>
                 @endforeach
             </div>
-    <div class="card" style="border-radius: 0px 6px 6px 0px;" id="tracking">
+    <div class="mt-4 card" style="border-radius: 0px 6px 6px 0px;" id="tracking">
             @foreach($altdata['prev'] as $key => $prev)
             <ul class="unor list-group list-group-flush">
             <div class="section-header">
                 <li>
                 @if( $altdata['trackings'][$key]->action == 1)
-                <h5><div class="top-arrow center" style="position:relative; right:65px;">
+                <h5><div class="top-arrow center">
                 </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
                     <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
                     <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
@@ -183,7 +209,7 @@ ul:not(first-child) ul{
                     @endif
                 @endif
                 @if( $altdata['trackings'][$key]->action == 2)
-                <h5><div class="top-arrow center" style="position:relative; right:65px;">
+                <h5><div class="top-arrow center">
                 </div>Forwarded by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
                     <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
                     <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
