@@ -40,7 +40,7 @@
 
 <body>
 
-@include('layouts.navbars.auth.nav')
+{{-- @include('layouts.navbars.auth.nav') --}}
   <style>
     *{
         font-family: 'Biryani', sans-serif;

@@ -8,7 +8,7 @@
     position: relative;
     right: 65px;
     border: 3px solid #22303c;
-    background-color: #D3D3D3;
+    background-color: #adefd1ff;
     border-radius: 100%;
 	display: inline-block;
 	width: 1.75rem;
@@ -119,14 +119,14 @@ ul:not(first-child) ul{
                             @endif
                             @if($light->action == 2)
                             <div class="d-flex">
-                                <button type="button" class="btn btn-secondary"  style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
+                                {{-- <button type="button" class="btn btn-secondary"  style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button> --}}
                                 <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
                             </div>
                             @endif
                             @if($light->action == 1)
                             <div class="d-flex">
-                                <button type="button" class="btn btn-secondary"  style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
-                                <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                                <button type="button" class="btn btn-success"><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
+                                {{-- <button type="button" class="btn btn-success" disabled><a href="{{ url('receive/'.$data->referenceNo) }}" disabled>Receive</a></button> --}}
                             </div>
                             @endif
                         </div>
@@ -166,6 +166,7 @@ ul:not(first-child) ul{
                     </div>
             </div>
             <div class="justify-content-center">
+                <hr>
                 @include('partials.comments')
                 @foreach ($comments as $comment)
                     <div class="m-3 bg-white p-3 pt-5 rounded shadow">
@@ -191,7 +192,8 @@ ul:not(first-child) ul{
                     </div>
                 @endforeach
             </div>
-    <div class="mt-4 card" style="border-radius: 0px 6px 6px 0px;" id="tracking">
+            <hr>
+    <div class="card" style="border-radius: 0px 6px 6px 0px;" id="tracking">
             @foreach($altdata['prev'] as $key => $prev)
             <ul class="unor list-group list-group-flush">
             <div class="section-header">
