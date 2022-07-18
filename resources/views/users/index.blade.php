@@ -47,6 +47,10 @@ button {
 }
 
 @media screen and (max-width: 950px) {
+.display-4 {
+    font-size: 28px;
+    justify-content: center;
+}
 input {
     width: 100%;
     position: relative;
@@ -93,12 +97,20 @@ button {
         <button type="submit">Track Document</button>
     </form>
 </div>
+
 <div class="d-flex mt-6 justify-content-center">
     @if(isset($data->referenceNo))
-    <a class="bg-white w-20 border" style="border: 1px solid black; text-align: center;" href="http://127.0.0.1:8000/qrinfo/{{ $data->referenceNo }}"><div>
-        {{ $data->referenceNo }}</div></a>
+    <a class="bg-white w-60 border m-2 p-2" href="http://127.0.0.1:8000/qrinfo/{{ $data->referenceNo }}">
+    <div>
+        <h3>Reference Number : {{ $data->referenceNo }}</h3>
+        <div class="d-flex justify-content-end">
+            <p class="details">{{ date_format($data->created_at,'M d Y h:i a') }}</p>
+        </div>
+    </div></a>
+    @elseif (Request::is('index'))
+        <p class="display-4">Track 'Document' with reference number...</p>
     @else
-    <p class="display-4">Track 'Document' with reference number...</td></p>
+    <p class="display-4">No 'results' found</td></p>
     @endif
 </div>
 @if(Session::has('message'))

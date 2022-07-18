@@ -107,6 +107,10 @@ div.content {
   }
   .side-navbar {float: left;}
   div.content {margin-left: 0;}
+
+  .display-4{
+      font-size: 28px;
+  }
   .content{
       position: relative;
       justify-content: center;
@@ -114,6 +118,73 @@ div.content {
 }
 
 @media screen and (max-width: 400px) {
+  .side-navbar a {
+    text-align: center;
+    float: none;
+  }
+  
+}
+@media screen and (max-width: 950px) {
+    .side-navbar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .side-navbar {float: left;}
+  div.content {margin-left: 0;}
+  .content{
+      position: relative;
+      justify-content: center;
+  }
+
+  .display-4{
+      font-size: 28px;
+  }
+
+  .side-navbar a {
+    text-align: center;
+    float: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+    .side-navbar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .side-navbar {float: left;}
+  div.content {margin-left: 0;}
+  .content{
+      position: relative;
+      justify-content: center;
+  }
+  .display-4{
+      font-size: 24px;
+  }
+
+  .side-navbar a {
+    text-align: center;
+    float: none;
+  }
+}
+
+@media screen and (max-width: 1500px) {
+    .side-navbar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .side-navbar {float: left;}
+  div.content {margin-left: 0;}
+  .content{
+      position: relative;
+      justify-content: center;
+  }
+  .display-4{
+      font-size: 24px;
+  }
+
   .side-navbar a {
     text-align: center;
     float: none;
@@ -127,7 +198,7 @@ div.content {
         <span>Document Tracking System</span>
       </a>
       <li href="#" class="nav-link">
-        <a class="nav-link {{ (Request::is('user-documents') ? 'active' : '') }}" href="{{ url('user-documents') }}">
+        <a class="nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
             <span class="mx-2">Tracking</span>
         </a>
       </li>

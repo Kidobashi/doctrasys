@@ -20,14 +20,14 @@ class SearchController extends Controller
         $data = Documents::where('referenceNo', $search)->first();
         // $data = "Input Reference Number";
 
-        if($data === null){
-            // return Redirect::to("/")->withFail('Error message');
-            return view('users.index')->with(Session::flash('message', 'No results found'));
-        }
-        else{
-            return view('users.index')->with('data', $data);
-        }
+        // if($data === null){
+        //     // return Redirect::to("/")->withFail('Error message');
+        //     return view('users.index')->with(Session::flash('message', 'No results found'));
+        // }
+        // else{
+        //     return view('users.index')->with('data', $data);
+        // }
 
-        // return view('users.index')->with('data', $data);
+        return view('users.index')->with('data', $data);
     }
 }

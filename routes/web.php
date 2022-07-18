@@ -105,8 +105,8 @@ Route::get('/coming', function () {
 Route::get('/user-profile', [ProfileController::class, 'create']);
 Route::post('/user-profile', [ProfileController::class, 'store']);
 Route::get('user-management', [UserController::class, 'index'])->name('user');
-Route::get('user-documents', [DocumentsController::class, 'index'])->name('docs');
-Route::get('user-documents', [SearchController::class, 'search']);
+Route::get('index', [DocumentsController::class, 'index'])->name('docs');
+Route::get('index', [SearchController::class, 'search']);
 Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
 Route::get('download/{token}', [DocumentsController::class, 'fileGenerator'])->name('download');
 Route::post('add-documents', [DocumentsController::class, 'store']);

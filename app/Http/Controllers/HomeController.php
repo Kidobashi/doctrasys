@@ -8,6 +8,6 @@ class HomeController extends Controller
 {
     public function home()
     {
-        return redirect('user-documents');
+        return redirect('index');
     }
 }
