@@ -25,6 +25,6 @@ class QrComposer
         $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$refNo));
         $qr = base64_encode($qr);
 
-        $view->with('qr', $qr);
+        $view->with('qr', $qr)->with('refNo', $refNo);
     }
 }
