@@ -50,17 +50,16 @@
                                     </div>
 
                                     <div class="btn-toolbar">
-                                        <button onclick="downloadQr()" class="btn btn-primary shadow" type="submit">Submit</button>
-                                        {{-- <div id="qr" style="display:none;">
-                                            <a  href="http://127.0.0.1:8000/download">Download</a>
-                                        </div> --}}
+                                        <button onclick="showQr()" class="btn btn-primary shadow" type="submit">Submit</button>
                                     </div>
                                 </form>
+
+                                <button id="dl-png" style="display: none;" >Download QR</button>
                                 {{-- <label for="">QR Code</label>
-                                <button onclick="showQr()">Generate QR</button>
-                                <div id="qr">
+                                <button onclick="showQr()">Generate QR</button> --}}
+                                <div id="qr" style="display: none; position: absolute;">
                                     @include('partials.qrcode')
-                                </div> --}}
+                                </div>
 
                             @if(session('message'))
                                 <div class="alert alert-success"><strong>{{session('message')}}</strong></div>
@@ -71,14 +70,33 @@
                 </div>
             </div>
         </div>
+{{-- <script src="../../../public/js/html2canva.js"></script> --}}
+<script type="text/javascript" src="{{URL::asset('assets/js/html2canva.min.js')}}"></script>
+<script src="../public/assets/js/html2canva.min.js"></script>
+<script>
+    document.getElementById("dl-png").onclick = function() {
+        const screenshotTarget = document.getElementById("qr");
 
+        html2canvas(screenshotTarget).then((canvas) => {
+            const base64image = canvas.toDataURL("image/png");
+            var anchor = document.createElement('a');
+            anchor.setAttribute("href", base64image);
+            anchor.setAttribute("download", "qrcode.png");
+            anchor.click();
+            anchor.remove();
+        });
+    };
+</script>
 <script>
 function showQr() {
   var x = document.getElementById("qr");
+  var y = document.getElementById("dl-png");
   if (x.style.display === "block") {
     x.style.display = "none";
+    y.style.display = "none";
   } else {
     x.style.display = "block";
+    y.style.display = "none";
   }
 }
 // 'http://127.0.0.1:8000/download'

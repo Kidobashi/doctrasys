@@ -81,7 +81,7 @@ class DocumentsController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        // $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
+        $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
 
         $request->validate([
             'senderName' => 'required',
@@ -168,8 +168,6 @@ class DocumentsController extends Controller
 
         $pdf = PDF::loadView('users.testpdf')->setOptions(['defaultFont' => 'sans-serif']);
 
-        // return Pdf->loadHtml($html);
         return $pdf->download('doc_qr_'.$refNo.'.pdf');
-        // return $pdf->stream();
     }
 }
