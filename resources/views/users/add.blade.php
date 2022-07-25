@@ -3,7 +3,13 @@
 <head>
     <title>Create Traceable Document</title>
 </head>
-@include('layouts.navbars.auth.nav')
+<style>
+    .container-fluid{
+        position: relative;
+        top: 120px;
+        height: 100%;
+    }
+</style>
 <div class="container-fluid col-lg-6 col-md-6">
         <div class="row">
                 <div class="card">

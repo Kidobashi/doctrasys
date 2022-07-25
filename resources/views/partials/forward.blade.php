@@ -1,9 +1,16 @@
 
 @extends('templates.user')
 @section('content')
+<style>
+.container {
+    position: relative;
+        top: 120px;
+        height: 100%;
+}
+</style>
 <form action="forwarded/{{ $doc->referenceNo }}" method="post">
     @csrf
-    <div class="col-lg-10 float-end">
+    <div class="container col-lg-10">
     <label for="">Forward to:</label>
         <div class="mb-3">
             <input type="text" class="form-control" name="receiverName" id="name" value="{{ $doc->receiverName }}"aria-label="Name" aria-describedby="name">

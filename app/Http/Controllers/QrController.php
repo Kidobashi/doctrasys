@@ -22,7 +22,7 @@ class QrController extends Controller
     public function qrInfo($referenceNo){
         $id = Documents::where('referenceNo', $referenceNo)->pluck('id')->first();
 
-        $comments = Comments::where('documents_id', $id)->get();
+        $comments = Comments::where('documents_id', $id)->orderBy('created_at', 'DESC')->get();
 
         $data = DB::table('documents')
         ->join('offices', 'senderOffice', 'offices.id')

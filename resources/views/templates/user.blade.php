@@ -25,6 +25,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani&family=Raleway:wght@600&display=swap" rel="stylesheet">
@@ -62,20 +63,19 @@ font-family: 'Raleway', sans-serif;
 }
 
 .side-navbar {
+position: fixed;
   margin: 0;
   padding: 0;
-  width: 200px;
+  width: 100%;
   background-color: #f1f1f1;
-  position: absolute;
-  top:0;
-  height: 100%;
   overflow: hidden;
+  z-index: 99;
 }
 
 .side-navbar a {
   display: block;
   color: white;
-  padding: 16px;
+  padding: 20px;
   text-decoration: none;
 }
 
@@ -193,7 +193,7 @@ div.content {
 </style>
 
 <div class="side-navbar active-nav d-flex justify-content-between" id="sidebar">
-    <ul class="nav flex-column text-white w-100">
+    <ul class="nav text-white w-100">
       <a href="{{ route('dashboard') }}" class="nav-link h3 text-white my-2">
         <span>Document Tracking System</span>
       </a>
@@ -215,6 +215,22 @@ div.content {
         </a>
       </li>
       @endauth
+      @guest
+            <li class="nav-link" style="position: absolute; right: 0; padding-right: 25px;">
+                <a href="{{ url('/login')}}" class="nav-link text-body font-weight-bold px-0">
+                <i class="fa fa-user me-sm-1"></i>
+                <span class="d-sm-inline d-none text-white">Login</span>
+                </a>
+            </li>
+        @endguest
+        @auth
+        <li class="nav-link" style="position: absolute; right: 0; padding-right: 25px;">
+            <a href="{{ url('/logout')}}" class="nav-link text-body font-weight-bold px-0">
+                <i class="fa fa-user me-sm-1 white"></i>
+                <span class="d-sm-inline d-none text-white">Sign Out</span>
+            </a>
+        </li>
+        @endauth
     </ul>
 </div>
 
@@ -231,7 +247,7 @@ div.content {
       container.classList.toggle("active-cont");
     });
   </script>
-  @include('layouts.footers.auth.footer')
+  {{-- @include('layouts.footers.auth.footer') --}}
 </body>
 
 </html>

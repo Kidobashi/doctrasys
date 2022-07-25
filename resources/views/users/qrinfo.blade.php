@@ -4,6 +4,11 @@
     <title>Tracking Information</title>
 </head>
 <style>
+ .container-fluid{
+        position: relative;
+        top: 120px;
+        height: 100%;
+    }
 .top-arrow {
     position: relative;
     right: 65px;
@@ -93,8 +98,7 @@ ul:not(first-child) ul{
     }
 }
 </style>
-@include('layouts.navbars.auth.nav')
-    <div class="container-fluid col-lg-4">
+    <div class="container-fluid col-lg-6">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
                 <h4 class="card-title" style="margin-top: 10px;">Document Details</h4>
@@ -128,15 +132,6 @@ ul:not(first-child) ul{
                                         </div>
                                         <div class="mb-3">
                                             <input type="text" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}">
-                                            {{-- <label for="">Office <i class="baseline-record_voice_over"></i></label>
-                                            <label for="">Forward Office</label>
-                                            <select class="form-control" id="assignedOffice" name="receiverOffice">
-                                                <option value="" selected disabled>Select Office
-                                                    @foreach ($offices as $row)
-                                                    <option value="{{ $row->id }}">{{ $row->officeName }}</option>
-                                                </option>
-                                                @endforeach
-                                            </select> --}}
 
                                             <input class="form-control "type="text" style="display: none;" name='action' value="1">
                                             </div>
@@ -162,15 +157,6 @@ ul:not(first-child) ul{
                                         </div>
                                         <div class="mb-3">
                                             <input type="text" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}">
-                                            {{-- <label for="">Office <i class="baseline-record_voice_over"></i></label>
-                                            <label for="">Forward Office</label>
-                                            <select class="form-control" id="assignedOffice" name="receiverOffice">
-                                                <option value="" selected disabled>Select Office
-                                                    @foreach ($offices as $row)
-                                                    <option value="{{ $row->id }}">{{ $row->officeName }}</option>
-                                                </option>
-                                                @endforeach
-                                            </select> --}}
 
                                             <input class="form-control "type="text" style="display: none;" name='action' value="1">
                                             </div>
@@ -195,8 +181,8 @@ ul:not(first-child) ul{
                         @if ($light->action == 3)
                             <h5>In Circulation...</h5>
                         @elseif( $light->action == 1)
-                            <h5>&nbsp;Received by <i>{{ $light->receiverName }}</i></h5>
-                                <li class="">Office: <i>{{ $light->officeName }}</i></li>
+                            <h5>&nbsp;Received by <i>{{ $light->receiverName }}&nbsp;-&nbsp;<i>{{ $light->officeName }}</i></h5>
+                                {{-- <li class="">Office: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Received: <i>{{ date_format($light->created_at,'M d Y h:i A')}}</i></li>
                                 @if($light->action == 2)
                                 <p><li class="">Status: <i>In Circulation</i></p>
@@ -226,39 +212,37 @@ ul:not(first-child) ul{
                 <hr>
                 @include('partials.comments')
                 @foreach ($comments as $comment)
-                    <div class="m-3 bg-white p-3 pt-5 rounded shadow">
+                    <div class="m-1 bg-white p-2">
                         <div class="d-flex">
-                            <div class="mr-2 d-flex flex-col justify-center">
+                            <div class="m-1 d-flex flex-col justify-center">
                                 <div>
                                     <?php
-                                        $parts = explode(' ', Auth::user()->name);
+                                        $parts = explode(' ', $comment->author);
                                         $initials = strtoupper($parts[0][0] . $parts[count($parts) - 1][0]);
                                     ?>
-                                    <span class="bg-gray-300 p-3 rounded-circle"><strong>{{ $initials }}</strong></span>
-                                </div>
-
-                                <div class="d-flex flex-col justify-content-center">
-                                    <p class="mr-2"><strong>&nbsp;&nbsp;{{  Auth::user()->name  }}</strong> &nbsp;&nbsp;&nbsp;</p>
+                                    <span class="bg-gray-200 rounded-circle"><strong>{{ $initials }}</strong></span>
+                                    <span class="mr-1 text-black-200" style="position:relative; right: 0px;">{{  $comment->author   }}</span>
                                 </div>
                             </div>
+                            <div class="d-flex float-end" style="position: absolute; right:0;">
+                                <span class="text-black-200" style="font-family: Helvetica, sans-serif; font-size:13px">{{ $comment->created_at->diffForHumans() }}</span>
+                            </div>
                         </div>
-                        <div class="mt-2 ">
                             <p>{{ $comment->text }}</p>
-                        </div>
-                        <p class="text-gray-600" style="font-family: Helvetica, sans-serif; font-size:13px;position: relative; left: 1px;">{{ $comment->created_at->diffForHumans() }}</p>
+                            <hr>
                     </div>
                 @endforeach
             </div>
-            <hr>
-    <div class="card" style="border-radius: 0px 6px 6px 0px;" id="tracking">
+        </div>
+        <div class="card" style="border-radius: 0px 6px 6px 0px;" id="tracking">
             @foreach($altdata['prev'] as $key => $prev)
             <ul class="unor list-group list-group-flush">
             <div class="section-header">
                 <li>
                 @if( $altdata['trackings'][$key]->action == 1)
                 <h5><div class="top-arrow center">
-                </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
-                    <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
+                </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
+                    {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                     <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                     @if($altdata['trackings'][$key]->action == 2)
                     <p><li class="">Status: <i>In Circulation</i></p>
@@ -269,8 +253,8 @@ ul:not(first-child) ul{
                 @endif
                 @if( $altdata['trackings'][$key]->action == 2)
                 <h5><div class="top-arrow center">
-                </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
-                    <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
+                </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
+                    {{-- <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                     <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
                     <li class="">Forwarded by: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
                     @if($altdata['trackings'][$key]->action == 2)
@@ -284,11 +268,9 @@ ul:not(first-child) ul{
                     </li>
                 </div>
             </ul>
-
-        @endforeach
+            @endforeach
         </div>
-        <hr>
-        <footer>
+        {{-- <footer>
             <div class="row">
                 <div class="col-md-6">
                     <p>Copyright &copy; 2021 Tutorial Republic</p>
@@ -299,9 +281,15 @@ ul:not(first-child) ul{
                     <a href="#" class="text-dark">Privacy Policy</a>
                 </div>
             </div>
-        </footer>
+        </footer> --}}
     </div>
-    <script id="dsq-count-scr" src="//testcomment-6.disqus.com/count.js" async></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+          <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+
+    </script>
     </body>
 </html>
 @endsection

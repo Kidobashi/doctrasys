@@ -6,6 +6,9 @@
 <style>
 .search{
     justify-content: center;
+    position: relative;
+    top: 120px;
+    height: 30%;
 }
 input {
     font-size: 16px;
@@ -90,8 +93,8 @@ button {
     border-radius:25px;
 }
 }
+
 </style>
-@include('layouts.navbars.auth.nav')
 <div class="search d-flex ml-4 col-lg-12 col-md-12 col-md-8">
     <form action="tracking" method="get">
         <input type="text" name="search">
