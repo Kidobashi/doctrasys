@@ -3,6 +3,7 @@
 <head>
     <title>Create Traceable Document</title>
 </head>
+@include('layouts.navbars.auth.nav')
 <div class="container-fluid col-lg-6 col-md-6">
         <div class="row">
                 <div class="card">
@@ -13,10 +14,15 @@
                                 @csrf
                                     <label for="">Sender Name</label>
                                     <div class="mb-3">
-                                    <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="" >
+                                    <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name; }}" >
                                     @error('senderName')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="">Sender Office</label>
+                                        <input type="text" class="form-control" name="senderOffice" id="name" aria-label="Name" aria-describedby="name" value="{{ $senderOffice }}" >
                                     </div>
 
                                     <label for="">Receiver Name</label>
@@ -25,17 +31,6 @@
                                     @error('receiverName')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="">Sender Office</label>
-                                        <select class="form-control" id="assignedOffice" name="senderOffice">
-                                            <option value="" selected disabled>Select Office
-                                                @foreach ($offices as $row)
-                                                <option value="{{ $row->id }}">{{ $row->officeName }}</option>
-                                            </option>
-                                            @endforeach
-                                        </select>
                                     </div>
 
                                     <div class="mb-3">
@@ -50,7 +45,11 @@
                                     </div>
 
                                     <div class="btn-toolbar">
-                                        <button onclick="showQr()" class="btn btn-primary shadow" type="submit">Submit</button>
+                                        <button onclick="showQr()" class="btn btn-primary shadow" type="submit">Show QR</button>
+                                    </div>
+
+                                    <div class="btn-toolbar">
+                                        <button class="btn btn-primary shadow" type="submit">Submit</button>
                                     </div>
                                 </form>
 
@@ -96,7 +95,7 @@ function showQr() {
     y.style.display = "none";
   } else {
     x.style.display = "block";
-    y.style.display = "none";
+    y.style.display = "block";
   }
 }
 // 'http://127.0.0.1:8000/download'

@@ -1,5 +1,6 @@
 @extends('templates.user')
 @section('content')
+@include('layouts.navbars.auth.nav')
 <form action="received/{{ $doc->referenceNo }}" method="post">
     @csrf
     <div class="col-lg-10 float-end">

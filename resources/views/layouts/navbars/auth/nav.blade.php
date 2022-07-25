@@ -18,11 +18,11 @@
             <ul class="navbar-nav  justify-content-end">
             @guest
                 <li class="nav-item d-flex align-items-center">
-                    <a href="{{ url('/register')}}" class="nav-link text-body font-weight-bold px-0">
+                    <a href="{{ url('/login')}}" class="nav-link text-body font-weight-bold px-0">
                     <i class="fa fa-user me-sm-1"></i>
-                    <span class="d-sm-inline d-none">Register</span>
+                    <span class="d-sm-inline d-none">Login</span>
                     </a>
-            </li>
+                </li>
             @endguest
             @auth
             <li class="nav-item d-flex align-items-center">

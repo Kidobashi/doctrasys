@@ -93,6 +93,7 @@ ul:not(first-child) ul{
     }
 }
 </style>
+@include('layouts.navbars.auth.nav')
     <div class="container-fluid col-lg-4">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
@@ -114,13 +115,69 @@ ul:not(first-child) ul{
                             @if($light->action == 3)
                             <div class="d-flex">
                                 <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
-                                <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                                <form action="received/{{ $data->referenceNo }}" method="post">
+                                    @csrf
+                                    <div class="col-lg-10 float-end" style="display: none;">
+                                    {{-- <H1>Receive</H1> --}}
+                                    <label for="">Received By:</label>
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control" name="receiverName" id="name" value="{{ Auth::user()->name }}"aria-label="Name" aria-describedby="name">
+                                            @error('receiverName')
+                                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}">
+                                            {{-- <label for="">Office <i class="baseline-record_voice_over"></i></label>
+                                            <label for="">Forward Office</label>
+                                            <select class="form-control" id="assignedOffice" name="receiverOffice">
+                                                <option value="" selected disabled>Select Office
+                                                    @foreach ($offices as $row)
+                                                    <option value="{{ $row->id }}">{{ $row->officeName }}</option>
+                                                </option>
+                                                @endforeach
+                                            </select> --}}
+
+                                            <input class="form-control "type="text" style="display: none;" name='action' value="1">
+                                            </div>
+                                        {{-- <button type="submit">Receive</button> --}}
+                                    </div>
+                                    <button type="submit">Receive</button>
+                                </form>
                             </div>
                             @endif
                             @if($light->action == 2)
                             <div class="d-flex">
                                 {{-- <button type="button" class="btn btn-secondary"  style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button> --}}
-                                <button type="button" class="btn btn-success"><a href="{{ url('receive/'.$data->referenceNo) }}">Receive</a></button>
+                                <form action="received/{{ $data->referenceNo }}" method="post">
+                                    @csrf
+                                    <div class="col-lg-10 float-end" style="display: none;">
+                                    {{-- <H1>Receive</H1> --}}
+                                    <label for="">Received By:</label>
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control" name="receiverName" id="name" value="{{ Auth::user()->name }}"aria-label="Name" aria-describedby="name">
+                                            @error('receiverName')
+                                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}">
+                                            {{-- <label for="">Office <i class="baseline-record_voice_over"></i></label>
+                                            <label for="">Forward Office</label>
+                                            <select class="form-control" id="assignedOffice" name="receiverOffice">
+                                                <option value="" selected disabled>Select Office
+                                                    @foreach ($offices as $row)
+                                                    <option value="{{ $row->id }}">{{ $row->officeName }}</option>
+                                                </option>
+                                                @endforeach
+                                            </select> --}}
+
+                                            <input class="form-control "type="text" style="display: none;" name='action' value="1">
+                                            </div>
+                                        {{-- <button type="submit">Receive</button> --}}
+                                    </div>
+                                    <button type="submit">Receive</button>
+                                </form>
                             </div>
                             @endif
                             @if($light->action == 1)
@@ -150,10 +207,10 @@ ul:not(first-child) ul{
                                 @endif
                             {{-- @endif --}}
                             @elseif( $light->action == 2)
-                            <h5>&nbsp;Forwarded by <i>{{ $light->receiverName }}</i></h5>
-                                <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li>
+                            <h5>&nbsp;Forwarded to <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
+                                {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
-                                <li class="">Forwarded from: <b>{{ $light->prevReceiver }}</b> - <i>{{ $lightPrev->officeName }}</i></li>
+                                <li class="">Forwarded by: <b>{{ $light->prevReceiver }}</b> - <i>{{ $lightPrev->officeName }}</i></li>
                                 @if($light->action == 2)
                                 <p><li class="">Status: <i>In Circulation</i></p>
                                 @endif
@@ -174,14 +231,14 @@ ul:not(first-child) ul{
                             <div class="mr-2 d-flex flex-col justify-center">
                                 <div>
                                     <?php
-                                        $parts = explode(' ', $comment->author);
+                                        $parts = explode(' ', Auth::user()->name);
                                         $initials = strtoupper($parts[0][0] . $parts[count($parts) - 1][0]);
                                     ?>
                                     <span class="bg-gray-300 p-3 rounded-circle"><strong>{{ $initials }}</strong></span>
                                 </div>
 
                                 <div class="d-flex flex-col justify-content-center">
-                                    <p class="mr-2"><strong>&nbsp;&nbsp;{{ $comment->author }}</strong> &nbsp;&nbsp;&nbsp;</p>
+                                    <p class="mr-2"><strong>&nbsp;&nbsp;{{  Auth::user()->name  }}</strong> &nbsp;&nbsp;&nbsp;</p>
                                 </div>
                             </div>
                         </div>
@@ -212,10 +269,10 @@ ul:not(first-child) ul{
                 @endif
                 @if( $altdata['trackings'][$key]->action == 2)
                 <h5><div class="top-arrow center">
-                </div>Forwarded by <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
+                </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }}</i></h5>
                     <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li>
                     <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
-                    <li class="">Forwarded from: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
+                    <li class="">Forwarded by: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
                     @if($altdata['trackings'][$key]->action == 2)
                     <p><li class="">Status: <i>In Circulation</i></p>
                     @endif

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Documents;
 use App\Models\Offices;
 use App\Models\TrackingLogs;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -123,7 +124,8 @@ class QrController extends Controller
     }
 
     public function receiveDoc($referenceNo,Request $request){
-
+        // $sender = Auth::user()->email;
+        // $senderOffice = Auth::user()->assignedOffice;
         $doc = Documents::where('referenceNo', $referenceNo)->first();
         $newReceiver = $request->input('receiverName');
         $newOfficeReceiver = $request->input('receiverOffice');

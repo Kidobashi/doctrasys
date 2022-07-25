@@ -40,6 +40,12 @@ class DocumentsController extends Controller
 
         $last = DB::table('documents')->latest('id')->first();
 
+        $assignedOffice = Auth::user()->assignedOffice;
+
+        $senderOffice = Offices::where('id', $assignedOffice)->pluck('officeName')->first();
+
+        // $assignedOffice = Offices::where('')->first();
+
         $identity = $last->id + 1;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
@@ -49,7 +55,7 @@ class DocumentsController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        return view('users.add')->with('offices', $offices)->with('refNo', $refNo);
+        return view('users.add')->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice);
     }
 
     public function create()
@@ -68,7 +74,10 @@ class DocumentsController extends Controller
     public function store(Request $request)
     {
         //
-        // $sender = Auth::user()->email;
+        $sender = Auth::user()->email;
+        $senderOffice = Auth::user()->assignedOffice;
+
+        // dd($senderOffice);
 
         $last = DB::table('documents')->latest('id')->first();
 
@@ -81,27 +90,27 @@ class DocumentsController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
+        // $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
 
         $request->validate([
             'senderName' => 'required',
             'receiverName' => 'required',
-            'senderOffice' => 'required',
+            'senderOffice' =>  'required',
             'receiverOffice' => 'required',
         ]);
 
         Documents::create([
             'senderName' => request('senderName'),
             'receiverName' => request('receiverName'),
-            'senderOffice' => request('senderOffice'),
+            'senderOffice' =>  $senderOffice,
             'receiverOffice' => request('receiverOffice'),
             'referenceNo' => $refNo,
         ]);
 
         TrackingLogs::create([
-            'senderName' => request('senderName'),
+            'senderName' => $sender,
             'receiverName' => request('receiverName'),
-            'senderOffice' => request('senderOffice'),
+            'senderOffice' => $senderOffice,
             'receiverOffice' => request('receiverOffice'),
             'referenceNo' => $refNo,
         ]);
@@ -118,6 +127,13 @@ class DocumentsController extends Controller
     public function show($id)
     {
         //
+        // $assignedOffice = Auth::user()->assignedOffice;
+
+        // $senderOffice = Offices::where('id', $assignedOffice)->pluck('officeName');
+
+        // dd($senderOffice);
+
+        // return view('users.add')->with('senderOffice', $senderOffice);
     }
 
     /**

@@ -207,12 +207,14 @@ div.content {
             <span class="mx-2">Profile</span>
         </a>
       </li> --}}
+      @auth
       <li href="#" class="nav-link">
         <a class="nav-link {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
             <span class="mx-2">Create&nbsp;Document</span>
         </a>
         </a>
       </li>
+      @endauth
     </ul>
 </div>
 

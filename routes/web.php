@@ -101,7 +101,7 @@ Route::get('/coming', function () {
 });
 
 
-// Route::get('test', [QrController::class, 'generateQr'])->name('qr');
+// Route::get('add-document', [DocumentsController::class, 'show']);
 Route::get('/user-profile', [ProfileController::class, 'create']);
 Route::post('/user-profile', [ProfileController::class, 'store']);
 Route::get('user-management', [UserController::class, 'index'])->name('user');
@@ -116,7 +116,7 @@ Route::post('qrinfo/{referenceNo}/comment', [App\Http\Controllers\CommentsContro
 Route::get('forward/{referenceNo}', [QrController::class, 'forward']);
 Route::post('forward/forwarded/{referenceNo}', [QrController::class, 'update']);
 Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
-Route::post('receive/received/{referenceNo}', [QrController::class, 'update']);
+Route::post('qrinfo/received/{referenceNo}', [QrController::class, 'update']);
 Route::get('tracking', [SearchController::class, 'search']);
 
 // Route::post('add-document', [DocumentsController::class, 'create'])->name('offices');
