@@ -6,7 +6,7 @@
 <style>
  .container-fluid{
         position: relative;
-        top: 120px;
+        top: 20px;
         height: 100%;
     }
 .top-arrow {
@@ -98,7 +98,7 @@ ul:not(first-child) ul{
     }
 }
 </style>
-    <div class="container-fluid col-lg-6">
+    <div class="container-fluid col-lg-5 float-start">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
                 <h4 class="card-title" style="margin-top: 10px;">Document Details</h4>
@@ -109,13 +109,6 @@ ul:not(first-child) ul{
 
                             <h5>From Office: {{$data->officeName}}</h5>
 
-                            {{-- <div class="col-xxs-6">
-                                <img src="{{ asset('qrcodes/qr'.$data->referenceNo.'.png') }}" alt="tag">
-                            </div> --}}
-
-                            {{-- <hr style="border: 3px solid"> --}}
-
-                            <h3>Options</h3>
                             @if($light->action == 3)
                             <div class="d-flex">
                                 <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
@@ -234,42 +227,6 @@ ul:not(first-child) ul{
                 @endforeach
             </div>
         </div>
-        <div class="card" style="border-radius: 0px 6px 6px 0px;" id="tracking">
-            @foreach($altdata['prev'] as $key => $prev)
-            <ul class="unor list-group list-group-flush">
-            <div class="section-header">
-                <li>
-                @if( $altdata['trackings'][$key]->action == 1)
-                <h5><div class="top-arrow center">
-                </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
-                    {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
-                    <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
-                    @if($altdata['trackings'][$key]->action == 2)
-                    <p><li class="">Status: <i>In Circulation</i></p>
-                    @endif
-                    @if($altdata['trackings'][$key]->action == 1)
-                        <p><li class="">Status: <i>Processing...</i></p>
-                    @endif
-                @endif
-                @if( $altdata['trackings'][$key]->action == 2)
-                <h5><div class="top-arrow center">
-                </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
-                    {{-- <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
-                    <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
-                    <li class="">Forwarded by: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
-                    @if($altdata['trackings'][$key]->action == 2)
-                    <p><li class="">Status: <i>In Circulation</i></p>
-                    @endif
-                    @if($altdata['trackings'][$key]->action == 1)
-                        <p><li class="">Status: <i>Processing...</i></p>
-                    @endif
-                    </li>
-                @endif
-                    </li>
-                </div>
-            </ul>
-            @endforeach
-        </div>
         {{-- <footer>
             <div class="row">
                 <div class="col-md-6">
@@ -282,6 +239,47 @@ ul:not(first-child) ul{
                 </div>
             </div>
         </footer> --}}
+    </div>
+
+    <div class="card mt-4 col-lg-6 float-end" style="border-radius: 0px 6px 6px 0px;" id="tracking">
+        <h4 class="card-title" style="margin-top: 10px;">Tracking Information</h4>
+        <hr>
+        @foreach($altdata['prev'] as $key => $prev)
+        <ul class="unor list-group list-group-flush">
+        <div class="section-header">
+            <li>
+            @if( $altdata['trackings'][$key]->action == 1)
+            <h5><div class="top-arrow center">
+            </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
+                {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
+                <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
+                @if($altdata['trackings'][$key]->action == 2)
+                <p><li class="">Status: <i>In Circulation</i></p>
+                @endif
+                @if($altdata['trackings'][$key]->action == 1)
+                    <p><li class="">Status: <i>Processing...</i></p>
+                @endif
+                <hr>
+            @endif
+            @if( $altdata['trackings'][$key]->action == 2)
+            <h5><div class="top-arrow center">
+            </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
+                {{-- <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
+                <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
+                <li class="">Forwarded by: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
+                @if($altdata['trackings'][$key]->action == 2)
+                <p><li class="">Status: <i>In Circulation</i></p>
+                @endif
+                @if($altdata['trackings'][$key]->action == 1)
+                    <p><li class="">Status: <i>Processing...</i></p>
+                @endif
+                </li>
+                <hr>    
+            @endif
+                </li>
+            </div>
+        </ul>
+        @endforeach
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

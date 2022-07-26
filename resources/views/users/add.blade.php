@@ -6,7 +6,7 @@
 <style>
     .container-fluid{
         position: relative;
-        top: 120px;
+        top: 40px;
         height: 100%;
     }
 </style>

@@ -42,11 +42,11 @@
 <body>
 
 {{-- @include('layouts.navbars.auth.nav') --}}
-  <style>
-    *{
-        font-family: 'Biryani', sans-serif;
-font-family: 'Raleway', sans-serif;
-    }
+<style>
+*{
+    font-family: 'Biryani', sans-serif;
+    font-family: 'Raleway', sans-serif;
+}
 .content {
     width: 100%;
     float: right;
@@ -63,7 +63,7 @@ font-family: 'Raleway', sans-serif;
 }
 
 .side-navbar {
-position: fixed;
+  position: relative;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -81,11 +81,13 @@ position: fixed;
 
 .side-navbar a.active {
   background-color: #1B3FAB;
+  border-radius: 10px;
   color: white;
 }
 
 .side-navbar a:hover:not(.active) {
   background-color: #555;
+  border-radius: 10px;
   color: white;
 }
 
@@ -104,10 +106,14 @@ div.content {
     width: 100%;
     height: auto;
     position: relative;
+    display: block;
   }
-  .side-navbar {float: left;}
-  div.content {margin-left: 0;}
-
+  .side-navbar {
+      display: block;
+    }
+  div.content {
+      margin-left: 0;
+    }
   .display-4{
       font-size: 28px;
   }
@@ -129,9 +135,12 @@ div.content {
     width: 100%;
     height: auto;
     position: relative;
+    display: block;
+    justify-content: center;
   }
-  .side-navbar {float: left;}
-  div.content {margin-left: 0;}
+  div.content {
+      margin-left: 0;
+    }
   .content{
       position: relative;
       justify-content: center;
@@ -152,8 +161,9 @@ div.content {
     width: 100%;
     height: auto;
     position: relative;
+    display: block;
+    justify-content: center;
   }
-  .side-navbar {float: left;}
   div.content {margin-left: 0;}
   .content{
       position: relative;
@@ -174,9 +184,14 @@ div.content {
     width: 100%;
     height: auto;
     position: relative;
+    display: block;
   }
-  .side-navbar {float: left;}
-  div.content {margin-left: 0;}
+  .side-navbar {
+      text-align: center;
+    }
+div.content {
+    margin-left: 0;
+}
   .content{
       position: relative;
       justify-content: center;
