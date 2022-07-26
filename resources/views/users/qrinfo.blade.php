@@ -21,16 +21,6 @@ li .comments:nth-child(4){
     display: none;
 }
 
-/* .dropdown-menu:nth-child(2){
-    display: none;
-}
-
-.dropdown-menu:nth-child(3){
-    display: none;
-}
-.dropdown-menu:nth-child(4){
-    display: none;
-} */
  .container-fluid{
         position: relative;
         top: 20px;
@@ -242,7 +232,7 @@ ul:not(first-child) ul{
                             <span class="text-black-200" style="font-family: Helvetica, sans-serif; font-size:13px">{{ $latestComment->created_at->diffForHumans() }}</span>
                         </div>
                     </div>
-                    <p>{{ $latestComment->text }}</p>
+                    <p style="word-wrap: break-word;">{{ $latestComment->text }}</p>
                         <hr>
                 </div>
                 @endforeach
@@ -254,7 +244,7 @@ ul:not(first-child) ul{
                 <ul class="dropdown-menu">
                   <li>
                     @foreach ($comments as $comment)
-                        <div class="comments m-1 bg-white p-2" style="white-space: normal;">
+                        <div class="comments m-1 bg-white p-2 w-80" style="white-space: normal;">
                             <div class="d-flex">
                                 <div class="m-1 d-flex flex-col justify-center">
                                     <div>
@@ -270,7 +260,7 @@ ul:not(first-child) ul{
                                     <span class="text-black-200" style="font-family: Helvetica, sans-serif; font-size:13px">{{ $comment->created_at->diffForHumans() }}</span>
                                 </div>
                             </div>
-                                <p>{{ $comment->text }}</p>
+                                <p style="word-wrap: break-word;">{{ $comment->text }}</p>
                                 <hr>
                         </div>
                     @endforeach
