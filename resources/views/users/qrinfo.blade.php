@@ -4,6 +4,33 @@
     <title>Tracking Information</title>
 </head>
 <style>
+
+li .comments:nth-child(1){
+    display: none;
+}
+
+li .comments:nth-child(2){
+    display: none;
+}
+
+li .comments:nth-child(3){
+    display: none;
+}
+
+li .comments:nth-child(4){
+    display: none;
+}
+
+/* .dropdown-menu:nth-child(2){
+    display: none;
+}
+
+.dropdown-menu:nth-child(3){
+    display: none;
+}
+.dropdown-menu:nth-child(4){
+    display: none;
+} */
  .container-fluid{
         position: relative;
         top: 20px;
@@ -33,10 +60,6 @@
 }
 .section-header {
   justify-content: space-between;
-  /* border-left: 2px solid black;
-  position: relative;
-  padding-left: 100px;
-  right: 54px; */
 }
 
 #latestTrack, #latestTrack h5{
@@ -71,7 +94,6 @@ ul:not(first-child) ul{
 }
 
 #tracking {
-  display: none;
   z-index: 1;
 }
 
@@ -98,7 +120,7 @@ ul:not(first-child) ul{
     }
 }
 </style>
-    <div class="container-fluid col-lg-5 float-start">
+    <div class="container-fluid col-lg-5">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
                 <h4 class="card-title" style="margin-top: 10px;">Document Details</h4>
@@ -182,7 +204,7 @@ ul:not(first-child) ul{
                                 @endif
                                 @if($light->action == 1)
                                     <p><li class="">Status: <i>Processing...</i></p>
-                                <a href="#tracking"><button class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button></a>
+                                        <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
                                 @endif
                             {{-- @endif --}}
                             @elseif( $light->action == 2)
@@ -197,35 +219,64 @@ ul:not(first-child) ul{
                                     <p><li class="">Status: <i>Processing...</i></p>
                                 @endif
                                 </li>
-                                <a href="#tracking"><button class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button></a>
+                                <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
                             @endif
                     </div>
             </div>
+            @include('partials.comments')
             <div class="justify-content-center">
-                <hr>
-                @include('partials.comments')
-                @foreach ($comments as $comment)
-                    <div class="m-1 bg-white p-2">
-                        <div class="d-flex">
-                            <div class="m-1 d-flex flex-col justify-center">
-                                <div>
-                                    <?php
-                                        $parts = explode(' ', $comment->author);
-                                        $initials = strtoupper($parts[0][0] . $parts[count($parts) - 1][0]);
-                                    ?>
-                                    <span class="bg-gray-200 rounded-circle"><strong>{{ $initials }}</strong></span>
-                                    <span class="mr-1 text-black-200" style="position:relative; right: 0px;">{{  $comment->author   }}</span>
-                                </div>
-                            </div>
-                            <div class="d-flex float-end" style="position: absolute; right:0;">
-                                <span class="text-black-200" style="font-family: Helvetica, sans-serif; font-size:13px">{{ $comment->created_at->diffForHumans() }}</span>
+                @foreach ($latestComments as $latestComment)
+                <div class="comments m-1 bg-white p-2" style="white-space: normal;">
+                    <div class="d-flex">
+                        <div class="m-1 d-flex flex-col justify-center">
+                            <div>
+                                <?php
+                                    $parts = explode(' ', $latestComment->author);
+                                    $initials = strtoupper($parts[0][0] . $parts[count($parts) - 1][0]);
+                                ?>
+                                <span class="bg-gray-300 p-2 mb-1 rounded-circle"><strong>{{ $initials }}</strong></span>
+                                <span class="mr-1 text-black-200" style="position:relative; right: 0px;">{{  $latestComment->author   }}</span>
                             </div>
                         </div>
-                            <p>{{ $comment->text }}</p>
-                            <hr>
+                        <div class="d-flex float-end" style="position: absolute; right:0;">
+                            <span class="text-black-200" style="font-family: Helvetica, sans-serif; font-size:13px">{{ $latestComment->created_at->diffForHumans() }}</span>
+                        </div>
                     </div>
+                    <p>{{ $latestComment->text }}</p>
+                        <hr>
+                </div>
                 @endforeach
             </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Show all comments
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    @foreach ($comments as $comment)
+                        <div class="comments m-1 bg-white p-2" style="white-space: normal;">
+                            <div class="d-flex">
+                                <div class="m-1 d-flex flex-col justify-center">
+                                    <div>
+                                        <?php
+                                            $parts = explode(' ', $comment->author);
+                                            $initials = strtoupper($parts[0][0] . $parts[count($parts) - 1][0]);
+                                        ?>
+                                        <span class="bg-gray-300 p-2 mb-1 rounded-circle"><strong>{{ $initials }}</strong></span>
+                                        <span class="mr-1 text-black-200" style="position:relative; right: 0px;">{{  $comment->author   }}</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex float-end" style="position: absolute; right:0;">
+                                    <span class="text-black-200" style="font-family: Helvetica, sans-serif; font-size:13px">{{ $comment->created_at->diffForHumans() }}</span>
+                                </div>
+                            </div>
+                                <p>{{ $comment->text }}</p>
+                                <hr>
+                        </div>
+                    @endforeach
+                  </li>
+                </ul>
+              </div>
         </div>
         {{-- <footer>
             <div class="row">
@@ -240,54 +291,65 @@ ul:not(first-child) ul{
             </div>
         </footer> --}}
     </div>
-
-    <div class="card mt-4 col-lg-6 float-end" style="border-radius: 0px 6px 6px 0px;" id="tracking">
-        <h4 class="card-title" style="margin-top: 10px;">Tracking Information</h4>
-        <hr>
-        @foreach($altdata['prev'] as $key => $prev)
-        <ul class="unor list-group list-group-flush">
-        <div class="section-header">
-            <li>
-            @if( $altdata['trackings'][$key]->action == 1)
-            <h5><div class="top-arrow center">
-            </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
-                {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
-                <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
-                @if($altdata['trackings'][$key]->action == 2)
-                <p><li class="">Status: <i>In Circulation</i></p>
-                @endif
-                @if($altdata['trackings'][$key]->action == 1)
-                    <p><li class="">Status: <i>Processing...</i></p>
-                @endif
-                <hr>
-            @endif
-            @if( $altdata['trackings'][$key]->action == 2)
-            <h5><div class="top-arrow center">
-            </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
-                {{-- <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
-                <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
-                <li class="">Forwarded by: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
-                @if($altdata['trackings'][$key]->action == 2)
-                <p><li class="">Status: <i>In Circulation</i></p>
-                @endif
-                @if($altdata['trackings'][$key]->action == 1)
-                    <p><li class="">Status: <i>Processing...</i></p>
-                @endif
-                </li>
-                <hr>    
-            @endif
-                </li>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Tracking Information</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="card mt-4 col-lg-12" style="border-radius: 0px 6px 6px 0px;" id="tracking">
+                @foreach($altdata['prev'] as $key => $prev)
+                <ul class="unor list-group list-group-flush">
+                <div class="section-header">
+                    <li>
+                    @if( $altdata['trackings'][$key]->action == 1)
+                    <h5><div class="top-arrow center">
+                    </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
+                        {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
+                        <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
+                        @if($altdata['trackings'][$key]->action == 2)
+                        <p><li class="">Status: <i>In Circulation</i></p>
+                        @endif
+                        @if($altdata['trackings'][$key]->action == 1)
+                            <p><li class="">Status: <i>Processing...</i></p>
+                        @endif
+                    @endif
+                    @if( $altdata['trackings'][$key]->action == 2)
+                    <h5><div class="top-arrow center">
+                    </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
+                        {{-- <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
+                        <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
+                        <li class="">Forwarded by: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
+                        @if($altdata['trackings'][$key]->action == 2)
+                        <p><li class="">Status: <i>In Circulation</i></p>
+                        @endif
+                        @if($altdata['trackings'][$key]->action == 1)
+                            <p><li class="">Status: <i>Processing...</i></p>
+                        @endif
+                        </li>
+                    @endif
+                        </li>
+                    </div>
+                </ul>
+                @endforeach
             </div>
-        </ul>
-        @endforeach
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
+  </div>
+
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-          <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-          <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script>
-
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>
 </html>
 @endsection

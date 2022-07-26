@@ -24,6 +24,8 @@ class QrController extends Controller
 
         $comments = Comments::where('documents_id', $id)->orderBy('created_at', 'DESC')->get();
 
+        $latestComments = Comments::where('documents_id', $id)->orderBy('created_at', 'DESC')->take(4)->get();
+
         $data = DB::table('documents')
         ->join('offices', 'senderOffice', 'offices.id')
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
@@ -53,7 +55,7 @@ class QrController extends Controller
 
         $altdata = array_merge(['prev' => $prev] , ['trackings' => $trackings]);
 
-        return view('users.qrinfo')->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
+        return view('users.qrinfo')->with('latestComments', $latestComments)->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
     }
 
     public function saveQr(){
