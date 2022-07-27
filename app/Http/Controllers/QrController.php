@@ -21,11 +21,6 @@ class QrController extends Controller
 
     public function qrInfo($referenceNo){
 
-        // $checkOfficeifLanded = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
-        // ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'ASC')->first();
-
-        // dd($checkOfficeifLanded);
-
         $id = Documents::where('referenceNo', $referenceNo)->pluck('id')->first();
 
         $comments = Comments::where('documents_id', $id)->orderBy('created_at', 'DESC')->get();
@@ -91,31 +86,43 @@ class QrController extends Controller
         ->where('documents.referenceNo', $referenceNo)
         ->first();
 
-        return view('partials.forward')->with('officeN', $officeN)->with('offices', $offices)->with('doc', $doc)->with('message', 'Successfully Added!');
+        return view('partials.forward')->with('officeN', $officeN)->with('offices', $offices)->with('doc', $doc)->with('succerss', 'Forwarded Successfully!');
     }
 
     public function update($referenceNo,Request $request){
 
-        $doc = Documents::where('referenceNo', $referenceNo)->first();
-        $newReceiver = $request->input('receiverName');
-        $newOfficeReceiver = $request->input('receiverOffice');
+         $checkOfficeIfCorrect = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
+         ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'DESC')->first();
+
+        //  dd($checkOfficeifLanded);
+
+        if($checkOfficeIfCorrect->receiverOffice === Auth::user()->assignedOffice)
+        {
+            $doc = Documents::where('referenceNo', $referenceNo)->first();
+            $newReceiver = $request->input('receiverName');
+            $newOfficeReceiver = $request->input('receiverOffice');
         // $prevOffice = $request->input('prevOffice');
         // $prevReceiver = $request->input('prevReceiver');
 
-        Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
+            Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
 
-        TrackingLogs::create([
-            'senderName' => $doc->senderName,
-            'receiverName' => $newReceiver,
-            'senderOffice' => $doc->senderOffice,
-            'receiverOffice' => $newOfficeReceiver,
-            'referenceNo' => $referenceNo,
-            'action' => $request->input('action'),
-            'prevOffice' => $doc->receiverOffice,
-            'prevReceiver' => $doc->receiverName,
-        ]);
+            TrackingLogs::create([
+                'senderName' => $doc->senderName,
+                'receiverName' => $newReceiver,
+                'senderOffice' => $doc->senderOffice,
+                'receiverOffice' => $newOfficeReceiver,
+                'referenceNo' => $referenceNo,
+                'action' => $request->input('action'),
+                'prevOffice' => $doc->receiverOffice,
+                'prevReceiver' => $doc->receiverName,
+            ]);
 
-        return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');
+            return redirect('qrinfo/'.$referenceNo)->with('success', 'Received Successfully');
+        }
+        else{
+            return redirect('qrinfo/'.$referenceNo)->with('danger', 'Error, Credentials Does Not Match');
+         }
+
     }
 
     public function receive($referenceNo){
