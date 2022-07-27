@@ -20,6 +20,12 @@ class QrController extends Controller
     }
 
     public function qrInfo($referenceNo){
+
+        // $checkOfficeifLanded = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
+        // ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'ASC')->first();
+
+        // dd($checkOfficeifLanded);
+
         $id = Documents::where('referenceNo', $referenceNo)->pluck('id')->first();
 
         $comments = Comments::where('documents_id', $id)->orderBy('created_at', 'DESC')->get();

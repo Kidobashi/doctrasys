@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,9 +19,10 @@
     <!-- Link to your Javascript file -->
     <script src="multiple-form-submit-prevent.js"></script>
 </head>
-<body>
+<body> --}}
 
 <style>
+
 .spinner{
     display: none;
 }
@@ -51,10 +52,16 @@ button{
     border-radius: 3px;
     background-color: #04426E;
     color: white;
-    pading: 2px;
+    padding: 2px;
 }
 </style>
 <div class="comment">
+    @guest
+        <div class="m-3 justify-content-center">
+            <a href="{{ url('/login')}}">Sign in to add comment</a>
+        </div>
+    @endguest
+    @auth
     <form class="from-prevent-multiple-submits" action="{{ $data->referenceNo }}/comment" method="post">
         @csrf
         <input type="text" name="author" value="{{ Auth::user()->name }}" style="display: none;" required/>
@@ -64,8 +71,9 @@ button{
         ?>
         <span class="bg-gray-300 p-3"><strong>{{ $initials }}</strong></span>
         <div><input placeholder="Write a comment..." name="text" class="mt-1 py-2 px-3 block w-100 border-gray-400 rounded shadow-sm" required></div>
-        <button class="from-prevent-multiple-submits" type="submit"><i class="fas fa-spinner spinner"></i> Post Comment</button>
+        <button class="from-prevent-multiple-submits" type="submit">Post Comment</button>
     </form>
+    @endauth
 </div>
 
 <script type="text/javascript">
@@ -76,8 +84,7 @@ button{
     })
     })();
 </script>
-</body>
-</html>
+
 
 
 

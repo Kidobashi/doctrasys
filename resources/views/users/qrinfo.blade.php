@@ -115,12 +115,18 @@ ul:not(first-child) ul{
             <div class="col-xxs-6 col-xs-4">
                 <h4 class="card-title" style="margin-top: 10px;">Document Details</h4>
                             <hr>
-                        <div class="d-flex flex-column" style="display: flex; align-items: center; justify-content: center;">
+                        <div class="d-flex flex-column" style="align-items: center; justify-content: center;">
                             <h5>Reference No.: {{$data->referenceNo}}</h5>
                             <h5>Sender: {{$data->senderName}}</h5>
 
                             <h5>From Office: {{$data->officeName}}</h5>
-
+                            @guest
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled>Forward</button>
+                                <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled>Receive</button>
+                            </div>
+                            @endguest
+                            @auth
                             @if($light->action == 3)
                             <div class="d-flex">
                                 <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
@@ -142,7 +148,7 @@ ul:not(first-child) ul{
                                             </div>
                                         {{-- <button type="submit">Receive</button> --}}
                                     </div>
-                                    <button type="submit">Receive</button>
+                                    <button class="btn btn-success" type="submit">Receive</button>
                                 </form>
                             </div>
                             @endif
@@ -167,7 +173,7 @@ ul:not(first-child) ul{
                                             </div>
                                         {{-- <button type="submit">Receive</button> --}}
                                     </div>
-                                    <button type="submit">Receive</button>
+                                    <button class="btn btn-success" type="submit">Receive</button>
                                 </form>
                             </div>
                             @endif
@@ -178,6 +184,7 @@ ul:not(first-child) ul{
                             </div>
                             @endif
                         </div>
+                        @endauth
             </div>
             <hr>
             <h3>Tracking Information</h3>
@@ -213,6 +220,9 @@ ul:not(first-child) ul{
                             @endif
                     </div>
             </div>
+            @auth
+
+            @endauth
             @include('partials.comments')
             <div class="justify-content-center">
                 @foreach ($latestComments as $latestComment)
@@ -237,9 +247,9 @@ ul:not(first-child) ul{
                 </div>
                 @endforeach
             </div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    Show all comments
+            <div class="btn-group w-100 rounded">
+                <button type="button" class="btn dropdown-toggle" style="border-right-radius: 20px;font-weight: bold; background-color: #0275d8; color:white;" data-bs-toggle="dropdown" aria-expanded="false">
+                   Show all comments
                 </button>
                 <ul class="dropdown-menu">
                   <li>
