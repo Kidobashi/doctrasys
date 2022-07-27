@@ -249,7 +249,7 @@ div.content {
         <li class="nav-link" style="position: absolute; right: 0; padding-right: 25px;">
             <a href="{{ url('/logout')}}" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1 white"></i>
-                <span class="d-sm-inline d-none text-white">Sign Out</span>
+                <span class="d-sm-inline d-none text-white">{{ Auth::user()->name }} | Sign Out</span>
             </a>
         </li>
         @endauth

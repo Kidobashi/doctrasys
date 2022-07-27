@@ -86,24 +86,42 @@ class QrController extends Controller
         ->where('documents.referenceNo', $referenceNo)
         ->first();
 
-        return view('partials.forward')->with('officeN', $officeN)->with('offices', $offices)->with('doc', $doc)->with('succerss', 'Forwarded Successfully!');
+        return view('partials.forward')->with('officeN', $officeN)->with('offices', $offices)->with('doc', $doc)->with('success', 'Forwarded Successfully!');
     }
 
     public function update($referenceNo,Request $request){
+
+        $doc = Documents::where('referenceNo', $referenceNo)->first();
+        $newReceiver = $request->input('receiverName');
+        $newOfficeReceiver = $request->input('receiverOffice');
+        $success = 2;
+
+        $checkIntendedReceiver = Documents::join('offices', 'receiverOffice', 'offices.id')
+        ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'ASC')->first();
 
          $checkOfficeIfCorrect = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
          ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'DESC')->first();
 
         //  dd($checkOfficeifLanded);
-
-        if($checkOfficeIfCorrect->receiverOffice === Auth::user()->assignedOffice)
+        if($checkIntendedReceiver->receiverName === Auth::user()->name && $checkIntendedReceiver->receiverOffice === Auth::user()->assignedOffice)
         {
-            $doc = Documents::where('referenceNo', $referenceNo)->first();
-            $newReceiver = $request->input('receiverName');
-            $newOfficeReceiver = $request->input('receiverOffice');
-        // $prevOffice = $request->input('prevOffice');
-        // $prevReceiver = $request->input('prevReceiver');
+            Documents::where('referenceNo', $referenceNo)->update( array('status' => $success));
 
+            TrackingLogs::create([
+                'senderName' => $doc->senderName,
+                'receiverName' => $newReceiver,
+                'senderOffice' => $doc->senderOffice,
+                'receiverOffice' => $newOfficeReceiver,
+                'referenceNo' => $referenceNo,
+                'action' => $request->input('action'),
+                'prevOffice' => $doc->receiverOffice,
+                'prevReceiver' => $doc->receiverName,
+            ]);
+
+            return redirect('qrinfo/'.$referenceNo)->with('success', 'Received Successfully by Intended User');
+        }
+        elseif($checkOfficeIfCorrect->receiverOffice === Auth::user()->assignedOffice)
+        {
             Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
 
             TrackingLogs::create([

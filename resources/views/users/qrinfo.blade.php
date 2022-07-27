@@ -147,6 +147,7 @@ ul:not(first-child) ul{
                                 <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled>Receive</button>
                             </div>
                             @endguest
+                            @if ($light->prevReceiver !== Auth::user()->name && $lightPrev->officeName !== Auth::user()->assignedOffice)
                             @auth
                             @if($light->action == 3)
                             <div class="d-flex">
@@ -206,6 +207,7 @@ ul:not(first-child) ul{
                             @endif
                         </div>
                         @endauth
+                        @endif
             </div>
             <hr>
             <h3>Tracking Information</h3>
