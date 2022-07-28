@@ -138,6 +138,7 @@ ul:not(first-child) ul{
                             <hr>
                         <div class="d-flex flex-column" style="align-items: center; justify-content: center;">
                             <h5>Reference No.: {{$data->referenceNo}}</h5>
+                            <h5>Document Type: {{$docCategory->documentName}}</h5>
                             <h5>Sender: {{$data->senderName}}</h5>
 
                             <h5>From Office: {{$data->officeName}}</h5>
@@ -147,8 +148,9 @@ ul:not(first-child) ul{
                                 <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled>Receive</button>
                             </div>
                             @endguest
-                            @if ($light->prevReceiver !== Auth::user()->name && $lightPrev->officeName !== Auth::user()->assignedOffice)
+
                             @auth
+                            @if (isset($light->prevReceiver) !== Auth::user()->name && isset($lightPrev->officeName) !== Auth::user()->assignedOffice)
                             @if($light->action == 3)
                             <div class="d-flex">
                                 <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
@@ -206,8 +208,8 @@ ul:not(first-child) ul{
                             </div>
                             @endif
                         </div>
+                            @endif
                         @endauth
-                        @endif
             </div>
             <hr>
             <h3>Tracking Information</h3>
@@ -270,11 +272,12 @@ ul:not(first-child) ul{
                 </div>
                 @endforeach
             </div>
+            @if (count($comments) >= 5)
             <div class="btn-group w-100 rounded">
                 <button type="button" class="btn dropdown-toggle" style="border-right-radius: 20px;font-weight: bold; background-color: #0275d8; color:white;" data-bs-toggle="dropdown" aria-expanded="false">
                    Show all comments
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu p-2 w-100">
                   <li>
                     @foreach ($comments as $comment)
                         <div class="comments m-1 bg-white p-2 w-80" style="white-space: normal;">
@@ -285,7 +288,7 @@ ul:not(first-child) ul{
                                             $parts = explode(' ', $comment->author);
                                             $initials = strtoupper($parts[0][0] . $parts[count($parts) - 1][0]);
                                         ?>
-                                        <span class="bg-gray-300 p-2 mb-1 rounded-circle"><strong>{{ $initials }}</strong></span>
+                                        <span class="bg-gray-300 p-2 mb-2 rounded-circle"><strong>{{ $initials }}</strong></span>
                                         <span class="mr-1 text-black-200" style="position:relative; right: 0px;">{{  $comment->author   }}</span>
                                     </div>
                                 </div>
@@ -300,6 +303,7 @@ ul:not(first-child) ul{
                   </li>
                 </ul>
               </div>
+              @endif
         </div>
         {{-- <footer>
             <div class="row">

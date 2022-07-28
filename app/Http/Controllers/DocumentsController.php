@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Documents;
+use App\Models\DocumentType;
 use Illuminate\Http\Request;
 use App\Models\Offices;
 use App\Models\TrackingLogs;
@@ -44,6 +45,8 @@ class DocumentsController extends Controller
 
         $senderOffice = Offices::where('id', $assignedOffice)->pluck('officeName')->first();
 
+        $docType = DocumentType::all();
+
         // $assignedOffice = Offices::where('')->first();
 
         $identity = $last->id + 1;
@@ -55,7 +58,7 @@ class DocumentsController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        return view('users.add')->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice);
+        return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice);
     }
 
     public function create()
@@ -104,6 +107,7 @@ class DocumentsController extends Controller
             'receiverName' => request('receiverName'),
             'senderOffice' =>  $senderOffice,
             'receiverOffice' => request('receiverOffice'),
+            'docType' => request('docType'),
             'referenceNo' => $refNo,
         ]);
 

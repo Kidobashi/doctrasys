@@ -18,6 +18,7 @@ class Documents extends Model
         'receiverName',
         'senderOffice',
         'receiverOffice',
+        'docType',
         'updated_at',
         'createad_at'
     ];

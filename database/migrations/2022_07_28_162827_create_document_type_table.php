@@ -13,15 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('document_type', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('referenceNo');
-            $table->string('senderName');
-            $table->string('receiverName');
-            $table->bigInteger('senderOffice');
-            $table->bigInteger('receiverOffice');
-            $table->bigInteger('status');
-            $table->bigInteger('docType');
+            $table->string('docType');
             $table->timestamps();
         });
     }
@@ -33,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('documents');
+        Schema::dropIfExists('document_type');
     }
 };

@@ -50,6 +50,17 @@
                                         </select>
                                     </div>
 
+                                    <div class="mb-3">
+                                        <label for="">Choose Document Type</label>
+                                        <select class="form-control" id="" name="docType">
+                                            <option value="" selected disabled>Select Office
+                                                @foreach ($docType as $row)
+                                                <option value="{{ $row->id }}">{{ $row->docType }}</option>
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
                                     <div class="btn-toolbar">
                                         <button onclick="showQr()" class="btn btn-primary shadow" type="submit">Show QR</button>
                                     </div>
