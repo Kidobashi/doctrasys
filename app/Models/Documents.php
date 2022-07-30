@@ -20,6 +20,7 @@ class Documents extends Model
         'receiverOffice',
         'docType',
         'updated_at',
-        'createad_at'
+        'createad_at',
+        'email'
     ];
 }

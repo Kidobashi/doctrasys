@@ -27,6 +27,13 @@
                                     </div>
 
                                     <div class="mb-3">
+                                        <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email; }}" >
+                                        @error('email')
+                                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
                                         <label for="">Sender Office</label>
                                         <input type="text" class="form-control" name="senderOffice" id="name" aria-label="Name" aria-describedby="name" value="{{ $senderOffice }}" >
                                     </div>
@@ -55,7 +62,7 @@
                                         <select class="form-control" id="" name="docType">
                                             <option value="" selected disabled>Select Office
                                                 @foreach ($docType as $row)
-                                                <option value="{{ $row->id }}">{{ $row->docType }}</option>
+                                                <option value="{{ $row->id }}">{{ $row->documentName }}</option>
                                             </option>
                                             @endforeach
                                         </select>

@@ -118,6 +118,7 @@ Route::post('forward/forwarded/{referenceNo}', [QrController::class, 'update']);
 Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
 Route::post('qrinfo/received/{referenceNo}', [QrController::class, 'update']);
 Route::get('tracking', [SearchController::class, 'search']);
+Route::get('documents', [DocumentsController::class, 'userDocs']);
 
 // Route::post('add-document', [DocumentsController::class, 'create'])->name('offices');
 // Route::get('add-document', [DocumentsController::class, 'index']);

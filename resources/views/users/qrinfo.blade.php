@@ -274,7 +274,7 @@ ul:not(first-child) ul{
             </div>
             @if (count($comments) >= 5)
             <div class="btn-group w-100 rounded">
-                <button type="button" class="btn dropdown-toggle" style="border-right-radius: 20px;font-weight: bold; background-color: #0275d8; color:white;" data-bs-toggle="dropdown" aria-expanded="false">
+                <button type="button" class="btn dropdown-toggle" style="position: ; border-right-radius: 20px;font-weight: bold; background-color: #0275d8; color:white;" data-bs-toggle="dropdown" aria-expanded="false">
                    Show all comments
                 </button>
                 <ul class="dropdown-menu p-2 w-100">

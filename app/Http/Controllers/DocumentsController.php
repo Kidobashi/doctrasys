@@ -100,10 +100,12 @@ class DocumentsController extends Controller
             'receiverName' => 'required',
             'senderOffice' =>  'required',
             'receiverOffice' => 'required',
+            'email' => 'required',
         ]);
 
         Documents::create([
             'senderName' => request('senderName'),
+            'email' => request('email'),
             'receiverName' => request('receiverName'),
             'senderOffice' =>  $senderOffice,
             'receiverOffice' => request('receiverOffice'),
@@ -189,5 +191,14 @@ class DocumentsController extends Controller
         $pdf = PDF::loadView('users.testpdf')->setOptions(['defaultFont' => 'sans-serif']);
 
         return $pdf->download('doc_qr_'.$refNo.'.pdf');
+    }
+
+    public function userDocs()
+    {
+        $userDocs = Auth::user()->email;
+
+        $docs = Documents::where('email', $userDocs)->orderBy('created_at', 'DESC')->get();
+
+        return view('users.documents')->with(['docs' => $docs]);
     }
 }
