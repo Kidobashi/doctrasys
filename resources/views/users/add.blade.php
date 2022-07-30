@@ -4,7 +4,7 @@
     <title>Create Traceable Document</title>
 </head>
 <style>
-    .container-fluid{
+    .container-fluid {
         position: relative;
         top: 40px;
         height: 100%;
