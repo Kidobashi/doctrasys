@@ -40,7 +40,7 @@
 
                                     <label for="">Receiver Name</label>
                                     <div class="mb-3">
-                                    <input type="text" class="form-control" name="receiverName" id="name" aria-label="Name" aria-describedby="name">
+                                    <input type="text" class="form-control" name="receiverName" id="name" aria-label="Name" aria-describedby="name" required>
                                     @error('receiverName')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
@@ -48,7 +48,7 @@
 
                                     <div class="mb-3">
                                         <label for="">Receiver Office</label>
-                                        <select class="form-control" id="assignedOffice" name="receiverOffice">
+                                        <select class="form-control" id="assignedOffice" name="receiverOffice" required>
                                             <option value="" selected disabled>Select Office
                                                 @foreach ($offices as $row)
                                                 <option value="{{ $row->id }}">{{ $row->officeName }}</option>
@@ -59,7 +59,7 @@
 
                                     <div class="mb-3">
                                         <label for="">Choose Document Type</label>
-                                        <select class="form-control" id="" name="docType">
+                                        <select class="form-control" id="" name="docType" required>
                                             <option value="" selected disabled>Select Office
                                                 @foreach ($docType as $row)
                                                 <option value="{{ $row->id }}">{{ $row->documentName }}</option>

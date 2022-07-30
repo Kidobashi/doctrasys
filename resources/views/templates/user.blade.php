@@ -28,7 +28,7 @@
     {{-- <link rel="icon" href="../../../public/images/CMU-LOGO.png"> --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <!-- Bootsgrap CSS file -->
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"> --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
     <!-- Link to your CSS file -->
     <link rel="stylesheet" href="multiple-form-submit-prevent.css">
 
@@ -233,7 +233,7 @@ div.content {
       @auth
       <li href="#" class="nav-link">
         <a class="nav-link {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">
-            <span class="mx-2">Everything</span>
+            <span class="mx-2">My Documents</span>
         </a>
         </a>
       </li>

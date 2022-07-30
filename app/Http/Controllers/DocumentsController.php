@@ -199,7 +199,7 @@ class DocumentsController extends Controller
 
         $docs = Documents::where('email', $userDocs)
         ->join('offices', 'receiverOffice', 'offices.id')
-        ->orderBy('created_at', 'DESC')->get();
+        ->orderBy('created_at', 'DESC')->paginate(5);
 
         return view('users.documents')->with(['docs' => $docs]);
     }
