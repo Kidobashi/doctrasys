@@ -2,6 +2,11 @@
 @extends('templates.user')
 @section('content')
 <h2 class="m-4">My Documents</h2>
+<div class="d-flex justify-content-center">
+    <p>Completed<button type="button" class="btn btn-info"></button></p>
+    <p>Circulation<button type="button" class="btn btn-success"></button></p>
+    <p>Something Wrong<button type="button" class="btn btn-danger"></button></p>
+</div>
 <table class="table">
     <thead class="thead-dark">
       <tr>
