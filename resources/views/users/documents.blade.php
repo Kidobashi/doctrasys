@@ -20,44 +20,86 @@
         <button onclick="showThree()" class="btn border d-flex justify-content-center border border-dark">Something Wrong</button>
     </ul>
 </div>
-<table class="table">
-    <thead class="thead-dark">
-      <tr>
-        <th class="text-center" scope="col">Reference No.</th>
-        <th class="text-center" scope="col">Receiver</th>
-        <th class="text-center" scope="col">Receiving Office</th>
-        <th class="text-center" scope="col">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-    @foreach ($docs as $doc)
-        <tr>
-            <td class="text-center"> {{ $doc->referenceNo }}</td>
-            <td class="text-center">{{ $doc->receiverName }}</td>
-            <td class="text-center">{{ $doc->officeName }}</td>
-            @if ($doc->status == 1)
-                <td class="d-flex text-center" style="justify-content: center;"><p>Circulating</p>&nbsp;<button type="button" class="btn btn-info"></button></td>
-            @endif
-            @if ($doc->status == 2)
-                <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
-            @endif
-            @if ($doc->status == 3)
-                <td class="d-flex text-center" style="justify-content: center;"><p>Sent Back</p>&nbsp;<button type="button" class="btn btn-danger"></button></td>
-            @endif
-        </tr>
-    @endforeach
-    </tbody>
-  </table>
-  {!! $docs->links() !!}
 
   <div id="myDiv1">
-    <h1>Hi</h1>
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th class="text-center" scope="col">No.</th>
+            <th class="text-center" scope="col">Reference No.</th>
+            <th class="text-center" scope="col">Receiver</th>
+            <th class="text-center" scope="col">Receiving Office</th>
+            <th class="text-center" scope="col">Status</th>
+            <th class="text-center" scope="col">Info</th>
+          </tr>
+        </thead>
+        <tbody>
+        @foreach ($comps as $doc)
+            <tr>
+                <td class="text-center"> {{ $loop->iteration }} </td>
+                <td class="text-center"> {{ $doc->referenceNo }}</td>
+                <td class="text-center">{{ $doc->receiverName }}</td>
+                <td class="text-center">{{ $doc->officeName }}</td>
+                <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
+                <td class="text-center"><a href="">Info</a></td>
+            </tr>
+        @endforeach
+        </tbody>
+      </table>
   </div>
+
   <div id="myDiv2">
-    <h1>Hello</h1>
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th class="text-center" scope="col">No.</th>
+            <th class="text-center" scope="col">Reference No.</th>
+            <th class="text-center" scope="col">Receiver</th>
+            <th class="text-center" scope="col">Receiving Office</th>
+            <th class="text-center" scope="col">Status</th>
+            <th class="text-center" scope="col">Info</th>
+          </tr>
+        </thead>
+        <tbody>
+        @foreach ($circs as $doc)
+            <tr>
+                <td class="text-center"> {{ $loop->iteration }} </td>
+                <td class="text-center"> {{ $doc->referenceNo }}</td>
+                <td class="text-center">{{ $doc->receiverName }}</td>
+                <td class="text-center">{{ $doc->officeName }}</td>
+                <td class="d-flex text-center" style="justify-content: center;"><p>Circulating</p>&nbsp;<button type="button" class="btn btn-info"></button></td>
+                <td class="text-center"><a href="">Info</a></td>
+            </tr>
+        @endforeach
+        </tbody>
+      </table>
   </div>
+
   <div id="myDiv3">
-    <h1>HiHello</h1>
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th class="text-center" scope="col">No.</th>
+            <th class="text-center" scope="col">Reference No.</th>
+            <th class="text-center" scope="col">Receiver</th>
+            <th class="text-center" scope="col">Receiving Office</th>
+            <th class="text-center" scope="col">Status</th>
+            <th class="text-center" scope="col">Info</th>
+          </tr>
+        </thead>
+        <tbody>
+        @foreach ($sentBack as $doc)
+            <tr>
+                <td class="text-center"> {{ $loop->iteration }} </td>
+                <td class="text-center"> {{ $doc->referenceNo }}</td>
+                <td class="text-center">{{ $doc->receiverName }}</td>
+                <td class="text-center">{{ $doc->officeName }}</td>
+                <td class="d-flex text-center" style="justify-content: center;"><p>Sent Back</p>&nbsp;<button type="button" class="btn btn-danger"></button></td>
+                <td class="text-center"><a href="">Info</a></td>
+            </tr>
+        @endforeach
+        </tbody>
+      </table>
   </div>
 
 <script>

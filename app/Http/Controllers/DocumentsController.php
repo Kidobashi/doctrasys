@@ -197,10 +197,21 @@ class DocumentsController extends Controller
     {
         $userDocs = Auth::user()->email;
 
-        $docs = Documents::where('email', $userDocs)
+        $circs = Documents::where('email', $userDocs)
         ->join('offices', 'receiverOffice', 'offices.id')
-        ->orderBy('created_at', 'DESC')->paginate(5);
+        ->where('status', 1)
+        ->orderBy('created_at', 'DESC')->get();
 
-        return view('users.documents')->with(['docs' => $docs]);
+        $comps = Documents::where('email', $userDocs)
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('status', 2)
+        ->orderBy('created_at', 'DESC')->get();
+
+        $sentBack = Documents::where('email', $userDocs)
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('status', 3)
+        ->orderBy('created_at', 'DESC')->get();
+
+        return view('users.documents')->with(['circs' => $circs])->with(['comps' => $comps])->with(['sentBack' => $sentBack]);
     }
 }
