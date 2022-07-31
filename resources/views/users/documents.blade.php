@@ -1,11 +1,24 @@
 
 @extends('templates.user')
 @section('content')
+<style>
+.active, .btn:hover {
+  background-color: #666;
+  color: white;
+}
+
+#myDiv2, #myDiv3 {
+    display: none;
+}
+</style>
+
 <h2 class="m-4">My Documents</h2>
-<div class="d-flex justify-content-center">
-    <p>Completed<button type="button" class="btn btn-info"></button></p>
-    <p>Circulation<button type="button" class="btn btn-success"></button></p>
-    <p>Something Wrong<button type="button" class="btn btn-danger"></button></p>
+<div class="nav list-group list-group-flush">
+    <ul id="nav" class="nav d-flex">
+        <button onclick="showOne()" class="btn border d-flex justify-content-center border border-dark">Completed</button>
+        <button onclick="showTwo()" class="btn border d-flex justify-content-center border border-dark">Circulating</button>
+        <button onclick="showThree()" class="btn border d-flex justify-content-center border border-dark">Something Wrong</button>
+    </ul>
 </div>
 <table class="table">
     <thead class="thead-dark">
@@ -36,4 +49,73 @@
     </tbody>
   </table>
   {!! $docs->links() !!}
+
+  <div id="myDiv1">
+    <h1>Hi</h1>
+  </div>
+  <div id="myDiv2">
+    <h1>Hello</h1>
+  </div>
+  <div id="myDiv3">
+    <h1>HiHello</h1>
+  </div>
+
+<script>
+function showOne() {
+    if (document.getElementById('myDiv1')) {
+        if (document.getElementById('myDiv1').style.display == 'block') {
+            document.getElementById('myDiv1').style.display = 'block';
+            document.getElementById('myDiv2').style.display = 'none';
+            document.getElementById('myDiv3').style.display = 'none';
+        }
+        else {
+            document.getElementById('myDiv1').style.display = 'block';
+            document.getElementById('myDiv2').style.display = 'none';
+            document.getElementById('myDiv2').style.display = 'none';
+        }
+    }
+}
+
+function showTwo() {
+    if (document.getElementById('myDiv2')) {
+        if (document.getElementById('myDiv2').style.display == 'none') {
+            document.getElementById('myDiv1').style.display = 'none';
+            document.getElementById('myDiv2').style.display = 'block';
+            document.getElementById('myDiv3').style.display = 'none';
+        }
+        else {
+            document.getElementById('myDiv1').style.display = 'block';
+            document.getElementById('myDiv2').style.display = 'none';
+            document.getElementById('myDiv3').style.display = 'none';
+        }
+    }
+}
+function showThree() {
+    if (document.getElementById('myDiv1')) {
+        if (document.getElementById('myDiv3').style.display == 'none') {
+            document.getElementById('myDiv1').style.display = 'none';
+            document.getElementById('myDiv2').style.display = 'none';
+            document.getElementById('myDiv3').style.display = 'block';
+        }
+        else {
+            document.getElementById('myDiv1').style.display = 'block';
+            document.getElementById('myDiv2').style.display = 'none';
+            document.getElementById('myDiv3').style.display = 'none';
+        }
+    }
+}
+</script>
+
+  <script>
+    // Add active class to the current button (highlight it)
+    var header = document.getElementById("nav");
+    var btns = header.getElementsByClassName("btn");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function() {
+      var current = document.getElementsByClassName("active");
+      current[0].className = current[0].className.replace(" active", "");
+      this.className += " active";
+      });
+    }
+    </script>
 @endsection
