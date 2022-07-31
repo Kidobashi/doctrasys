@@ -30,7 +30,7 @@
             <th class="text-center" scope="col">Receiver</th>
             <th class="text-center" scope="col">Receiving Office</th>
             <th class="text-center" scope="col">Status</th>
-            <th class="text-center" scope="col">Info</th>
+            <th class="text-center" scope="col">Details</th>
           </tr>
         </thead>
         <tbody>
@@ -41,7 +41,7 @@
                 <td class="text-center">{{ $doc->receiverName }}</td>
                 <td class="text-center">{{ $doc->officeName }}</td>
                 <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
-                <td class="text-center"><a href="">Info</a></td>
+                <td class="text-center"><a href="" title="Click for more Information">Info</a></td>
             </tr>
         @endforeach
         </tbody>
@@ -57,7 +57,7 @@
             <th class="text-center" scope="col">Receiver</th>
             <th class="text-center" scope="col">Receiving Office</th>
             <th class="text-center" scope="col">Status</th>
-            <th class="text-center" scope="col">Info</th>
+            <th class="text-center" scope="col">Details</th>
           </tr>
         </thead>
         <tbody>
@@ -68,7 +68,7 @@
                 <td class="text-center">{{ $doc->receiverName }}</td>
                 <td class="text-center">{{ $doc->officeName }}</td>
                 <td class="d-flex text-center" style="justify-content: center;"><p>Circulating</p>&nbsp;<button type="button" class="btn btn-info"></button></td>
-                <td class="text-center"><a href="">Info</a></td>
+                <td class="text-center"><a href="" title="Click for more Information">Info</a></td>
             </tr>
         @endforeach
         </tbody>
@@ -84,7 +84,7 @@
             <th class="text-center" scope="col">Receiver</th>
             <th class="text-center" scope="col">Receiving Office</th>
             <th class="text-center" scope="col">Status</th>
-            <th class="text-center" scope="col">Info</th>
+            <th class="text-center" scope="col">Details</th>
           </tr>
         </thead>
         <tbody>
@@ -95,7 +95,7 @@
                 <td class="text-center">{{ $doc->receiverName }}</td>
                 <td class="text-center">{{ $doc->officeName }}</td>
                 <td class="d-flex text-center" style="justify-content: center;"><p>Sent Back</p>&nbsp;<button type="button" class="btn btn-danger"></button></td>
-                <td class="text-center"><a href="">Info</a></td>
+                <td class="text-center"><a href="" title="Click for more Information">Info</a></td>
             </tr>
         @endforeach
         </tbody>
@@ -105,7 +105,7 @@
 <script>
 function showOne() {
     if (document.getElementById('myDiv1')) {
-        if (document.getElementById('myDiv1').style.display == 'block') {
+        if (document.getElementById('myDiv1').style.display == 'none') {
             document.getElementById('myDiv1').style.display = 'block';
             document.getElementById('myDiv2').style.display = 'none';
             document.getElementById('myDiv3').style.display = 'none';
@@ -133,16 +133,16 @@ function showTwo() {
     }
 }
 function showThree() {
-    if (document.getElementById('myDiv1')) {
+    if (document.getElementById('myDiv3')) {
         if (document.getElementById('myDiv3').style.display == 'none') {
             document.getElementById('myDiv1').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'none';
             document.getElementById('myDiv3').style.display = 'block';
         }
         else {
-            document.getElementById('myDiv1').style.display = 'block';
+            document.getElementById('myDiv1').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('myDiv3').style.display = 'none';
+            document.getElementById('myDiv3').style.display = 'block';
         }
     }
 }
