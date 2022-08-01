@@ -41,7 +41,7 @@
                 <td class="text-center">{{ $doc->receiverName }}</td>
                 <td class="text-center">{{ $doc->officeName }}</td>
                 <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
-                <td class="text-center"><a href="" title="Click for more Information">Info</a></td>
+                <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $doc->referenceNo }}" title="Click for more Information">Info</a></td>
             </tr>
         @endforeach
         </tbody>
@@ -68,7 +68,7 @@
                 <td class="text-center">{{ $doc->receiverName }}</td>
                 <td class="text-center">{{ $doc->officeName }}</td>
                 <td class="d-flex text-center" style="justify-content: center;"><p>Circulating</p>&nbsp;<button type="button" class="btn btn-info"></button></td>
-                <td class="text-center"><a href="" title="Click for more Information">Info</a></td>
+                <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $doc->referenceNo }}" title="Click for more Information">Info</a></td>
             </tr>
         @endforeach
         </tbody>
@@ -95,7 +95,7 @@
                 <td class="text-center">{{ $doc->receiverName }}</td>
                 <td class="text-center">{{ $doc->officeName }}</td>
                 <td class="d-flex text-center" style="justify-content: center;"><p>Sent Back</p>&nbsp;<button type="button" class="btn btn-danger"></button></td>
-                <td class="text-center"><a href="" title="Click for more Information">Info</a></td>
+                <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $doc->referenceNo }}" title="Click for more Information">Info</a></td>
             </tr>
         @endforeach
         </tbody>
@@ -126,8 +126,8 @@ function showTwo() {
             document.getElementById('myDiv3').style.display = 'none';
         }
         else {
-            document.getElementById('myDiv1').style.display = 'block';
-            document.getElementById('myDiv2').style.display = 'none';
+            document.getElementById('myDiv1').style.display = 'none';
+            document.getElementById('myDiv2').style.display = 'block';
             document.getElementById('myDiv3').style.display = 'none';
         }
     }

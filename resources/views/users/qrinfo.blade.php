@@ -149,68 +149,72 @@ ul:not(first-child) ul{
                             </div>
                             @endguest
 
+                            {{-- @auth
+                                @if (isset($data->senderName) === Auth::user()->name && isset($data->officeName) === Auth::user()->assignedOffice)
+                                @endif
+                            @endauth --}}
+
                             @auth
-                            @if (isset($light->prevReceiver) !== Auth::user()->name && isset($lightPrev->officeName) !== Auth::user()->assignedOffice)
-                            @if($light->action == 3)
-                            <div class="d-flex">
-                                <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
-                                <form action="received/{{ $data->referenceNo }}" method="post">
-                                    @csrf
-                                    <div class="col-lg-10 float-end" style="display: none;">
-                                    {{-- <H1>Receive</H1> --}}
-                                    <label for="">Received By:</label>
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" name="receiverName" id="name" value="{{ Auth::user()->name }}"aria-label="Name" aria-describedby="name">
-                                            @error('receiverName')
-                                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                            @enderror
-                                        </div>
+                            @if ($data->senderName === Auth::user()->name && $data->senderOffice === Auth::user()->assignedOffice)
+                                <h4>dfdafsdfdsf</h4>
+
+                            @elseif (isset($light->prevReceiver) !== Auth::user()->name && isset($lightPrev->officeName) !== Auth::user()->assignedOffice)
+                                @if($light->action == 3)
+                                    <div class="d-flex">
+                                        <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
+                                        <form action="received/{{ $data->referenceNo }}" method="post">
+                                        @csrf
+                                        <div class="col-lg-10 float-end" style="display: none;">
+                                        <label for="">Received By:</label>
+                                            <div class="mb-3">
+                                                <input type="text" class="form-control" name="receiverName" id="name" value="{{ Auth::user()->name }}"aria-label="Name" aria-describedby="name">
+                                                @error('receiverName')
+                                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                                @enderror
+                                            </div>
                                         <div class="mb-3">
                                             <input type="text" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}">
 
                                             <input class="form-control "type="text" style="display: none;" name='action' value="1">
                                             </div>
-                                        {{-- <button type="submit">Receive</button> --}}
-                                    </div>
-                                    <button class="btn btn-success" type="submit">Receive</button>
-                                </form>
-                            </div>
-                            @endif
+                                        </div>
+                                            <button class="btn btn-success" type="submit">Receive</button>
+                                    </form>
+                                </div>
+                                @endif
                             @if($light->action == 2)
-                            <div class="d-flex">
-                                {{-- <button type="button" class="btn btn-secondary"  style="margin-right:20px;" disabled><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button> --}}
-                                <form action="received/{{ $data->referenceNo }}" method="post">
-                                    @csrf
+                                <div class="d-flex">
+                                    <form action="received/{{ $data->referenceNo }}" method="post">
+                                        @csrf
                                     <div class="col-lg-10 float-end" style="display: none;">
-                                    {{-- <H1>Receive</H1> --}}
-                                    <label for="">Received By:</label>
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" name="receiverName" id="name" value="{{ Auth::user()->name }}"aria-label="Name" aria-describedby="name">
-                                            @error('receiverName')
-                                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}">
-
-                                            <input class="form-control "type="text" style="display: none;" name='action' value="1">
+                                        <label for="">Received By:</label>
+                                            <div class="mb-3">
+                                                <input type="text" class="form-control" name="receiverName" id="name" value="{{ Auth::user()->name }}"aria-label="Name" aria-describedby="name">
+                                                @error('receiverName')
+                                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                                @enderror
                                             </div>
-                                        {{-- <button type="submit">Receive</button> --}}
+                                            <div class="mb-3">
+                                                <input type="text" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}">
+
+                                                <input class="form-control "type="text" style="display: none;" name='action' value="1">
+                                            </div>
                                     </div>
                                     <button class="btn btn-success" type="submit">Receive</button>
-                                </form>
-                            </div>
+                                    </form>
+                                </div>
                             @endif
+
                             @if($light->action == 1)
                             <div class="d-flex">
                                 <button type="button" class="btn btn-success"><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
                                 {{-- <button type="button" class="btn btn-success" disabled><a href="{{ url('receive/'.$data->referenceNo) }}" disabled>Receive</a></button> --}}
                             </div>
                             @endif
-                        </div>
+                            </div>
                             @endif
                         @endauth
-            </div>
+                    </div>
             <hr>
             <h3>Tracking Information</h3>
             <div class="col-xxs-6 col-xs-4" id="latestTrack">

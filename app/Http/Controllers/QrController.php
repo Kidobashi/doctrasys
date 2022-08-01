@@ -46,8 +46,6 @@ class QrController extends Controller
         ->orderBy('created_at', 'DESC')
         ->latest()->first();
 
-        // dd($light);
-
         $trackings = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
         ->where('referenceNo', $referenceNo)
         ->orderBy('created_at', 'DESC')
