@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Arr;
 use App\Models\Comments;
+use App\Models\Issues;
 
 class QrController extends Controller
 {
@@ -179,4 +180,18 @@ class QrController extends Controller
         return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');
     }
 
+    public function sendBack($referenceNo, Request $request)
+    {
+        $doc = Documents::where('referenceNo', $referenceNo)->first();
+
+        $sendBack = $request->input('status');
+        Documents::where('referenceNo', $referenceNo)->update( array('status' => $sendBack));
+
+        Issues::create([
+            'docRefNo' => $doc->referenceNo,
+            'details' => $request->input('details'),
+        ]);
+
+        return redirect('qrinfo/'.$referenceNo)->with('sentBack', 'Issue Reported');
+    }
 }

@@ -4,6 +4,9 @@
     <title>Tracking Information</title>
 </head>
 <style>
+#sendBack {
+    display: none;
+}
 #message {
     position: fixed;
     text-align: center;
@@ -236,14 +239,26 @@ h5{
 
                             @if($light->action == 1)
                             <div class="d-flex">
-                                <button type="button" class="btn btn-success"><a href="{{ url('forward/'.$data->referenceNo) }}">Forward</a></button>
-                                {{-- <button type="button" class="btn btn-success" disabled><a href="{{ url('receive/'.$data->referenceNo) }}" disabled>Receive</a></button> --}}
+                                <button type="button" class="btn btn-success"><a href="{{ url('forward/'.$data->referenceNo) }}" class="text-white">Forward</a></button>
+                                <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
                             </div>
                             @endif
                             </div>
                             @endif
                         @endauth
-                </div>
+                        <div class="sendBack" id="sendBack" style="width: 18rem;">
+                            <hr>
+                            <form action="send-back/{{ $data->referenceNo }}" method="post">
+                                @csrf
+                            <div class="card-body">
+                              <h5 class="card-title">Send Back</h5>
+                              <h6 class="card-subtitle mb-2 text-muted">Issue:</h6>
+                              <textarea class="card-text w-100" name="details"></textarea>
+                              <input class="form-control "type="text" style="display: none;" name='status' value="3">
+                              <button type="submit" class="btn btn-danger" class="text-white">Send Report</button>
+                                </form>
+                            </div>
+                          </div>
             <hr>
             <h4>Tracking Information</h4>
             <div class="col-xxs-6 col-xs-4" id="latestTrack">
@@ -304,9 +319,9 @@ h5{
                         <hr>
                 </div>
                 @endforeach
-            </div>
-            @if (count($comments) >= 5)
-            <div class="btn-group w-100 rounded">
+                </div>
+                @if (count($comments) >= 5)
+                <div class="btn-group w-100 rounded">
                 <button type="button" class="btn dropdown-toggle" style="position: ; border-right-radius: 20px;font-weight: bold; background-color: #0275d8; color:white;" data-bs-toggle="dropdown" aria-expanded="false">
                    Show all comments
                 </button>
@@ -337,7 +352,7 @@ h5{
                 </ul>
               </div>
               @endif
-        </div>
+            </div>
         {{-- <footer>
             <div class="row">
                 <div class="col-md-6">
@@ -350,6 +365,7 @@ h5{
                 </div>
             </div>
         </footer> --}}
+    </div>
   <!-- Modal -->
   <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -404,7 +420,18 @@ h5{
       </div>
     </div>
   </div>
-
+  <script>
+    function showSendBack() {
+    if (document.getElementById('sendBack')) {
+        if (document.getElementById('sendBack').style.display == 'none') {
+            document.getElementById('sendBack').style.display = 'block';
+        }
+        else {
+            document.getElementById('sendBack').style.display = 'none';
+        }
+    }
+}
+  </script>
     <script>
     $("document").ready(function(){
         setTimeout(function(){
