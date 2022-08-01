@@ -104,6 +104,9 @@ ul:not(first-child) ul{
 }
 
 @media screen and (max-width: 700px) {
+h5{
+    font-size: 4.5vw;
+}
   #latestTrack li{
     font-size: 14px;
   }
@@ -136,42 +139,43 @@ ul:not(first-child) ul{
             @endif
                 <h4 class="card-title" style="margin-top: 10px;">Document Details</h4>
                 <hr>
+                <div style="background-color: #ECECEC; border-radius: 10px;">
                     <div class="container">
                         <div class="row">
-                            <div class="col-sm">
+                            <div class="col-sm p-2">
                                Reference No
                             </div>
-                            <div class="col-sm">
+                            <div class="col-sm p-2">
                                 <h5>{{$data->referenceNo}}</h5>
                              </div>
-                             <div class="col-sm">
+                             <div class="col-sm p-2">
                                 Document Type
-                                {{-- Sender <h5>{{$data->senderName}}</h5> --}}
                              </div>
-                             <div class="col-sm">
+                             <div class="col-sm p-2">
                                 <h5>{{$docCategory->documentName}}</h5>
                              </div>
                         </div>
                     </div>
                     <div class="container">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-3 p-2">
                                 From Office
                             </div>
-                            <div class="col-8">
-                                <h5>{{$data->officeName}}</h5>
-                             </div>
+                            <div class="col-8 p-2">
+                                <h5 class="text-start">{{$data->officeName}}</h5>
+                            </div>
                         </div>
                     </div>
                     <div class="container">
                         <div class="row">
-                            <div class="col-sm">
+                            <div class="col-3 p-2">
                                 Sender
                             </div>
-                            <div class="col-sm">
-                                <h5>{{$data->senderName}}</h5>
+                            <div class="col-8 p-2">
+                                <h5 class="text-start">{{$data->senderName}}</h5>
                              </div>
                         </div>
+                    </div>
                     </div>
                 </div>
 
@@ -241,7 +245,7 @@ ul:not(first-child) ul{
                         @endauth
                 </div>
             <hr>
-            <h3>Tracking Information</h3>
+            <h4>Tracking Information</h4>
             <div class="col-xxs-6 col-xs-4" id="latestTrack">
                     <div>
                         @if ($light->action == 3)
