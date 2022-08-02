@@ -7,20 +7,43 @@
   color: white;
 }
 
-#myDiv2, #myDiv3 {
+#filter, #myDiv2, #myDiv3 {
     display: none;
 }
-</style>
 
-<h2 class="m-4">My Documents</h2>
-<div class="nav list-group list-group-flush">
-    <ul id="nav" class="nav d-flex">
-        <button onclick="showOne()" class="btn border d-flex justify-content-center border border-dark">Completed</button>
-        <button onclick="showTwo()" class="btn border d-flex justify-content-center border border-dark">Circulating</button>
-        <button onclick="showThree()" class="btn border d-flex justify-content-center border border-dark">Something Wrong</button>
-    </ul>
+.filter {
+    float: right;
+}
+
+ul .nav {
+    float: left;
+}
+</style>
+<div>
+    <h2 class="m-4">My Documents</h2>
+    <div class="nav list-group list-group-flush">
+        <ul id="nav" class="nav d-flex">
+            <button onclick="showOne()" class="btn border d-flex justify-content-center border border-dark">Completed</button>
+            <button onclick="showTwo()" class="btn border d-flex justify-content-center border border-dark">Circulating</button>
+            <button onclick="showThree()" class="btn border d-flex justify-content-center border border-dark">Sent Back</button>
+            &nbsp;&nbsp;&nbsp;<button onclick="showFilter()" class="btn border d-flex justify-content-center border border-dark">More Filter</button>
+        </ul>
+    </div>
 </div>
 
+    <div class="filter float-start" id="filter">
+        <form action="">
+        <select name="receiverOffice" class="form-control">
+            <option value="" selected disabled>Receiving Office
+                @foreach ($offices as $row)
+                    <option value="{{ $row->id }}">{{ $row->officeName }}</option>
+                </option>
+                @endforeach
+            </select>
+            </select>
+            <button class="btn border d-flex justify-content-center border border-dark">Filter</button>
+        </form>
+    </div>
   <div id="myDiv1">
     <table class="table">
         <thead class="thead-dark">
@@ -132,6 +155,7 @@ function showTwo() {
         }
     }
 }
+
 function showThree() {
     if (document.getElementById('myDiv3')) {
         if (document.getElementById('myDiv3').style.display == 'none') {
@@ -143,6 +167,17 @@ function showThree() {
             document.getElementById('myDiv1').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'none';
             document.getElementById('myDiv3').style.display = 'block';
+        }
+    }
+}
+
+function showFilter() {
+    if (document.getElementById('filter')) {
+        if (document.getElementById('filter').style.display == 'none') {
+            document.getElementById('filter').style.display = 'block';
+        }
+        else {
+            document.getElementById('filter').style.display = 'none';
         }
     }
 }

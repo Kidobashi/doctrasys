@@ -225,11 +225,6 @@ div.content {
             <span class="mx-2">Tracking</span>
         </a>
       </li>
-      {{-- <li href="#" class="nav-link">
-        <a class="nav-link" href="{{ url('coming') }}">
-            <span class="mx-2">Profile</span>
-        </a>
-      </li> --}}
       @auth
       <li href="#" class="nav-link">
         <a class="nav-link {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">

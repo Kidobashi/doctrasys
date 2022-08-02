@@ -212,6 +212,8 @@ class DocumentsController extends Controller
         ->where('status', 3)
         ->orderBy('created_at', 'DESC')->get();
 
-        return view('users.documents')->with(['circs' => $circs])->with(['comps' => $comps])->with(['sentBack' => $sentBack]);
+        $offices = Offices::all();
+
+        return view('users.documents')->with(['circs' => $circs])->with(['comps' => $comps])->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
     }
 }
