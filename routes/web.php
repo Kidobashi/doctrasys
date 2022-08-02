@@ -100,26 +100,37 @@ Route::get('/coming', function () {
     return view('unused.coming');
 });
 
+//Search Controllers
+Route::get('index', [SearchController::class, 'search']);
+Route::get('tracking', [SearchController::class, 'search']);
 
-// Route::get('add-document', [DocumentsController::class, 'show']);
+
+//Comments Controller
+Route::post('qrinfo/{referenceNo}/comment', [App\Http\Controllers\CommentsController::class, 'store']);
+
+
+//Profile Controller
 Route::get('/user-profile', [ProfileController::class, 'create']);
 Route::post('/user-profile', [ProfileController::class, 'store']);
+
+
+//User Controller
 Route::get('user-management', [UserController::class, 'index'])->name('user');
+
+
+//Documents Controller
 Route::get('index', [DocumentsController::class, 'index'])->name('docs');
-Route::get('index', [SearchController::class, 'search']);
 Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
 Route::get('download/{token}', [DocumentsController::class, 'fileGenerator'])->name('download');
 Route::post('add-documents', [DocumentsController::class, 'store']);
+Route::get('documents', [DocumentsController::class, 'userDocs']);
+
+
+//Qr Controllers
 Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo']);
-// Route::get('qrinfo/{referenceNo}', [App\Http\Controllers\CommentsController::class, 'showComment']);
-Route::post('qrinfo/{referenceNo}/comment', [App\Http\Controllers\CommentsController::class, 'store']);
 Route::get('forward/{referenceNo}', [QrController::class, 'forward']);
-Route::post('forward/forwarded/{referenceNo}', [QrController::class, 'update']);
+Route::post('qrinfo/forwarded/{referenceNo}', [QrController::class, 'update']);
 Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
 Route::post('qrinfo/received/{referenceNo}', [QrController::class, 'update']);
-Route::get('tracking', [SearchController::class, 'search']);
-Route::get('documents', [DocumentsController::class, 'userDocs']);
 Route::post('qrinfo/send-back/{referenceNo}', [QrController::class, 'sendBack']);
 
-// Route::post('add-document', [DocumentsController::class, 'create'])->name('offices');
-// Route::get('add-document', [DocumentsController::class, 'index']);

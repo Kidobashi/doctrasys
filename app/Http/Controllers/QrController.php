@@ -28,6 +28,13 @@ class QrController extends Controller
 
         $latestComments = Comments::where('documents_id', $id)->orderBy('created_at', 'DESC')->take(4)->get();
 
+        $officeN = DB::table('documents')
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('documents.referenceNo', $referenceNo)
+        ->first();
+
+        $offices = Offices::all();
+
         $data = DB::table('documents')
         ->join('offices', 'senderOffice', 'offices.id')
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
@@ -60,7 +67,7 @@ class QrController extends Controller
 
         $altdata = array_merge(['prev' => $prev] , ['trackings' => $trackings]);
 
-        return view('users.qrinfo')->with('docCategory', $docCategory)->with('latestComments', $latestComments)->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
+        return view('users.qrinfo')->with('offices', $offices)->with('officeN', $officeN)->with('docCategory', $docCategory)->with('latestComments', $latestComments)->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
     }
 
     public function saveQr(){
@@ -96,8 +103,11 @@ class QrController extends Controller
     public function update($referenceNo,Request $request){
 
         $doc = Documents::where('referenceNo', $referenceNo)->first();
+
         $newReceiver = $request->input('receiverName');
+
         $newOfficeReceiver = $request->input('receiverOffice');
+
         $success = 2;
 
         $checkIntendedReceiver = Documents::join('offices', 'receiverOffice', 'offices.id')
@@ -112,9 +122,9 @@ class QrController extends Controller
             Documents::where('referenceNo', $referenceNo)->update( array('status' => $success));
 
             TrackingLogs::create([
-                'senderName' => $doc->senderName,
+                'senderName' => $request->input('senderName'),
                 'receiverName' => $newReceiver,
-                'senderOffice' => $doc->senderOffice,
+                'senderOffice' => $request->input('senderOffice'),
                 'receiverOffice' => $newOfficeReceiver,
                 'referenceNo' => $referenceNo,
                 'action' => $request->input('action'),
@@ -129,9 +139,9 @@ class QrController extends Controller
             Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
 
             TrackingLogs::create([
-                'senderName' => $doc->senderName,
+                'senderName' => $request->input('senderName'),
                 'receiverName' => $newReceiver,
-                'senderOffice' => $doc->senderOffice,
+                'senderOffice' => $request->input('senderOffice'),
                 'receiverOffice' => $newOfficeReceiver,
                 'referenceNo' => $referenceNo,
                 'action' => $request->input('action'),
