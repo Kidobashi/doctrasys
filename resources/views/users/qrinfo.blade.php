@@ -198,7 +198,8 @@ h5{
 
                 @auth
                 @if ($lightPrev->senderName === Auth::user()->name && $lightPrev->senderOffice === Auth::user()->assignedOffice)
-                    <h1>&nbsp;&nbsp;&nbsp;This Document was modified by YOU</h1>
+                    <h1>&nbsp;&nbsp;&nbsp;This Document was modified by you</h1>
+                    <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
                 @elseif (isset($light->prevReceiver) !== Auth::user()->name && isset($lightPrev->officeName) !== Auth::user()->assignedOffice)
                     @if($light->action == 3)
                         <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
@@ -217,6 +218,7 @@ h5{
                         </div>
                 @endif
                 @endauth
+
                         <div class="receive" id="receive">
                             <form action="received/{{ $data->referenceNo }}" method="post">
                             @csrf

@@ -104,6 +104,10 @@ class QrController extends Controller
 
         $doc = Documents::where('referenceNo', $referenceNo)->first();
 
+        $newSender = Auth::user()->name;
+
+        $newSenderOffice = Auth::user()->assignedOffice;
+
         $newReceiver = $request->input('receiverName');
 
         $newOfficeReceiver = $request->input('receiverOffice');
@@ -122,9 +126,9 @@ class QrController extends Controller
             Documents::where('referenceNo', $referenceNo)->update( array('status' => $success));
 
             TrackingLogs::create([
-                'senderName' => $request->input('senderName'),
+                'senderName' => $newSender,
                 'receiverName' => $newReceiver,
-                'senderOffice' => $request->input('senderOffice'),
+                'senderOffice' => $newSenderOffice,
                 'receiverOffice' => $newOfficeReceiver,
                 'referenceNo' => $referenceNo,
                 'action' => $request->input('action'),
@@ -139,9 +143,9 @@ class QrController extends Controller
             Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
 
             TrackingLogs::create([
-                'senderName' => $request->input('senderName'),
+                'senderName' => $newSender,
                 'receiverName' => $newReceiver,
-                'senderOffice' => $request->input('senderOffice'),
+                'senderOffice' => $newSenderOffice,
                 'receiverOffice' => $newOfficeReceiver,
                 'referenceNo' => $referenceNo,
                 'action' => $request->input('action'),
