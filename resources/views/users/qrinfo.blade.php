@@ -289,6 +289,7 @@ h5{
                         @if ($light->action == 3)
                             <h5>In Circulation...</h5>
                         @elseif( $light->action == 1)
+                        {{ $light->created_at->diffForHumans() }}
                             <h5>&nbsp;Received by <i>{{ $light->receiverName }}&nbsp;-&nbsp;<i>{{ $light->officeName }}</i></h5>
                                 <li class="">Date Received: <i>{{ date_format($light->created_at,'M d Y h:i A')}}</i></li>
                                 @if($light->action == 2)
@@ -299,6 +300,7 @@ h5{
                                         <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
                                 @endif
                             @elseif( $light->action == 2)
+                        {{ $light->created_at->diffForHumans() }}
                             <h5>&nbsp;Forwarded to <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
                                 {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
@@ -402,6 +404,7 @@ h5{
                 <div class="section-header">
                     <li>
                     @if( $altdata['trackings'][$key]->action == 1)
+                    {{ $altdata['trackings'][$key]->created_at->diffForHumans() }}
                     <h5><div class="top-arrow center">
                     </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
                         {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
@@ -414,6 +417,7 @@ h5{
                         @endif
                     @endif
                     @if( $altdata['trackings'][$key]->action == 2)
+                    {{ $altdata['trackings'][$key]->created_at->diffForHumans() }}
                     <h5><div class="top-arrow center">
                     </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
                         {{-- <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
