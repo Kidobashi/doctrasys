@@ -9,10 +9,24 @@
           <div class="row">
             <div class="col-8">
               <div class="numbers">
-                <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Money</p>
+                <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Documents</p>
                 <h5 class="font-weight-bolder mb-0">
-                  $53,000
-                  <span class="text-success text-sm font-weight-bolder">+55%</span>
+                  #######
+                  {{-- <span class="text-success text-sm font-weight-bolder">+55%</span> --}}
+                </h5>
+              </div>
+              <div class="numbers">
+                <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Tagged Documents</p>
+                <h5 class="font-weight-bolder mb-0">
+                  #######
+                  {{-- <span class="text-success text-sm font-weight-bolder">+55%</span> --}}
+                </h5>
+              </div>
+              <div class="numbers">
+                <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Documents Sent Back</p>
+                <h5 class="font-weight-bolder mb-0">
+                  #######
+                  {{-- <span class="text-success text-sm font-weight-bolder">+55%</span> --}}
                 </h5>
               </div>
             </div>
@@ -38,6 +52,24 @@
                 </h5>
               </div>
             </div>
+            <div class="col-8">
+                <div class="numbers">
+                  <p class="text-sm mb-0 text-capitalize font-weight-bold">Current Documents Circulating</p>
+                  <h5 class="font-weight-bolder mb-0">
+                   ###
+                    <span class="text-success text-sm font-weight-bolder">+3%</span>
+                  </h5>
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="numbers">
+                  <p class="text-sm mb-0 text-capitalize font-weight-bold">Documents Being Processed</p>
+                  <h5 class="font-weight-bolder mb-0">
+                    ###
+                    <span class="text-success text-sm font-weight-bolder">+3%</span>
+                  </h5>
+                </div>
+              </div>
             <div class="col-4 text-end">
               <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
                 <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
