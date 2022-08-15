@@ -25,7 +25,7 @@
               <div class="numbers">
                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Documents Sent Back</p>
                 <h5 class="font-weight-bolder mb-0">
-                  #######
+                    {{ $sentBack }}
                   {{-- <span class="text-success text-sm font-weight-bolder">+55%</span> --}}
                 </h5>
               </div>
