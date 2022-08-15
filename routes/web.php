@@ -13,6 +13,7 @@ use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\QrController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
@@ -134,3 +135,5 @@ Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
 Route::post('qrinfo/received/{referenceNo}', [QrController::class, 'update']);
 Route::post('qrinfo/send-back/{referenceNo}', [QrController::class, 'sendBack']);
 
+
+Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

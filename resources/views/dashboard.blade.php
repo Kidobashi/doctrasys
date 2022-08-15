@@ -11,7 +11,7 @@
               <div class="numbers">
                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Documents</p>
                 <h5 class="font-weight-bolder mb-0">
-                  #######
+                    {{ $totalDocs }}
                   {{-- <span class="text-success text-sm font-weight-bolder">+55%</span> --}}
                 </h5>
               </div>
