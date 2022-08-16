@@ -18,7 +18,7 @@
               <div class="numbers">
                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Tagged Documents</p>
                 <h5 class="font-weight-bolder mb-0">
-                  #######
+                  {{ $taggedDocs }}
                   {{-- <span class="text-success text-sm font-weight-bolder">+55%</span> --}}
                 </h5>
               </div>
@@ -45,9 +45,9 @@
           <div class="row">
             <div class="col-8">
               <div class="numbers">
-                <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Users</p>
+                <p class="text-sm mb-0 text-capitalize font-weight-bold">Created Documents Today</p>
                 <h5 class="font-weight-bolder mb-0">
-                  2,300
+                  {{ $docsToday }}
                   <span class="text-success text-sm font-weight-bolder">+3%</span>
                 </h5>
               </div>
@@ -56,7 +56,7 @@
                 <div class="numbers">
                   <p class="text-sm mb-0 text-capitalize font-weight-bold">Current Documents Circulating</p>
                   <h5 class="font-weight-bolder mb-0">
-                   ###
+                   {{ $circulatingDocs }}
                     <span class="text-success text-sm font-weight-bolder">+3%</span>
                   </h5>
                 </div>
@@ -65,7 +65,7 @@
                 <div class="numbers">
                   <p class="text-sm mb-0 text-capitalize font-weight-bold">Documents Being Processed</p>
                   <h5 class="font-weight-bolder mb-0">
-                    ###
+                    {{ $receivedDocs }}
                     <span class="text-success text-sm font-weight-bolder">+3%</span>
                   </h5>
                 </div>

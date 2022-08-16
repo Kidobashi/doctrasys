@@ -103,7 +103,7 @@ class DocumentsController extends Controller
             'email' => 'required',
         ]);
 
-        Documents::create([
+        Documents::insert([
             'senderName' => request('senderName'),
             'email' => request('email'),
             'receiverName' => request('receiverName'),
@@ -111,6 +111,7 @@ class DocumentsController extends Controller
             'receiverOffice' => request('receiverOffice'),
             'docType' => request('docType'),
             'referenceNo' => $refNo,
+            'created_at' => date('Y-m-d'),
         ]);
 
         TrackingLogs::create([
