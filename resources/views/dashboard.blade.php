@@ -39,7 +39,7 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                      <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Tagged Documents</p>
+                      <p class="text-sm mb-0 text-capitalize font-weight-bold">Reached Intended User<span class="ai-user"></span></p></p>
                       <h5 class="font-weight-bolder mb-0">
                         {{ $taggedDocs }}
                       </h5>
@@ -76,68 +76,80 @@
       </div>
     </div>
 
-    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+    <div class="col-xl-4 col-sm-7 mb-xl-0 mb-5">
       <div class="card">
         <div class="card-body p-3">
           <div class="row">
-            <div class="col-8">
-              <div class="numbers">
-                <p class="text-sm mb-0 text-capitalize font-weight-bold">Created Documents Today</p>
-                <h5 class="font-weight-bolder mb-0">
-                  {{ $docsToday }}
-                  <span class="text-success text-sm font-weight-bolder">+3%</span>
-                </h5>
+            <div class="numbers">
+              <h5 class="font-weight-bolder mb-0">
+                  Documents Summary
+              </h5>
+            </div>
+            <div class="card">
+              <div class="card-body p-3">
+                <div class="row">
+                  <div class="col-8">
+                    <div class="numbers">
+                      <p class="text-sm mb-0 text-capitalize font-weight-bold">Created Documents Today</p>
+                      <h5 class="font-weight-bolder mb-0">
+                        {{ $docsToday }}
+                        <span class="text-success text-sm font-weight-bolder">+3%</span>
+                      </h5>
+                    </div>
+                  </div>
+                  <div class="col-4 text-end">
+                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                      <i class="ni ni-fat-remove text-lg opacity-10" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-8">
-                <div class="numbers">
-                  <p class="text-sm mb-0 text-capitalize font-weight-bold">Current Documents Circulating</p>
-                  <h5 class="font-weight-bolder mb-0">
-                   {{ $circulatingDocs }}
-                    <span class="text-success text-sm font-weight-bolder">+3%</span>
-                  </h5>
+            <div class="card">
+              <div class="card-body p-3">
+                <div class="row">
+                  <div class="col-8">
+                    <div class="numbers">
+                      <p class="text-sm mb-0 text-capitalize font-weight-bold">Current Documents Circulating</p>
+                      <h5 class="font-weight-bolder mb-0">
+                       {{ $circulatingDocs }}
+                        <span class="text-success text-sm font-weight-bolder">+3%</span>
+                      </h5>
+                    </div>
+                  </div>
+                  <div class="col-4 text-end">
+                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                      <i class="ni ni-fat-remove   text-lg opacity-10" aria-hidden="true"></i>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-8">
-                <div class="numbers">
-                  <p class="text-sm mb-0 text-capitalize font-weight-bold">Documents Being Processed</p>
-                  <h5 class="font-weight-bolder mb-0">
-                    {{ $receivedDocs }}
-                    <span class="text-success text-sm font-weight-bolder">+3%</span>
-                  </h5>
+            </div>
+            <div class="card">
+              <div class="card-body p-3">
+                <div class="row">
+                  <div class="col-8">
+                    <div class="numbers">
+                      <p class="text-sm mb-0 text-capitalize font-weight-bold">Documents Being Processed</p>
+                      <h5 class="font-weight-bolder mb-0">
+                        {{ $receivedDocs }}
+                        <span class="text-success text-sm font-weight-bolder">+3%</span>
+                      </h5>
+                    </div>
+                  </div>
+                  <div class="col-4 text-end">
+                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                      <i class="ni ni-fat-remove   text-lg opacity-10" aria-hidden="true"></i>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-      <div class="card">
-        <div class="card-body p-3">
-          <div class="row">
-            <div class="col-8">
-              <div class="numbers">
-                <p class="text-sm mb-0 text-capitalize font-weight-bold">New Clients</p>
-                <h5 class="font-weight-bolder mb-0">
-                  +3,462
-                  <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                </h5>
-              </div>
-            </div>
-            <div class="col-4 text-end">
-              <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
     <div class="col-xl-3 col-sm-6">
       <div class="card">
         <div class="card-body p-3">

@@ -137,3 +137,4 @@ Route::post('qrinfo/send-back/{referenceNo}', [QrController::class, 'sendBack'])
 
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('offices', [DashboardController::class, 'adminOffice']);
