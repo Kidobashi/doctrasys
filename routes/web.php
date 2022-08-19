@@ -17,6 +17,7 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -138,3 +139,4 @@ Route::post('qrinfo/send-back/{referenceNo}', [QrController::class, 'sendBack'])
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('offices', [DashboardController::class, 'adminOffice']);
+Route::post('addOffice', [DashboardController::class, 'addOffice']);

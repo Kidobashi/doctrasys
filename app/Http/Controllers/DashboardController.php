@@ -22,11 +22,8 @@ class DashboardController extends Controller
          //Sent Back/Status 3
         $sentBack = Documents::where('status', 3)->count();
 
-        // $mytime = Carbon::now()->format('Y-m-d');
-        //  dd($mytime);
         $date = date('Y-m-d');
-       $docsToday = Documents::where('created_at',  $date)->count();
-    //    dd($docsToday);
+        $docsToday = Documents::where('created_at',  $date)->count();
 
         $receivedDocs = TrackingLogs::where('action', 1)->groupby('referenceNo')->count();
 
@@ -38,5 +35,18 @@ class DashboardController extends Controller
         $offices = Offices::all();
 
         return view('laravel-examples.offices')->with(['offices' => $offices]);
+    }
+
+    public function addOffice(Request $request)
+    {
+        $request->validate([
+            'officeName' => 'required',
+        ]);
+
+        Offices::insert([
+            'officeName' => request('officeName'),
+        ]);
+
+        return redirect('offices');
     }
 }
