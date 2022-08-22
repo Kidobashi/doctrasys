@@ -71,8 +71,8 @@ Route::group(['middleware' => 'auth'], function () {
 	})->name('sign-up');
 
     Route::get('/logout', [SessionsController::class, 'destroy']);
-	Route::get('/user-profile', [InfoUserController::class, 'create']);
-	Route::post('/user-profile', [InfoUserController::class, 'store']);
+	// Route::get('/user-profile', [InfoUserController::class, 'create']);
+	// Route::post('/user-profile', [InfoUserController::class, 'store']);
     Route::get('/login', function () {
 		return view('dashboard');
 	})->name('sign-up');
@@ -113,7 +113,7 @@ Route::post('qrinfo/{referenceNo}/comment', [App\Http\Controllers\CommentsContro
 
 //Profile Controller
 Route::get('/user-profile', [ProfileController::class, 'create']);
-Route::post('/user-profile', [ProfileController::class, 'store']);
+Route::post('/details', [ProfileController::class, 'store']);
 
 
 //User Controller

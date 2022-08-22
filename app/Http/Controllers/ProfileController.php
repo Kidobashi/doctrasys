@@ -13,7 +13,7 @@ class ProfileController extends Controller
 
     public function create()
     {
-        return view('users.profile');
+        return view('laravel-examples.user-profile');
     }
 
     public function store(Request $request)
@@ -52,6 +52,6 @@ class ProfileController extends Controller
         ]);
 
 
-        return redirect('/details')->with('success','Profile updated successfully');
+        return redirect('/user-profile')->with('success','Profile updated successfully');
     }
 }
