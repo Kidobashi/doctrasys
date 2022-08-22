@@ -46,7 +46,7 @@
                   </div>
                 </div>
                 <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                  <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
                     <i class="ni ni-like-2 text-lg opacity-10" aria-hidden="true"></i>
                   </div>
                 </div>
@@ -65,7 +65,7 @@
                   </div>
                 </div>
                 <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                  <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md">
                     <i class="ni ni-fat-remove   text-lg opacity-10" aria-hidden="true"></i>
                   </div>
                 </div>
@@ -93,13 +93,12 @@
                       <p class="text-sm mb-0 text-capitalize font-weight-bold">Created Documents Today</p>
                       <h5 class="font-weight-bolder mb-0">
                         {{ $docsToday }}
-                        <span class="text-success text-sm font-weight-bolder">+3%</span>
                       </h5>
                     </div>
                   </div>
                   <div class="col-4 text-end">
                     <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                      <i class="ni ni-fat-remove text-lg opacity-10" aria-hidden="true"></i>
+                      <i class="ni ni-single-copy-04 text-lg opacity-10" aria-hidden="true"></i>
                     </div>
                   </div>
                 </div>
@@ -113,13 +112,12 @@
                       <p class="text-sm mb-0 text-capitalize font-weight-bold">Current Documents Circulating</p>
                       <h5 class="font-weight-bolder mb-0">
                        {{ $circulatingDocs }}
-                        <span class="text-success text-sm font-weight-bolder">+3%</span>
                       </h5>
                     </div>
                   </div>
                   <div class="col-4 text-end">
-                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                      <i class="ni ni-fat-remove   text-lg opacity-10" aria-hidden="true"></i>
+                    <div class="icon icon-shape bg-gradient-secondary shadow text-center border-radius-md">
+                        <i class="fa fa-share" aria-hidden="true"></i>
                     </div>
                   </div>
                 </div>
@@ -133,13 +131,12 @@
                       <p class="text-sm mb-0 text-capitalize font-weight-bold">Documents Being Processed</p>
                       <h5 class="font-weight-bolder mb-0">
                         {{ $receivedDocs }}
-                        <span class="text-success text-sm font-weight-bolder">+3%</span>
                       </h5>
                     </div>
                   </div>
                   <div class="col-4 text-end">
-                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                      <i class="ni ni-fat-remove   text-lg opacity-10" aria-hidden="true"></i>
+                    <div class="icon icon-shape bg-gradient-warning shadow text-center border-radius-md">
+                        <i class="fa fa-cogs" aria-hidden="true"></i>
                     </div>
                   </div>
                 </div>
@@ -150,7 +147,7 @@
       </div>
     </div>
 
-    <div class="col-xl-3 col-sm-6">
+    {{-- <div class="col-xl-3 col-sm-6">
       <div class="card">
         <div class="card-body p-3">
           <div class="row">
@@ -172,8 +169,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="row mt-4">
+  </div> --}}
+  {{-- <div class="row mt-4">
     <div class="col-lg-7 mb-lg-0 mb-4">
       <div class="card">
         <div class="card-body p-3">
@@ -216,8 +213,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="row mt-4">
+  </div> --}}
+  {{-- <div class="row mt-4">
     <div class="col-lg-5 mb-lg-0 mb-4">
       <div class="card z-index-2">
         <div class="card-body p-3">
@@ -350,8 +347,8 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="row my-4">
+  </div> --}}
+  {{-- <div class="row my-4">
     <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
       <div class="card">
         <div class="card-header pb-0">
@@ -376,8 +373,8 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="card-body px-0 pb-2">
+        </div> --}}
+        {{-- <div class="card-body px-0 pb-2">
           <div class="table-responsive">
             <table class="table align-items-center mb-0">
               <thead>
@@ -625,8 +622,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-4 col-md-6">
+    </div> --}}
+    {{-- <div class="col-lg-4 col-md-6">
       <div class="card h-100">
         <div class="card-header pb-0">
           <h6>Orders overview</h6>
@@ -694,11 +691,11 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> --}}
   </div>
 
 @endsection
-@push('dashboard')
+{{-- @push('dashboard')
   <script>
     window.onload = function() {
       var ctx = document.getElementById("chart-bars").getContext("2d");
@@ -871,5 +868,5 @@
       });
     }
   </script>
-@endpush
+@endpush --}}
 
