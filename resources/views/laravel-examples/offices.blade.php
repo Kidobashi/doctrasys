@@ -14,7 +14,17 @@
             </div>
             <div class="card-body pt-4 p-3">
                 @foreach ($offices as $row)
-                    <p>{{ $row->officeName }}</p>
+                <div class="d-flex">
+                <p style="white-space: normal;">{{ $row->officeName }}</p>
+                    <div class="">
+                        <a href="#" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit">
+                            <i class="fas fa-user-edit text-secondary"></i>
+                        </a>
+                        <span>
+                            <i class="cursor-pointer fas fa-trash text-secondary" data-bs-toggle="tooltip"  data-bs-original-title="Delete Office"></i>
+                        </span>
+                    </div>
+                </div>
                 @endforeach
             </div>
         </div>
