@@ -31,7 +31,26 @@ class SearchController extends Controller
 
         $result = Documents::where([['senderName', $creator],['created_at' ,$searchDate]])->get();
 
-        return view('users.documents')->with(['result' => $result]);
+        $userDocs = Auth::user()->email;
+
+        $circs = Documents::where('email', $userDocs)
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('status', 1)
+        ->orderBy('created_at', 'DESC')->get();
+
+        $comps = Documents::where('email', $userDocs)
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('status', 2)
+        ->orderBy('created_at', 'DESC')->get();
+
+        $sentBack = Documents::where('email', $userDocs)
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('status', 3)
+        ->orderBy('created_at', 'DESC')->get();
+
+        $offices = Offices::all();
+
+        return view('users.documents')->with(['result' => $result])->with(['circs' => $circs])->with(['comps' => $comps])->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
     }
 
 }

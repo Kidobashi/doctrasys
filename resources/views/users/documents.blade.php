@@ -29,7 +29,7 @@
             <div class="col-md-8">
                 <form action="searchByDate" method="get">
                     <input type="date" style="padding: .5vw;" class="rounded" placeholder="Search by Date" name="dateSearch" type="">
-                    <button style="padding: .5vw;" class="rounded" type="submit" onclick="hideBars()">Search</button>
+                    <button style="padding: .5vw;" class="rounded" type="submit">Search</button>
                 </form>
             </div>
         </div>
@@ -247,17 +247,6 @@ function showFilter() {
         }
         else {
             document.getElementById('filter').style.display = 'none';
-        }
-    }
-}
-
-function hideBars(){
-    if (document.getElementById('nav')) {
-        if (document.getElementById('nav').style.display == 'flex') {
-            document.getElementById('nav').style.display = 'none';
-        }
-        else {
-            document.getElementById('nav').style.display = 'flex';
         }
     }
 }
