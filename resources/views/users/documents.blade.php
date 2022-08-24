@@ -15,22 +15,59 @@
     float: right;
 }
 
-ul .nav {
-    float: left;
+#nav {
+    display: flex;
 }
 </style>
-<div>
-    <h2 class="m-4">My Documents</h2>
-    <div class="nav list-group list-group-flush">
-        <ul id="nav" class="nav d-flex">
-            <button onclick="showOne()" class="btn border d-flex justify-content-center border border-dark">Completed</button>
-            <button onclick="showTwo()" class="btn border d-flex justify-content-center border border-dark">Circulating</button>
-            <button onclick="showThree()" class="btn border d-flex justify-content-center border border-dark">Sent Back</button>
-            &nbsp;&nbsp;&nbsp;<button onclick="showFilter()" class="btn border d-flex justify-content-center border border-dark">More Filter</button>
-        </ul>
-    </div>
+<div class="col-md-12">
+    <h2 class="m-3">My Documents</h2>
+        <div id="nav" class="nav">
+            <button onclick="showOne()" class="btn border d-flex justify-content-center border border-dark">Completed</button>&nbsp;&nbsp;
+            <button onclick="showTwo()" class="btn border d-flex justify-content-center border border-dark">Circulating</button>&nbsp;&nbsp;
+            <button onclick="showThree()" class="btn border d-flex justify-content-center border border-dark">Sent Back</button>&nbsp;&nbsp;
+            <button onclick="showFilter()" class="btn border d-flex justify-content-center border border-dark">More Filter</button>
+            <div class="col-md-8">
+                <form action="searchByDate" method="get">
+                    <input type="date" style="padding: .5vw;" class="rounded" placeholder="Search by Date" name="dateSearch" type="">
+                    <button style="padding: .5vw;" class="rounded" type="submit" onclick="hideBars()">Search</button>
+                </form>
+            </div>
+        </div>
 </div>
 
+<div class="d-flex mt-6 justify-content-center">
+    @if (isset($result))
+    @foreach ($result as $row)
+        <tr>
+            {{-- <td class="text-center"> {{ $loop->iteration }} </td> --}}
+            <td class="text-center"> {{ $row->referenceNo }}</td>
+            <td class="text-center">{{ $row->receiverName }}</td>
+            <td class="text-center">{{ $row->officeName }}</td>
+            <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
+            <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $row->referenceNo }}" title="Click for more Information">Info</a></td>
+        </tr>
+    @endforeach
+    @elseif (Request::is('documents'))
+        <p style="display: none;" class="display-4">Track 'Document' with reference number...</p>
+    @else
+        <p class="display-4">No 'results' found</td></p>
+    @endif
+    {{-- @if(isset($data->referenceNo)) --}}
+    {{-- <a class="bg-white w-60 border m-2 p-2" href="http://127.0.0.1:8000/qrinfo/{{ $data->referenceNo }}"> --}}
+    {{-- <div> --}}
+        {{-- <h3>Reference Number : {{ $data->referenceNo }}</h3> --}}
+        {{-- <div class="d-flex justify-content-end"> --}}
+            {{-- <p class="details">{{ date_format($data->created_at,'M d Y h:i a') }}</p> --}}
+        {{-- </div> --}}
+    {{-- </div></a> --}}
+    {{-- @elseif (Request::is('index')) --}}
+        {{-- <p class="display-4">Track 'Document' with reference number...</p> --}}
+    {{-- @else --}}
+    {{-- <p class="display-4">No 'results' found</td></p> --}}
+        {{-- @endif --}}
+    </div>
+
+    @if (isset($offices))
     <div class="filter float-start" id="filter">
         <form action="">
         <select name="receiverOffice" class="form-control">
@@ -44,6 +81,35 @@ ul .nav {
             <button class="btn border d-flex justify-content-center border border-dark">Filter</button>
         </form>
     </div>
+    @endif
+
+    {{-- <div id="myDiv1">
+        <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th class="text-center" scope="col">No.</th>
+                <th class="text-center" scope="col">Reference No.</th>
+                <th class="text-center" scope="col">Receiver</th>
+                <th class="text-center" scope="col">Receiving Office</th>
+                <th class="text-center" scope="col">Status</th>
+                <th class="text-center" scope="col">Details</th>
+              </tr>
+            </thead>
+            <tbody>
+                @foreach ($result as $row)
+                    <tr>
+                        <td class="text-center"> {{ $loop->iteration }} </td>
+                        <td class="text-center"> {{ $row->referenceNo }}</td>
+                        <td class="text-center">{{ $row->receiverName }}</td>
+                        <td class="text-center">{{ $row->officeName }}</td>
+                        <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
+                        <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $row->referenceNo }}" title="Click for more Information">Info</a></td>
+                    </tr>
+                @endforeach
+            </tbody>
+          </table>
+      </div> --}}
+@if (isset($comps))
   <div id="myDiv1">
     <table class="table">
         <thead class="thead-dark">
@@ -70,7 +136,9 @@ ul .nav {
         </tbody>
       </table>
   </div>
+@endif
 
+@if (isset($circs))
   <div id="myDiv2">
     <table class="table">
         <thead class="thead-dark">
@@ -97,7 +165,8 @@ ul .nav {
         </tbody>
       </table>
   </div>
-
+@endif
+@if (isset($sentBack))
   <div id="myDiv3">
     <table class="table">
         <thead class="thead-dark">
@@ -124,7 +193,7 @@ ul .nav {
         </tbody>
       </table>
   </div>
-
+  @endif
 <script>
 function showOne() {
     if (document.getElementById('myDiv1')) {
@@ -178,6 +247,17 @@ function showFilter() {
         }
         else {
             document.getElementById('filter').style.display = 'none';
+        }
+    }
+}
+
+function hideBars(){
+    if (document.getElementById('nav')) {
+        if (document.getElementById('nav').style.display == 'flex') {
+            document.getElementById('nav').style.display = 'none';
+        }
+        else {
+            document.getElementById('nav').style.display = 'flex';
         }
     }
 }

@@ -26,7 +26,7 @@
                                     @enderror
                                     </div>
 
-                                    <div class="mb-3">
+                                    <div class="mb-3" style="display: none;">
                                         <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email; }}" >
                                         @error('email')
                                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
