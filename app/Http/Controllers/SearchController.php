@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Documents;
 use Illuminate\Http\Request;
 use App\Models\Offices;
+use App\Models\TrackingLogs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -29,28 +30,26 @@ class SearchController extends Controller
         $searchDate = $request['dateSearch'];
         $creator =  Auth::user()->name;
 
-        $result = Documents::where([['senderName', $creator],['created_at' ,$searchDate]])->get();
-
-        $userDocs = Auth::user()->email;
-
-        $circs = Documents::where('email', $userDocs)
+        $data = Documents::where([['senderName', $creator],['created_at' ,$searchDate]])
         ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('status', 1)
-        ->orderBy('created_at', 'DESC')->get();
+        ->orderBy('created_at', 'asc')
+        ->get()
+        ->unique('referenceNo');
 
-        $comps = Documents::where('email', $userDocs)
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('status', 2)
-        ->orderBy('created_at', 'DESC')->get();
-
-        $sentBack = Documents::where('email', $userDocs)
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('status', 3)
-        ->orderBy('created_at', 'DESC')->get();
-
-        $offices = Offices::all();
-
-        return view('users.documents')->with(['result' => $result])->with(['circs' => $circs])->with(['comps' => $comps])->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
+        return view('users.searchByDate')->with(['data' => $data]);
     }
 
+    public function rcvOfficeFilter(Request $request)
+    {
+        $searchOffice = $request['receiverOffice'];
+        $creator =  Auth::user()->name;
+
+        $data = Documents::where([['senderName', $creator],['created_at' ,$searchOffice]])
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->orderBy('created_at', 'asc')
+        ->get()
+        ->unique('referenceNo');
+
+        return view('users.filterByReceivingOffice')->with(['data' => $data]);
+    }
 }

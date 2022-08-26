@@ -142,3 +142,4 @@ Route::get('offices', [DashboardController::class, 'adminOffice']);
 Route::post('addOffice', [DashboardController::class, 'addOffice']);
 
 Route::get('searchByDate', [SearchController::class, 'dateFilter']);
+Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);

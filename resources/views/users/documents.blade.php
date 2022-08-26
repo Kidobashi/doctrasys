@@ -7,7 +7,7 @@
   color: white;
 }
 
-#filter, #myDiv2, #myDiv3 {
+#filter, #myDiv2, #myDiv3{
     display: none;
 }
 
@@ -22,9 +22,9 @@
 <div class="col-md-12">
     <h2 class="m-3">My Documents</h2>
         <div id="nav" class="nav">
-            <button onclick="showOne()" class="btn border d-flex justify-content-center border border-dark">Completed</button>&nbsp;&nbsp;
-            <button onclick="showTwo()" class="btn border d-flex justify-content-center border border-dark">Circulating</button>&nbsp;&nbsp;
-            <button onclick="showThree()" class="btn border d-flex justify-content-center border border-dark">Sent Back</button>&nbsp;&nbsp;
+            <a href="#completed"><button onclick="showOne()" class="btn border d-flex justify-content-center border border-dark">Completed</button></a>&nbsp;&nbsp;
+            <a href="#circulating"><button onclick="showTwo()" class="btn border d-flex justify-content-center border border-dark">Circulating</button></a>&nbsp;&nbsp;
+            <a href="#sentBack"><button onclick="showThree()" class="btn border d-flex justify-content-center border border-dark">Sent Back</button></a>&nbsp;&nbsp;
             <button onclick="showFilter()" class="btn border d-flex justify-content-center border border-dark">More Filter</button>
             <div class="col-md-8">
                 <form action="searchByDate" method="get">
@@ -35,41 +35,9 @@
         </div>
 </div>
 
-<div class="d-flex mt-6 justify-content-center">
-    @if (isset($result))
-    @foreach ($result as $row)
-        <tr>
-            {{-- <td class="text-center"> {{ $loop->iteration }} </td> --}}
-            <td class="text-center"> {{ $row->referenceNo }}</td>
-            <td class="text-center">{{ $row->receiverName }}</td>
-            <td class="text-center">{{ $row->officeName }}</td>
-            <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
-            <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $row->referenceNo }}" title="Click for more Information">Info</a></td>
-        </tr>
-    @endforeach
-    @elseif (Request::is('documents'))
-        <p style="display: none;" class="display-4">Track 'Document' with reference number...</p>
-    @else
-        <p class="display-4">No 'results' found</td></p>
-    @endif
-    {{-- @if(isset($data->referenceNo)) --}}
-    {{-- <a class="bg-white w-60 border m-2 p-2" href="http://127.0.0.1:8000/qrinfo/{{ $data->referenceNo }}"> --}}
-    {{-- <div> --}}
-        {{-- <h3>Reference Number : {{ $data->referenceNo }}</h3> --}}
-        {{-- <div class="d-flex justify-content-end"> --}}
-            {{-- <p class="details">{{ date_format($data->created_at,'M d Y h:i a') }}</p> --}}
-        {{-- </div> --}}
-    {{-- </div></a> --}}
-    {{-- @elseif (Request::is('index')) --}}
-        {{-- <p class="display-4">Track 'Document' with reference number...</p> --}}
-    {{-- @else --}}
-    {{-- <p class="display-4">No 'results' found</td></p> --}}
-        {{-- @endif --}}
-    </div>
-
     @if (isset($offices))
     <div class="filter float-start" id="filter">
-        <form action="">
+        <form action="filterByRcvOffice" method="get">
         <select name="receiverOffice" class="form-control">
             <option value="" selected disabled>Receiving Office
                 @foreach ($offices as $row)
@@ -84,30 +52,7 @@
     @endif
 
     {{-- <div id="myDiv1">
-        <table class="table">
-            <thead class="thead-dark">
-              <tr>
-                <th class="text-center" scope="col">No.</th>
-                <th class="text-center" scope="col">Reference No.</th>
-                <th class="text-center" scope="col">Receiver</th>
-                <th class="text-center" scope="col">Receiving Office</th>
-                <th class="text-center" scope="col">Status</th>
-                <th class="text-center" scope="col">Details</th>
-              </tr>
-            </thead>
-            <tbody>
-                @foreach ($result as $row)
-                    <tr>
-                        <td class="text-center"> {{ $loop->iteration }} </td>
-                        <td class="text-center"> {{ $row->referenceNo }}</td>
-                        <td class="text-center">{{ $row->receiverName }}</td>
-                        <td class="text-center">{{ $row->officeName }}</td>
-                        <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
-                        <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $row->referenceNo }}" title="Click for more Information">Info</a></td>
-                    </tr>
-                @endforeach
-            </tbody>
-          </table>
+
       </div> --}}
 @if (isset($comps))
   <div id="myDiv1">
@@ -201,11 +146,13 @@ function showOne() {
             document.getElementById('myDiv1').style.display = 'block';
             document.getElementById('myDiv2').style.display = 'none';
             document.getElementById('myDiv3').style.display = 'none';
+            document.getElementById('searchDate').style.display = 'none';
         }
         else {
             document.getElementById('myDiv1').style.display = 'block';
             document.getElementById('myDiv2').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'none';
+            document.getElementById('searchDate').style.display = 'none';
         }
     }
 }
@@ -216,11 +163,13 @@ function showTwo() {
             document.getElementById('myDiv1').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'block';
             document.getElementById('myDiv3').style.display = 'none';
+            document.getElementById('searchDate').style.display = 'none';
         }
         else {
             document.getElementById('myDiv1').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'block';
             document.getElementById('myDiv3').style.display = 'none';
+            document.getElementById('searchDate').style.display = 'none';
         }
     }
 }
@@ -231,11 +180,30 @@ function showThree() {
             document.getElementById('myDiv1').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'none';
             document.getElementById('myDiv3').style.display = 'block';
+            document.getElementById('searchDate').style.display = 'none';
         }
         else {
             document.getElementById('myDiv1').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'none';
             document.getElementById('myDiv3').style.display = 'block';
+            document.getElementById('searchDate').style.display = 'none';
+        }
+    }
+}
+
+function showSearchDate() {
+    if (document.getElementById('searchDate')) {
+        if (document.getElementById('searchDate').style.display == 'none') {
+            document.getElementById('myDiv1').style.display = 'none';
+            document.getElementById('myDiv2').style.display = 'none';
+            document.getElementById('myDiv3').style.display = 'none';
+            document.getElementById('searchDate').style.display = 'block';
+        }
+        else {
+            document.getElementById('myDiv1').style.display = 'none';
+            document.getElementById('myDiv2').style.display = 'none';
+            document.getElementById('myDiv3').style.display = 'none';
+            document.getElementById('searchDate').style.display = 'block';
         }
     }
 }
