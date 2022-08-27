@@ -61,9 +61,8 @@ li .comments:nth-child(4){
     z-index: 10;
 }
 .card ul{
-  border-left: 2px solid gray;
+  border-left: 2px solid green;
   padding-left: 50px;
-  padding-top: 0 !important;
 }
 
 .card ul:last-child {
@@ -112,6 +111,8 @@ ul:not(first-child) ul{
   display: block;
   z-index: 1;
 }
+
+
 
 @media screen and (max-width: 700px) {
 h5{
@@ -398,15 +399,14 @@ h5{
           </button>
         </div>
         <div class="modal-body">
-            <div class="card mt-4 col-lg-12" style="border-radius: 0px 6px 6px 0px;" id="tracking">
+            <div class="card col-lg-12" id="tracking">
                 @foreach($altdata['prev'] as $key => $prev)
                 <ul class="unor list-group list-group-flush">
                 <div class="section-header">
                     <li>
                     @if( $altdata['trackings'][$key]->action == 1)
-                    {{ $altdata['trackings'][$key]->created_at->diffForHumans() }}
                     <h5><div class="top-arrow center">
-                    </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
+                    </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
                         {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                         <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                         @if($altdata['trackings'][$key]->action == 2)
@@ -417,9 +417,8 @@ h5{
                         @endif
                     @endif
                     @if( $altdata['trackings'][$key]->action == 2)
-                    {{ $altdata['trackings'][$key]->created_at->diffForHumans() }}
                     <h5><div class="top-arrow center">
-                    </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }}</i></h5>
+                    </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
                         {{-- <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                         <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
                         <li class="">Forwarded by: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
