@@ -23,6 +23,8 @@ Search bar for tracking documents
 
 Tracking Information/Document is only mmodifiable by users having the same office assignment and the intended receiver
 ![image](https://user-images.githubusercontent.com/57261353/187147807-8bbd3754-9542-4f44-a1ca-fe234135b57c.png)
+![image](https://user-images.githubusercontent.com/57261353/187322811-79152ac3-354b-4bbb-bc53-7f8bdd775b72.png)
+
 
 Example...
 With error, office and/or user does not match
