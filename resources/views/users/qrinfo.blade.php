@@ -162,9 +162,11 @@ h5{
                              <div class="col-sm p-2">
                                 Document Type
                              </div>
+                             @if (isset($docCategory->documentName))
                              <div class="col-sm p-2">
                                 <h5>{{$docCategory->documentName}}</h5>
                              </div>
+                             @endif
                         </div>
                     </div>
                     <div class="container">
@@ -198,7 +200,7 @@ h5{
                 @endguest
 
                 @auth
-                @if ($lightPrev->senderName === Auth::user()->name && $lightPrev->senderOffice === Auth::user()->assignedOffice)
+                @if (isset($lightPrev->senderName) === Auth::user()->name && $lightPrev->senderOffice === Auth::user()->assignedOffice)
                     <h1>&nbsp;&nbsp;&nbsp;This Document was modified by you</h1>
                     <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
                 @elseif (isset($light->prevReceiver) !== Auth::user()->name && isset($lightPrev->officeName) !== Auth::user()->assignedOffice)
@@ -219,13 +221,13 @@ h5{
                         </div>
                 @endif
                 @endauth
-
+                        @if (isset(Auth::user()->name))
                         <div class="receive" id="receive">
                             <form action="received/{{ $data->referenceNo }}" method="post">
                             @csrf
                                 <h6>Confirm Receive</h6>
                                 <div class="mb-3">
-                                    <input style="display:none;" type="text" class="form-control" name="receiverName" id="name" value="{{ Auth::user()->name }}"aria-label="Name" aria-describedby="name">
+                                    <input style="display:none;" type="text" class="form-control" name="receiverName" id="name" value="{{ Auth::user()->name }}" aria-label="Name" aria-describedby="name">
                                     @error('receiverName')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
@@ -237,6 +239,7 @@ h5{
                                     <button class="btn btn-success text-white" type="submit">Confirm</button>
                             </form>
                         </div>
+                        @endif
 
                         <div class="sendBack" id="sendBack" style="width: 18rem;">
                             <hr>
@@ -252,6 +255,7 @@ h5{
                             </div>
                         </div>
 
+                        @if (isset( Auth::user()->name ))
                         <div class="forward" id="forward">
                             <form action="forwarded/{{ $data->referenceNo }}" method="post">
                                 @csrf
@@ -283,6 +287,7 @@ h5{
                                 </div>
                             </form>
                         </div>
+                        @endif
             <hr>
             <h4>Tracking Information</h4>
             <div class="col-xxs-6 col-xs-4" id="latestTrack">

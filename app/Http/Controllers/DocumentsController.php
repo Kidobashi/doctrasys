@@ -7,6 +7,7 @@ use App\Models\DocumentType;
 use Illuminate\Http\Request;
 use App\Models\Offices;
 use App\Models\TrackingLogs;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -39,6 +40,8 @@ class DocumentsController extends Controller
         //
         $offices = Offices::all();
 
+        $users = User::all();
+
         $last = DB::table('documents')->latest('id')->first();
 
         $assignedOffice = Auth::user()->assignedOffice;
@@ -58,7 +61,7 @@ class DocumentsController extends Controller
         $stringVal = strval($number);
         $refNo = "$prefix$stringVal";
 
-        return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice);
+        return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users]);
     }
 
     public function create()
@@ -77,7 +80,7 @@ class DocumentsController extends Controller
     public function store(Request $request)
     {
         //
-        $sender = Auth::user()->email;
+        $sender = Auth::user()->name;
         $senderOffice = Auth::user()->assignedOffice;
 
         // dd($senderOffice);
@@ -100,11 +103,11 @@ class DocumentsController extends Controller
             'receiverName' => 'required',
             'senderOffice' =>  'required',
             'receiverOffice' => 'required',
-            'email' => 'required',
+            // 'email' => 'required',
         ]);
 
         Documents::insert([
-            'senderName' => request('senderName'),
+            'senderName' => $sender,
             'email' => request('email'),
             'receiverName' => request('receiverName'),
             'senderOffice' =>  $senderOffice,

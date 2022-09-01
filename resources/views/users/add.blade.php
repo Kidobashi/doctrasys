@@ -40,7 +40,14 @@
 
                                     <label for="">Receiver Name</label>
                                     <div class="mb-3">
-                                    <input type="text" class="form-control" name="receiverName" id="name" aria-label="Name" aria-describedby="name" required>
+                                    <select class="form-control" id="receiverName" name="receiverName" required>
+                                        <option value="" selected disabled>Select Receiver
+                                            @foreach ($users as $row)
+                                            <option value="{{ $row->id}}"><p>{{ $row->email }}</p>-<i>{{ $row->name }}</i></option>
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    {{-- <input type="text" class="form-control" name="receiverName" id="name" aria-label="Name" aria-describedby="name" required> --}}
                                     @error('receiverName')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
