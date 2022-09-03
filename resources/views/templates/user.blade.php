@@ -215,7 +215,7 @@ div.content {
 }
 </style>
 
-<div class="side-navbar active-nav d-flex justify-content-between" id="sidebar">
+<div class="col-lg-12 side-navbar active-nav d-flex justify-content-between" id="sidebar">
     <ul class="nav text-white w-100">
       <a href="{{ route('dashboard') }}" class="nav-link h3 text-white my-2">
         <span>Document Tracking System</span>

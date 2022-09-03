@@ -45,7 +45,7 @@
                         @if ($row->status == 1)
                         <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
                         @endif
-                    <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $row->referenceNo }}" title="Click for more Information">Info</a></td>
+                    <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $row->referenceNo }}" title="Click for more Information"><i class="fa fa-link" aria-hidden="true"></i></a></td>
                 </tr>
             @endforeach
         </tbody>
