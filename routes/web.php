@@ -140,6 +140,8 @@ Route::post('qrinfo/send-back/{referenceNo}', [QrController::class, 'sendBack'])
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('offices', [DashboardController::class, 'adminOffice']);
 Route::post('addOffice', [DashboardController::class, 'addOffice']);
+Route::get('docType', [DashboardController::class, 'docTypes']);
+Route::post('addDocType', [DashboardController::class, 'addDocType']);
 
 Route::get('searchByDate', [SearchController::class, 'dateFilter']);
 Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);

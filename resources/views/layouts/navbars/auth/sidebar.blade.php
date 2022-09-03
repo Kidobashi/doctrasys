@@ -69,6 +69,14 @@
             <span class="nav-link-text ms-1">Offices</span>
         </a>
       </li>
+      <li class="nav-item pb-2">
+        <a class="nav-link {{ (Request::is('docType') ? 'active' : '') }}" href="{{ url('docType') }}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i style="font-size: 1rem;" class="ni ni-building ps-2 pe-2 text-center text-dark {{ (Request::is('doctype') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
+            </div>
+            <span class="nav-link-text ms-1">Document Type</span>
+        </a>
+      </li>
     </ul>
   </div>
   <div class="sidenav-footer mx-3 ">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Documents;
+use App\Models\DocumentType;
 use App\Models\Offices;
 use App\Models\TrackingLogs;
 use Illuminate\Support\Carbon;
@@ -48,5 +49,25 @@ class DashboardController extends Controller
         ]);
 
         return redirect('offices');
+    }
+
+    public function docTypes()
+    {
+        $docType = DocumentType::all();
+
+        return view('laravel-examples.documentType')->with(['docType' => $docType]);
+    }
+
+    public function addDocType(Request $request)
+    {
+        $request->validate([
+            'documentName' => 'required',
+        ]);
+
+        DocumentType::insert([
+            'documentName' => request('documentName'),
+        ]);
+
+        return redirect('docType');
     }
 }
