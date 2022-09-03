@@ -218,6 +218,12 @@ class DocumentsController extends Controller
 
         $offices = Offices::all();
 
-        return view('users.documents')->with(['circs' => $circs])->with(['comps' => $comps])->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
+        $all = Documents::where('email', $userDocs)
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->orderBy('created_at', 'DESC')->get();
+
+        // dd($all);
+
+        return view('users.documents')->with(['all' => $all])->with(['circs' => $circs])->with(['comps' => $comps])->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
     }
 }
