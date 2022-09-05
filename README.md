@@ -32,7 +32,7 @@ With error, office and/or user does not match
 
 Administrator Side
 
-Dashboard(Incomplete)
+Dashboard(On Going)
 ![image](https://user-images.githubusercontent.com/57261353/187148702-ff7002a4-0bc5-4547-8b94-53775388dd06.png)
 
 User Management
