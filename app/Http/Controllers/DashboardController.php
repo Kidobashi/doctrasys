@@ -75,7 +75,7 @@ class DashboardController extends Controller
             'documentName' => request('documentName'),
         ]);
 
-        return redirect('docType')->withSuccess(__('Document Type Added successfully.'));
+        return redirect('docType')->withSuccess(__('Document Type Added successfully'));
     }
 
     public function deleteDocType($id)
