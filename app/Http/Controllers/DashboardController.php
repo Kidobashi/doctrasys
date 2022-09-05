@@ -48,7 +48,14 @@ class DashboardController extends Controller
             'officeName' => request('officeName'),
         ]);
 
-        return redirect('offices');
+        return redirect('offices')->withSuccess(__('Office Added successfully.'));
+    }
+
+    public function deleteOffice($id)
+    {
+        Offices::destroy($id);
+
+        return redirect('offices')->withSuccess(__('Office deleted successfully.'));
     }
 
     public function docTypes()
@@ -68,6 +75,13 @@ class DashboardController extends Controller
             'documentName' => request('documentName'),
         ]);
 
-        return redirect('docType');
+        return redirect('docType')->withSuccess(__('Document Type Added successfully.'));
+    }
+
+    public function deleteDocType($id)
+    {
+        DocumentType::destroy($id);
+
+        return redirect('docType')->withSuccess(__('Document Type deleted successfully.'));
     }
 }

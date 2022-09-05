@@ -4,9 +4,15 @@
 <div>
     <div class="container-fluid py-4">
         <div class="card">
+            <div class="col-xxs-6 col-xs-4">
+                @if(session()->has('success'))
+                    <div id="message" class="col-lg-5 bg-success rounded right-3 text-sm py-2 px-4">
+                        <h5 class="m-0">{{ session('success')}}</h5>
+                    </div>
+                @endif
+            <div>
             <div class="card-header pb-0">
                 <div class="d-flex flex-row justify-content-between">
-                    <div>
                         <h3 class="mb-0">{{ __('Central Mindanao University Offices') }}</h3>
                     </div>
                     <a href="#" class="btn bg-gradient-primary float-end btn-sm mb-0 text-center" type="button" data-toggle="modal" data-target="#exampleModalCenter">+&nbsp; Add new office</a>
@@ -21,7 +27,11 @@
                             <i class="fas fa-user-edit text-secondary"></i>
                         </a>
                         <span>
-                            <i class="cursor-pointer fas fa-trash text-secondary" data-bs-toggle="tooltip"  data-bs-original-title="Delete Office"></i>
+                            <form method="post" action="delOffice/{{ $row->id }}">
+                                @method('delete')
+                                @csrf
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
                         </span>
                     </div>
                 </div>
@@ -51,4 +61,12 @@
       </div>
     </div>
   </div>
+
+  <script>
+    $("document").ready(function(){
+        setTimeout(function(){
+            $("#message").remove();
+        }, 4500 );
+    });
+    </script>
 @endsection

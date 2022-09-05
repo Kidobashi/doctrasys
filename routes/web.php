@@ -142,6 +142,8 @@ Route::get('offices', [DashboardController::class, 'adminOffice']);
 Route::post('addOffice', [DashboardController::class, 'addOffice']);
 Route::get('docType', [DashboardController::class, 'docTypes']);
 Route::post('addDocType', [DashboardController::class, 'addDocType']);
+Route::delete('delOffice/{id}', [DashboardController::class, 'deleteOffice']);
+Route::delete('delDocType/{id}', [DashboardController::class, 'deleteDocType']);
 
 Route::get('searchByDate', [SearchController::class, 'dateFilter']);
 Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);
