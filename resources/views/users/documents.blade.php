@@ -189,7 +189,7 @@ function showAll() {
             document.getElementById('searchDate').style.display = 'none';
         }
         else {
-            document.getElementById('All').style.display = 'none';
+            document.getElementById('All').style.display = 'block';
             document.getElementById('myDiv1').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'none';
             document.getElementById('myDiv2').style.display = 'none';

@@ -148,9 +148,9 @@ h5{
                 <h5 class="m-0">{{ session('danger')}}</h5>
             </div>
             @endif
-                <h4 class="card-title" style="margin-top: 10px;">Document Details</h4>
+                <h4 class="card-title">Document Details</h4>
                 <hr>
-                <div style="background-color: #ECECEC; border-radius: 10px;">
+                <div style=" margin: 10px; background-color: #ECECEC; border-radius: 10px;">
                     <div class="container">
                         <div class="row">
                             <div class="col-sm p-2">
@@ -191,18 +191,17 @@ h5{
                     </div>
                     </div>
                 </div>
-
                 @guest
-                    <div class="d-flex">
-                        <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled>Forward</button>
-                        <button type="button" class="btn btn-secondary" style="margin-right:20px;" disabled>Receive</button>
+                    <div class="text-center">
+                        <p class="font-italic">Login to receive document</p>
                     </div>
                 @endguest
 
                 @auth
-                @if (isset($lightPrev->senderName) === Auth::user()->name && $lightPrev->senderOffice === Auth::user()->assignedOffice)
-                    <h1>&nbsp;&nbsp;&nbsp;This Document was modified by you</h1>
+                @if (isset($light->senderName) == Auth::user()->name && $light->senderOffice == Auth::user()->assignedOffice)
+                    <p class="text-center">You may proceed to forward this document to the next receiver</p>
                     <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
+                    <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
                 @elseif (isset($light->prevReceiver) !== Auth::user()->name && isset($lightPrev->officeName) !== Auth::user()->assignedOffice)
                     @if($light->action == 3)
                         <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
@@ -210,12 +209,12 @@ h5{
                     @if($light->action == 2)
                     <hr>
                         <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
-                        <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
                     @endif
 
                     @if($light->action == 1)
                         <div class="d-flex">
                             <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
+                            <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
                         </div>
                     @endif
                         </div>

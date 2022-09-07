@@ -180,13 +180,13 @@ class QrController extends Controller
         $doc = Documents::where('referenceNo', $referenceNo)->first();
         $newReceiver = $request->input('receiverName');
         $newOfficeReceiver = $request->input('receiverOffice');
-        Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
+        // Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
 
         TrackingLogs::create([
-            'senderName' => $doc->senderName,
-            'receiverName' => $newReceiver,
-            'senderOffice' => $doc->senderOffice,
-            'receiverOffice' => $newOfficeReceiver,
+            'senderName' => Auth::user()->name,
+            'receiverName' => $doc->receiverName,
+            'senderOffice' => Auth::user()->assignedOffice,
+            'receiverOffice' => $doc->receiverOffice,
             'referenceNo' => $referenceNo,
             'action' => $request->input('action'),
         ]);
