@@ -14,6 +14,9 @@ CMU Doctrasys is a web application created to track documents circulating throug
 Creating Documents with QR CODE
 ![image](https://user-images.githubusercontent.com/57261353/187146740-b6607cff-0ab7-45a2-b643-a97122300506.png)
 
+Example of a generated PDF with QR code
+![image](https://user-images.githubusercontent.com/57261353/188940670-ff399325-8a9c-47ea-ba42-fc46d9b950f1.png)
+
 Client Document List
 ![image](https://user-images.githubusercontent.com/57261353/187146973-60941034-bfd0-4f7a-9487-f19e997d1a7e.png)
 
