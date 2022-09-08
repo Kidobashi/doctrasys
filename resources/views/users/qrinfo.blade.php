@@ -232,7 +232,7 @@ h5{
                                     @enderror
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text"  style="display:none;" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}">
+                                    {{-- <input type="text"  style="display:none;" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}"> --}}
                                     <input class="form-control "type="text" style="display: none;" name='action' value="1">
                                 </div>
                                     <button class="btn btn-success text-white" type="submit">Confirm</button>

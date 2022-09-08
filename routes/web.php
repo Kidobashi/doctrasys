@@ -133,7 +133,7 @@ Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo']);
 Route::get('forward/{referenceNo}', [QrController::class, 'forward']);
 Route::post('qrinfo/forwarded/{referenceNo}', [QrController::class, 'update']);
 Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
-Route::post('qrinfo/received/{referenceNo}', [QrController::class, 'update']);
+Route::post('qrinfo/received/{referenceNo}', [QrController::class, 'receiveDoc']);
 Route::post('qrinfo/send-back/{referenceNo}', [QrController::class, 'sendBack']);
 
 
