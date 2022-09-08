@@ -112,18 +112,18 @@ class QrController extends Controller
 
         $newOfficeReceiver = $request->input('receiverOffice');
 
-        $success = 2;
+        // $success = 2;
 
-        $checkIntendedReceiver = Documents::join('offices', 'receiverOffice', 'offices.id')
-        ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'ASC')->first();
+        // $checkIntendedReceiver = Documents::join('offices', 'receiverOffice', 'offices.id')
+        // ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'ASC')->first();
 
-         $checkOfficeIfCorrect = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
-         ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'DESC')->first();
+        //  $checkOfficeIfCorrect = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
+        //  ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'DESC')->first();
 
         //  dd($checkOfficeifLanded);
-        if($checkIntendedReceiver->receiverName === Auth::user()->name && $checkIntendedReceiver->receiverOffice === Auth::user()->assignedOffice)
-        {
-            Documents::where('referenceNo', $referenceNo)->update( array('status' => $success));
+        // if($checkIntendedReceiver->receiverName === Auth::user()->name && $checkIntendedReceiver->receiverOffice === Auth::user()->assignedOffice)
+        // {
+            // Documents::where('referenceNo', $referenceNo)->update( array('status' => $success));
 
             TrackingLogs::create([
                 'senderName' => $newSender,
@@ -136,28 +136,28 @@ class QrController extends Controller
                 'prevReceiver' => $doc->receiverName,
             ]);
 
-            return redirect('qrinfo/'.$referenceNo)->with('success', 'Received Successfully by Intended User');
-        }
-        elseif($checkOfficeIfCorrect->receiverOffice === Auth::user()->assignedOffice)
-        {
-            Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
+            return redirect('qrinfo/'.$referenceNo)->with('success', 'Forwarded Sucessfully');
+        // }
+        // elseif($checkOfficeIfCorrect->receiverOffice === Auth::user()->assignedOffice)
+        // {
+        //     Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
 
-            TrackingLogs::create([
-                'senderName' => $newSender,
-                'receiverName' => $newReceiver,
-                'senderOffice' => $newSenderOffice,
-                'receiverOffice' => $newOfficeReceiver,
-                'referenceNo' => $referenceNo,
-                'action' => $request->input('action'),
-                'prevOffice' => $doc->receiverOffice,
-                'prevReceiver' => $doc->receiverName,
-            ]);
+        //     TrackingLogs::create([
+        //         'senderName' => $newSender,
+        //         'receiverName' => $newReceiver,
+        //         'senderOffice' => $newSenderOffice,
+        //         'receiverOffice' => $newOfficeReceiver,
+        //         'referenceNo' => $referenceNo,
+        //         'action' => $request->input('action'),
+        //         'prevOffice' => $doc->receiverOffice,
+        //         'prevReceiver' => $doc->receiverName,
+        //     ]);
 
-            return redirect('qrinfo/'.$referenceNo)->with('success', 'Received Successfully');
-        }
-        else{
-            return redirect('qrinfo/'.$referenceNo)->with('danger', 'Error, Credentials Does Not Match');
-         }
+        //     return redirect('qrinfo/'.$referenceNo)->with('success', 'Received Successfully');
+        // }
+        // else{
+        //     return redirect('qrinfo/'.$referenceNo)->with('danger', 'Error, Credentials Does Not Match');
+        //  }
 
     }
 

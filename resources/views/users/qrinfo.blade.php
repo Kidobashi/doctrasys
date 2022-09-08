@@ -199,10 +199,10 @@ h5{
 
                 @auth
                 @if (isset($light->senderName) == Auth::user()->name && $light->senderOffice == Auth::user()->assignedOffice)
-                    <p class="text-center">You may proceed to forward this document to the next receiver</p>
+                    <p class="text-center">You may proceed to forward this document to the next receiver or send it back</p>
                     <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
                     <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
-                @elseif (isset($light->prevReceiver) !== Auth::user()->name && isset($lightPrev->officeName) !== Auth::user()->assignedOffice)
+                @elseif (isset($light->receiverName) == Auth::user()->name && isset($light->receiverOffice) == Auth::user()->assignedOffice)
                     @if($light->action == 3)
                         <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
                     @endif
@@ -261,7 +261,7 @@ h5{
                                 <div class="container col-lg-10">
                                 <label for="">Forward to:</label>
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" name="receiverName" id="name" value="{{ $data->receiverName }}"aria-label="Name" aria-describedby="name">
+                                        <input type="text" class="form-control" name="receiverName" id="name" placeholder="Name of whom you want to forward " aria-label="Name" aria-describedby="name">
                                         <input type="text" class="form-control" style="display: none;" name="senderName" id="name" value="{{ Auth::user()->name }}"aria-label="Name" aria-describedby="name">
                                         <input type="text" class="form-control" style="display: none;" name="senderOffice" id="name" value="{{ Auth::user()->assignedOffice }}"aria-label="Name" aria-describedby="name">
                                         @error('receiverName')
