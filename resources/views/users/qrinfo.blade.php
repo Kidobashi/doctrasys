@@ -198,7 +198,11 @@ h5{
                 @endguest
 
                 @auth
-                @if (isset($light->senderName) == Auth::user()->name && $light->senderOffice == Auth::user()->assignedOffice)
+                @if ($status->status == 3)
+                <hr>
+                    <p class="text-center">Processing issue...</p>
+                @endif
+                @if (isset($light->senderName) == Auth::user()->name && $light->senderOffice == Auth::user()->assignedOffice && $status->status != 3)
                     <p class="text-center">You may proceed to forward this document to the next receiver or send it back</p>
                     <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
                     <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
@@ -211,7 +215,7 @@ h5{
                         <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
                     @endif
 
-                    @if($light->action == 1)
+                    @if($light->action == 1 && $status->status != 3)
                         <div class="d-flex">
                             <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
                             <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
