@@ -67,9 +67,11 @@ class QrController extends Controller
         ->orderBy('created_at', 'DESC')
         ->get();
 
+        $issue = Issues::where('docRefNo','LIKE', "%{$referenceNo}%")->first();
+
         $altdata = array_merge(['prev' => $prev] , ['trackings' => $trackings]);
 
-        return view('users.qrinfo')->with('status', $status)->with('offices', $offices)->with('officeN', $officeN)->with('docCategory', $docCategory)->with('latestComments', $latestComments)->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
+        return view('users.qrinfo')->with('issue', $issue)->with('status', $status)->with('offices', $offices)->with('officeN', $officeN)->with('docCategory', $docCategory)->with('latestComments', $latestComments)->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
     }
 
     public function saveQr(){
@@ -105,62 +107,23 @@ class QrController extends Controller
     public function update($referenceNo,Request $request){
 
         $doc = Documents::where('referenceNo', $referenceNo)->first();
-
         $newSender = Auth::user()->name;
-
         $newSenderOffice = Auth::user()->assignedOffice;
-
         $newReceiver = $request->input('receiverName');
-
         $newOfficeReceiver = $request->input('receiverOffice');
 
-        // $success = 2;
+        TrackingLogs::create([
+            'senderName' => $newSender,
+            'receiverName' => $newReceiver,
+            'senderOffice' => $newSenderOffice,
+            'receiverOffice' => $newOfficeReceiver,
+            'referenceNo' => $referenceNo,
+            'action' => $request->input('action'),
+            'prevOffice' => $doc->receiverOffice,
+            'prevReceiver' => $doc->receiverName,
+        ]);
 
-        // $checkIntendedReceiver = Documents::join('offices', 'receiverOffice', 'offices.id')
-        // ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'ASC')->first();
-
-        //  $checkOfficeIfCorrect = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
-        //  ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->orderBy('created_at', 'DESC')->first();
-
-        //  dd($checkOfficeifLanded);
-        // if($checkIntendedReceiver->receiverName === Auth::user()->name && $checkIntendedReceiver->receiverOffice === Auth::user()->assignedOffice)
-        // {
-            // Documents::where('referenceNo', $referenceNo)->update( array('status' => $success));
-
-            TrackingLogs::create([
-                'senderName' => $newSender,
-                'receiverName' => $newReceiver,
-                'senderOffice' => $newSenderOffice,
-                'receiverOffice' => $newOfficeReceiver,
-                'referenceNo' => $referenceNo,
-                'action' => $request->input('action'),
-                'prevOffice' => $doc->receiverOffice,
-                'prevReceiver' => $doc->receiverName,
-            ]);
-
-            return redirect('qrinfo/'.$referenceNo)->with('success', 'Forwarded Sucessfully');
-        // }
-        // elseif($checkOfficeIfCorrect->receiverOffice === Auth::user()->assignedOffice)
-        // {
-        //     Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
-
-        //     TrackingLogs::create([
-        //         'senderName' => $newSender,
-        //         'receiverName' => $newReceiver,
-        //         'senderOffice' => $newSenderOffice,
-        //         'receiverOffice' => $newOfficeReceiver,
-        //         'referenceNo' => $referenceNo,
-        //         'action' => $request->input('action'),
-        //         'prevOffice' => $doc->receiverOffice,
-        //         'prevReceiver' => $doc->receiverName,
-        //     ]);
-
-        //     return redirect('qrinfo/'.$referenceNo)->with('success', 'Received Successfully');
-        // }
-        // else{
-        //     return redirect('qrinfo/'.$referenceNo)->with('danger', 'Error, Credentials Does Not Match');
-        //  }
-
+        return redirect('qrinfo/'.$referenceNo)->with('success', 'Forwarded Sucessfully');
     }
 
     public function receive($referenceNo){
@@ -203,11 +166,53 @@ class QrController extends Controller
         $sendBack = $request->input('status');
         Documents::where('referenceNo', $referenceNo)->update( array('status' => $sendBack));
 
+        $prev = DB::table('tracking_logs')
+        ->where('referenceNo','LIKE', "%{$referenceNo}%")
+        ->orderBy('created_at', 'DESC')
+        ->first();
+
+        $owner = Documents::where('referenceNo','LIKE', "%{$referenceNo}%")
+        ->first();
+
         Issues::create([
             'docRefNo' => $doc->referenceNo,
             'details' => $request->input('details'),
+            'email' => $request->input('email'),
+        ]);
+
+        TrackingLogs::create([
+            'senderName' => Auth::user()->name,
+            'receiverName' => $owner->senderName,
+            'senderOffice' => Auth::user()->assignedOffice,
+            'receiverOffice' => $owner->senderOffice,
+            'referenceNo' => $referenceNo,
+            'action' => 4,
+            'status' => 3,
         ]);
 
         return redirect('qrinfo/'.$referenceNo)->with('sentBack', 'Issue Reported');
+    }
+
+    public function fixIssue($referenceNo, Request $request)
+    {
+        $sendBack = $request->input('status');
+        Documents::where('referenceNo', $referenceNo)->update( array('status' => $sendBack));
+
+        $prev = DB::table('tracking_logs')
+        ->where('referenceNo','LIKE', "%{$referenceNo}%")
+        ->orderBy('created_at', 'DESC')
+        ->first();
+
+        TrackingLogs::create([
+            'senderName' => $prev->senderName,
+            'receiverName' => $prev->receiverName,
+            'senderOffice' => $prev->senderOffice,
+            'receiverOffice' => $prev->receiverOffice,
+            'referenceNo' => $referenceNo,
+            'action' => $request->input('action'),
+            'status' => 4,
+        ]);
+
+        return redirect('qrinfo/'.$referenceNo)->with('fixIssue', 'Issue Fixed, You may forward it now');
     }
 }

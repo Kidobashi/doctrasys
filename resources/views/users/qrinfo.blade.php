@@ -7,7 +7,7 @@
 #sendBack {
     display: none;
 }
-#forward {
+#forward, #fixIssue {
     display: none;
 }
 
@@ -198,9 +198,14 @@ h5{
                 @endguest
 
                 @auth
-                @if ($status->status == 3)
+                @if ($status->email == Auth::user()->email && $status->status == 3 )
                 <hr>
-                    <p class="text-center">Processing issue...</p>
+                    <p class="pt-2 text-center">Fix Issue before forwarding</p>
+                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit">Issue Fix</button>
+                @endif
+                @if ($status->status == 3 && $status->email != Auth::user()->email)
+                <hr>
+                    <p class="pt-2 text-center">Processing issue...</p>
                 @endif
                 @if (isset($light->senderName) == Auth::user()->name && $light->senderOffice == Auth::user()->assignedOffice && $status->status != 3)
                     <p class="text-center">You may proceed to forward this document to the next receiver or send it back</p>
@@ -215,7 +220,7 @@ h5{
                         <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
                     @endif
 
-                    @if($light->action == 1 && $status->status != 3)
+                    @if($light->action == 1 && $status->status != 3 && $status->email == Auth::user()->email)
                         <div class="d-flex">
                             <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
                             <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
@@ -244,6 +249,20 @@ h5{
                         </div>
                         @endif
 
+                        <div class="fixIssue" id="fixIssue">
+                            <form action="fix-issue/{{ $data->referenceNo }}" method="post">
+                            @csrf
+                                <h6>Confirm Fix</h6>
+                                <div class="mb-3">
+                                </div>
+                                <div class="mb-3">
+                                    {{-- <input type="text"  style="display:none;" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}"> --}}
+                                    <input class="form-control "type="text" style="display: none;" name='action' value="5">
+                                </div>
+                                    <button class="btn btn-success text-white" type="submit">Confirm</button>
+                            </form>
+                        </div>
+
                         <div class="sendBack" id="sendBack" style="width: 18rem;">
                             <hr>
                             <form action="send-back/{{ $data->referenceNo }}" method="post">
@@ -253,6 +272,7 @@ h5{
                               <h6 class="card-subtitle mb-2 text-muted">Issue:</h6>
                               <textarea class="card-text w-100" name="details"></textarea>
                               <input class="form-control "type="text" style="display: none;" name='status' value="3">
+                              <input class="form-control "type="text" style="display: none;" name='email' value="{{ Auth::user()->email }}">
                               <button type="submit" class="btn btn-danger" class="text-white">Send Report</button>
                                 </form>
                             </div>
@@ -314,6 +334,23 @@ h5{
                                 {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
                                 <li class="">Forwarded by: <b>{{ $light->prevReceiver }}</b> - <i>{{ $lightPrev->officeName }}</i></li>
+                                @if($light->action == 2)
+                                <p><li class="">Status: <i>In Circulation</i></p>
+                                @endif
+                                @if($light->action == 1)
+                                    <p><li class="">Status: <i>Processing...</i></p>
+                                @endif
+                                </li>
+                                <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
+                            @elseif( $light->action == 4)
+                        {{ $light->created_at->diffForHumans() }}
+                                <h5>Something is wrong...</h5>
+                                @if (isset($issue))
+                                    <p>Issue Details: {{ $issue->details }}</p>
+                                @endif
+                            <h5>&nbsp;Sent by <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
+                                {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
+                                <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
                                 @if($light->action == 2)
                                 <p><li class="">Status: <i>In Circulation</i></p>
                                 @endif
@@ -470,6 +507,17 @@ h5{
         }
         else {
             document.getElementById('forward').style.display = 'none';
+            }
+        }
+    }
+
+    function fixIssue() {
+    if (document.getElementById('fixIssue')) {
+        if (document.getElementById('fixIssue').style.display == 'none') {
+            document.getElementById('fixIssue').style.display = 'block';
+        }
+        else {
+            document.getElementById('fixIssue').style.display = 'none';
             }
         }
     }

@@ -13,6 +13,7 @@ class Issues extends Model
 
     protected $fillable = [
         'docRefNo',
-        'details'
+        'details',
+        'email'
     ];
 }

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('issues', function (Blueprint $table) {
             $table->id();
             $table->string('docRefNo');
+            $table->string('email');
             $table->string('details');
             $table->timestamps();
         });
