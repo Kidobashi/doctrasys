@@ -198,7 +198,7 @@ h5{
                 @endguest
 
                 @auth
-                @if ($status->email == Auth::user()->email && $status->status == 3 )
+                @if ($status->senderName == Auth::user()->name && $status->email == Auth::user()->email && $status->status == 3 )
                 <hr>
                     <p class="pt-2 text-center">Fix Issue before forwarding</p>
                     <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit">Issue Fix</button>

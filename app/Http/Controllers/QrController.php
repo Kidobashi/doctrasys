@@ -40,7 +40,7 @@ class QrController extends Controller
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
         ->first();
 
-        $status = Documents::where('referenceNo', $referenceNo)->first();
+        // $issue = Issues::where('referenceNo', $referenceNo)->first();
 
         $docCategory = DB::table('documents')
         ->join('document_type', 'docType', 'document_type.id')
@@ -68,6 +68,8 @@ class QrController extends Controller
         ->get();
 
         $issue = Issues::where('docRefNo','LIKE', "%{$referenceNo}%")->first();
+
+        $status = Documents::where('referenceNo', $referenceNo)->first();
 
         $altdata = array_merge(['prev' => $prev] , ['trackings' => $trackings]);
 
