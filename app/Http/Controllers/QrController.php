@@ -108,7 +108,10 @@ class QrController extends Controller
 
     public function update($referenceNo,Request $request){
 
-        $doc = Documents::where('referenceNo', $referenceNo)->first();
+        $doc = TrackingLogs::where('referenceNo', $referenceNo)
+        ->orderBy('created_at', 'DESC')->first();
+        $prevOffice = $doc->receiverOffice;
+        $prevReceiver = $doc->receiverName;
         $newSender = Auth::user()->name;
         $newSenderOffice = Auth::user()->assignedOffice;
         $newReceiver = $request->input('receiverName');
@@ -121,8 +124,8 @@ class QrController extends Controller
             'receiverOffice' => $newOfficeReceiver,
             'referenceNo' => $referenceNo,
             'action' => $request->input('action'),
-            'prevOffice' => $doc->receiverOffice,
-            'prevReceiver' => $doc->receiverName,
+            'prevOffice' => $prevOffice,
+            'prevReceiver' => $prevReceiver,
         ]);
 
         return redirect('qrinfo/'.$referenceNo)->with('success', 'Forwarded Sucessfully');
@@ -144,7 +147,10 @@ class QrController extends Controller
     public function receiveDoc($referenceNo,Request $request){
         // $sender = Auth::user()->email;
         // $senderOffice = Auth::user()->assignedOffice;
-        $doc = Documents::where('referenceNo', $referenceNo)->first();
+        $doc = TrackingLogs::where('referenceNo', $referenceNo)
+        ->orderBy('created_at', 'DESC')->first();
+        $prevOffice = $doc->receiverOffice;
+        $prevReceiver = $doc->receiverName;
         $newReceiver = $request->input('receiverName');
         $newOfficeReceiver = $request->input('receiverOffice');
         // Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
@@ -156,6 +162,8 @@ class QrController extends Controller
             'receiverOffice' => $doc->receiverOffice,
             'referenceNo' => $referenceNo,
             'action' => $request->input('action'),
+            'prevOffice' => $prevOffice,
+            'prevReceiver' => $prevReceiver,
         ]);
 
         return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');

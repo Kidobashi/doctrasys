@@ -1,7 +1,7 @@
 <style>
 
 .spinner{
-    display: none;
+    display: block;
 }
 .comment {
     width: 100%;
