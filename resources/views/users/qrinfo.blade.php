@@ -216,7 +216,7 @@ h5{
                     @if(isset($status->senderName) && $status->senderName != Auth::user()->name && $light->action == 3)
                         <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
                     @endif
-                    @if($light->senderName != Auth::user()->name && $light->action == 2)
+                    @if($light->senderName != Auth::user()->name && $light->action == 2 || $light->action == 5)
                     <hr>
                         <button class="btn btn-success" type="button" onclick="showReceive()">Receive</button>
                     @elseif ($status->status != 3)
@@ -504,7 +504,11 @@ h5{
                     @endif
                     @if( $altdata['trackings'][$key]->action == 4)
                     <h5><div class="top-arrow center">
-                    </div>Issue was reported by <i>{{ $altdata['trackings'][$key]->senderName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
+                    </div>
+                        @if (isset($issue))
+                            <p style="color:red;">Issue Details: {{ $issue->details }}</p>
+                            Issue was reported by <i>{{ $issue->email }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
+                        @endif
                         {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                         <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                         @if($altdata['trackings'][$key]->action == 2)
@@ -516,7 +520,12 @@ h5{
                     @endif
                     @if( $altdata['trackings'][$key]->action == 5)
                     <h5><div class="top-arrow center">
-                    </div>Issue fixed by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
+                    </div>
+                        @if (isset($issue))
+                            <p style="color:green;">Issue Details: {{ $issue->details }}</p>
+                            Issue was fixed by <i>{{ $status->email }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
+                        @endif
+                        Issue fixed by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
                         {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                         <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                         @if($altdata['trackings'][$key]->action == 2)
