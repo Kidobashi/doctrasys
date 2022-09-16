@@ -43,7 +43,7 @@
                                     <select class="form-control" id="receiverName" name="receiverName" required>
                                         <option value="" selected disabled>Select Receiver
                                             @foreach ($users as $row)
-                                            <option value="{{ $row->id}}"><p>{{ $row->email }}</p>-<i>{{ $row->name }}</i></option>
+                                            <option value="{{$row->name}}"><p>{{ $row->email }}</p>-<i>{{ $row->name }}</i></option>
                                         </option>
                                         @endforeach
                                     </select>

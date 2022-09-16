@@ -207,10 +207,12 @@ h5{
                 <hr>
                     <p class="pt-2 text-center">Processing issue...</p>
                 @endif
-                @if (isset($light->senderName) == Auth::user()->name && $light->senderOffice == Auth::user()->assignedOffice && $status->status != 3)
+                @if (isset($light->senderName) && $light->senderName == Auth::user()->name && $light->action == 1 && $light->status == 1)
                     <p class="text-center">You may proceed to forward this document to the next receiver or send it back</p>
                     <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
                     <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
+                @elseif (isset($light->senderName) && $light->senderName != Auth::user()->name && $light->action == 1 && $light->status == 1)
+                    <p class="text-center">You don't have credentials to modify this document</p>
                 @elseif (isset($light->receiverName) == Auth::user()->name && isset($light->receiverOffice) == Auth::user()->assignedOffice)
                     @if($light->action == 3)
                         <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
@@ -272,7 +274,11 @@ h5{
                               <h6 class="card-subtitle mb-2 text-muted">Issue:</h6>
                               <textarea class="card-text w-100" name="details"></textarea>
                               <input class="form-control "type="text" style="display: none;" name='status' value="3">
-                              <input class="form-control "type="text" style="display: none;" name='email' value="{{ Auth::user()->email }}">
+                              <input class="form-control "type="text" style="display: none;" name='email'
+                              @if (isset(Auth::user()->email))
+                              value="{{ Auth::user()->email }}"
+                              @endif
+                              >
                               <button type="submit" class="btn btn-danger" class="text-white">Send Report</button>
                                 </form>
                             </div>
