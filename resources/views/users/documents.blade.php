@@ -22,6 +22,19 @@
 <div class="col-md-12">
     <h2 class="m-3">My Documents</h2>
         <div id="nav" class="nav">
+            @if (count($all) == 0)
+                <a href="#completed"><button onclick="showAll()" class="btn border d-flex justify-content-center border border-dark" disabled>All Documents</button></a>&nbsp;&nbsp;
+                <a href="#completed"><button onclick="showOne()" class="btn border d-flex justify-content-center border border-dark" disabled>Completed</button></a>&nbsp;&nbsp;
+                <a href="#circulating"><button onclick="showTwo()" class="btn border d-flex justify-content-center border border-dark" disabled>Circulating</button></a>&nbsp;&nbsp;
+                <a href="#sentBack"><button onclick="showThree()" class="btn border d-flex justify-content-center border border-dark" disabled>Sent Back</button></a>&nbsp;&nbsp;
+                <button onclick="showFilter()" class="btn border d-flex justify-content-center border border-dark" disabled>More Filter</button>
+                <div class="col-md-7">
+                    <form action="searchByDate" method="get">
+                        <input type="date" style="padding: .5vw;" class="rounded" placeholder="Search by Date" name="dateSearch" type="" disabled>
+                        <button style="padding: .5vw;" class="rounded" type="submit" disabled>Search</button>
+                    </form>
+                </div>
+            @else
             <a href="#completed"><button onclick="showAll()" class="btn border d-flex justify-content-center border border-dark">All Documents</button></a>&nbsp;&nbsp;
             <a href="#completed"><button onclick="showOne()" class="btn border d-flex justify-content-center border border-dark">Completed</button></a>&nbsp;&nbsp;
             <a href="#circulating"><button onclick="showTwo()" class="btn border d-flex justify-content-center border border-dark">Circulating</button></a>&nbsp;&nbsp;
@@ -33,6 +46,7 @@
                     <button style="padding: .5vw;" class="rounded" type="submit">Search</button>
                 </form>
             </div>
+            @endif
         </div>
 </div>
 
@@ -52,10 +66,9 @@
     </div>
     @endif
 
-    {{-- <div id="myDiv1">
-
-      </div> --}}
-      @if (isset($all))
+    @if (count($all) == '0')
+            <p class="display-4">No documents found</p>
+      @elseif (isset($all) != 0)
       <div id="All">
         <table class="table">
             <thead class="thead-dark">
