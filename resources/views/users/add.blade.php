@@ -10,6 +10,7 @@
         height: 100%;
     }
 </style>
+This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
 <div class="container-fluid col-lg-6 col-md-6">
         <div class="row">
                 <div class="card">
@@ -20,14 +21,14 @@
                                 @csrf
                                     <label for="">Sender Name</label>
                                     <div class="mb-3">
-                                    <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name; }}" >
+                                    <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name; }}" readonly>
                                     @error('senderName')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
                                     </div>
 
                                     <div class="mb-3" style="display: none;">
-                                        <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email; }}" >
+                                        <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email; }}" readonly>
                                         @error('email')
                                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
@@ -35,7 +36,7 @@
 
                                     <div class="mb-3">
                                         <label for="">Sender Office</label>
-                                        <input type="text" class="form-control" name="senderOffice" id="name" aria-label="Name" aria-describedby="name" value="{{ $senderOffice }}" >
+                                        <input type="text" class="form-control" name="senderOffice" id="name" aria-label="Name" aria-describedby="name" value="{{ $senderOffice }}" readonly>
                                     </div>
 
                                     <label for="">Receiver Name</label>
@@ -43,11 +44,10 @@
                                     <select class="form-control" id="receiverName" name="receiverName" required>
                                         <option value="" selected disabled>Select Receiver
                                             @foreach ($users as $row)
-                                            <option value="{{$row->name}}"><p>{{ $row->email }}</p>-<i>{{ $row->name }}</i></option>
+                                            <option value="{{$row->id}}"><p>{{ $row->email }}</p>-<i>{{ $row->name }}</i></option>
                                         </option>
                                         @endforeach
                                     </select>
-                                    {{-- <input type="text" class="form-control" name="receiverName" id="name" aria-label="Name" aria-describedby="name" required> --}}
                                     @error('receiverName')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror
@@ -55,12 +55,7 @@
 
                                     <div class="mb-3">
                                         <label for="">Receiver Office</label>
-                                        <select class="form-control" id="assignedOffice" name="receiverOffice" required>
-                                            <option value="" selected disabled>Select Office
-                                                @foreach ($offices as $row)
-                                                <option value="{{ $row->id }}">{{ $row->officeName }}</option>
-                                            </option>
-                                            @endforeach
+                                        <select class="form-control" id="receiverOffice" name="receiverOffice" required>
                                         </select>
                                     </div>
 
@@ -100,6 +95,37 @@
                 </div>
             </div>
         </div>
+
+	<script>
+         $(document).ready(function() {
+        $('#receiverName').on('change', function() {
+            var stateID = $(this).val();
+            if(stateID) {
+                $.ajax({
+                    url: '/findCityWithStateID/'+stateID,
+                    type: "GET",
+                    data : {"_token":"{{ csrf_token() }}"},
+                    dataType: "json",
+                    success:function(data) {
+                        console.log(data);
+                      if(data){
+                        $('#receiverOffice').empty();
+                        $('#receiverOffice').focus;
+                        $('#receiverOffice').append('<option value="">-- Select City --</option>');
+                        $.each(data, function(key, value){
+                        $('select[name="receiverOffice"]').append('<option value="'+ value.id +'">' + value.officeName + '</option>');
+                    });
+                  }else{
+                    $('#city').empty();
+                  }
+                  }
+                });
+            }else{
+              $('#city').empty();
+            }
+        });
+    });
+    </script>
 {{-- <script src="../../../public/js/html2canva.js"></script> --}}
 <script type="text/javascript" src="{{URL::asset('assets/js/html2canva.min.js')}}"></script>
 <script src="../public/assets/js/html2canva.min.js"></script>

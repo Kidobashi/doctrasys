@@ -148,3 +148,5 @@ Route::delete('delDocType/{id}', [DashboardController::class, 'deleteDocType']);
 
 Route::get('searchByDate', [SearchController::class, 'dateFilter']);
 Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);
+
+Route::get('findCityWithStateID/{id}', [DocumentsController::class, 'getOfficeByUser']);

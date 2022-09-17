@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="multiple-form-submit-prevent.css">
 
     <!-- Bootstrap & jQuery file -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Link to your Javascript file -->
     <script src="multiple-form-submit-prevent.js"></script>

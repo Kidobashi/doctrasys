@@ -135,6 +135,7 @@ h5{
     }
 }
 </style>
+This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
     <div class="container-fluid col-lg-6">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">

@@ -30,6 +30,17 @@ class DocumentsController extends Controller
         return view('users.index', compact(['docs']));
     }
 
+    public function getOfficeByUser($id)
+    {
+        $assOff = User::where('id', $id)->pluck('assignedOffice');
+
+        $city = DB::table('users')
+        ->join('offices', 'assignedOffice', 'offices.id')
+        ->where('users.assignedOffice', $assOff)
+        ->get();
+
+        return response()->json($city);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -38,6 +49,7 @@ class DocumentsController extends Controller
     public function showOffices()
     {
         //
+
         $offices = Offices::all();
 
         $users = User::all();
@@ -82,6 +94,9 @@ class DocumentsController extends Controller
         //
         $sender = Auth::user()->name;
         $senderOffice = Auth::user()->assignedOffice;
+        $rcvId = request('receiverName');
+
+        $receiverName = User::where('id', $rcvId )->first();
 
         // dd($senderOffice);
 
@@ -109,7 +124,7 @@ class DocumentsController extends Controller
         Documents::insert([
             'senderName' => $sender,
             'email' => request('email'),
-            'receiverName' => request('receiverName'),
+            'receiverName' => $receiverName->name,
             'senderOffice' =>  $senderOffice,
             'receiverOffice' => request('receiverOffice'),
             'docType' => request('docType'),
@@ -119,7 +134,7 @@ class DocumentsController extends Controller
 
         TrackingLogs::create([
             'senderName' => $sender,
-            'receiverName' => request('receiverName'),
+            'receiverName' => $receiverName,
             'senderOffice' => $senderOffice,
             'receiverOffice' => request('receiverOffice'),
             'referenceNo' => $refNo,

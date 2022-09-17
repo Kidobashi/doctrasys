@@ -19,6 +19,7 @@
     display: flex;
 }
 </style>
+This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
 <div class="col-md-12">
     <h2 class="m-3">My Documents</h2>
         <div id="nav" class="nav">
