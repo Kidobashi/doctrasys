@@ -50,6 +50,8 @@ class QrController extends Controller
         $light = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
         ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->latest()->first();
 
+        dd($light);
+
         $lightPrev = DB::table('tracking_logs')
         ->join('offices', 'prevOffice', 'offices.id')
         ->where('referenceNo','LIKE', "%{$referenceNo}%")

@@ -111,7 +111,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                       if(data){
                         $('#receiverOffice').empty();
                         $('#receiverOffice').focus;
-                        $('#receiverOffice').append('<option value="">-- Select City --</option>');
+                        $('#receiverOffice').append('<option value="">-- Select Office --</option>');
                         $.each(data, function(key, value){
                         $('select[name="receiverOffice"]').append('<option value="'+ value.id +'">' + value.officeName + '</option>');
                     });

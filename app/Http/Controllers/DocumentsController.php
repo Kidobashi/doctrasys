@@ -98,8 +98,6 @@ class DocumentsController extends Controller
 
         $receiverName = User::where('id', $rcvId )->first();
 
-        // dd($senderOffice);
-
         $last = DB::table('documents')->latest('id')->first();
 
         $identity = $last->id + 1;
@@ -118,7 +116,6 @@ class DocumentsController extends Controller
             'receiverName' => 'required',
             'senderOffice' =>  'required',
             'receiverOffice' => 'required',
-            // 'email' => 'required',
         ]);
 
         Documents::insert([
@@ -134,7 +131,7 @@ class DocumentsController extends Controller
 
         TrackingLogs::create([
             'senderName' => $sender,
-            'receiverName' => $receiverName,
+            'receiverName' => $receiverName->name,
             'senderOffice' => $senderOffice,
             'receiverOffice' => request('receiverOffice'),
             'referenceNo' => $refNo,
