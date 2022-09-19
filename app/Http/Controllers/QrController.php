@@ -50,8 +50,6 @@ class QrController extends Controller
         $light = TrackingLogs::join('offices', 'receiverOffice', 'offices.id')
         ->where('referenceNo', 'LIKE', "%{$referenceNo}%")->latest()->first();
 
-        dd($light);
-
         $lightPrev = DB::table('tracking_logs')
         ->join('offices', 'prevOffice', 'offices.id')
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
@@ -76,6 +74,33 @@ class QrController extends Controller
         $altdata = array_merge(['prev' => $prev] , ['trackings' => $trackings]);
 
         return view('users.qrinfo')->with('issue', $issue)->with('status', $status)->with('offices', $offices)->with('officeN', $officeN)->with('docCategory', $docCategory)->with('latestComments', $latestComments)->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
+    }
+
+    public function search(Request $request)
+    {
+        if($request->ajax())
+        {
+            $output = "";
+            $results = DB::table('users')
+            ->join('offices', 'assignedOffice', 'offices.id')
+            ->where('name','LIKE','%'.$request->search."%")
+            ->orWhere('email','LIKE','%'.$request->search."%")
+            ->orwhere('phone','LIKE','%'.$request->search."%")
+            ->get();
+
+            if(count($results)>0)
+            {
+                foreach ($results as $result)
+                {
+                    $output.=
+                    '<tr>'.
+                        '<td>'.$result->name.'</td>'.
+                    '</tr>';
+                }
+
+            }
+        }
+        return response()->json($results);
     }
 
     public function saveQr(){

@@ -97,7 +97,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
         </div>
 
 	<script>
-         $(document).ready(function() {
+        $(document).ready(function() {
         $('#receiverName').on('change', function() {
             var stateID = $(this).val();
             if(stateID) {

@@ -295,24 +295,35 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 <div class="container col-lg-10">
                                 <label for="">Forward to:</label>
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" name="receiverName" id="name" placeholder="Name of whom you want to forward " aria-label="Name" aria-describedby="name">
-                                        <input type="text" class="form-control" style="display: none;" name="senderName" id="name" value="{{ Auth::user()->name }}"aria-label="Name" aria-describedby="name">
-                                        <input type="text" class="form-control" style="display: none;" name="senderOffice" id="name" value="{{ Auth::user()->assignedOffice }}"aria-label="Name" aria-describedby="name">
+                                        <input type="text" class="form-control" name="receiverName" id="search" placeholder="Name of whom you want to forward " aria-label="Name" aria-describedby="name">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                            </thead>
+                                            <tbody>
+                                        </table>
+
                                         @error('receiverName')
                                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="">Current Office Receiver</label>
+                                        <label for="">Receiver Office</label>
+                                        <select class="form-control" id="receiverOffice" name="receiverOffice" required>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        {{-- <label for="">Current Office Receiver</label>
                                         <input class="form-control" type="text" value="{{ $officeN->officeName }}" disabled>
-                                        <label for="">Forward Office</label>
+                                        <select class="form-control" id="receiverOffice" name="receiverOffice" required>
+                                        </select> --}}
+                                        {{-- <label for="">Forward Office</label>
                                         <select class="form-control" id="assignedOffice" name="receiverOffice">
                                             <option value="" selected disabled>Select Office
                                                 @foreach ($offices as $row)
                                                 <option value="{{ $row->id }}">{{ $row->officeName }}</option>
                                             </option>
                                             @endforeach
-                                        </select>
+                                        </select> --}}
 
                                         <input class="form-control "type="text" style="display: none;" name='action' value="2">
                                     </div>
@@ -329,7 +340,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                             <h5>In Circulation...</h5>
                         @elseif( $light->action == 1)
                         {{ $light->created_at->diffForHumans() }}
-                            <h5>&nbsp;Received by <i>{{ $light->receiverName }}&nbsp;-&nbsp;<i>{{ $light->officeName }}</i></h5>
+                            <h5>&nbsp;Received by <i>{{ $light->senderName }}&nbsp;-&nbsp;<i>{{ $light->officeName }}</i></h5>
                                 <li class="">Date Received: <i>{{ date_format($light->created_at,'M d Y h:i A')}}</i></li>
                                 @if($light->action == 2)
                                 <p><li class="">Status: <i>In Circulation</i></p>
@@ -340,7 +351,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 @endif
                             @elseif( $light->action == 2)
                         {{ $light->created_at->diffForHumans() }}
-                            <h5>&nbsp;Forwarded to <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
+                            <h5>&nbsp;Forwarded to <i>{{ $light->senderName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
                                 {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
                                 <li class="">Forwarded by: <b>{{ $light->prevReceiver }}</b> - <i>{{ $lightPrev->officeName }}</i></li>
@@ -358,7 +369,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 @if (isset($issue))
                                     <p>Issue Details: {{ $issue->details }}</p>
                                 @endif
-                            <h5>&nbsp;Sent by <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
+                            <h5>&nbsp;Sent by <i>{{ $light->senderName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
                                 {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
                                 @if($light->action == 2)
@@ -372,7 +383,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 @elseif( $light->action == 5)
                             {{ $light->created_at->diffForHumans() }}
                                 <h5>Issue was fixed</h5>
-                            <h5>&nbsp;Sent by <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
+                            <h5>&nbsp;Sent by <i>{{ $light->senderName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
                                 {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
                                 @if($light->action == 2)
@@ -476,7 +487,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                     <li>
                     @if( $altdata['trackings'][$key]->action == 1)
                     <h5><div class="top-arrow center">
-                    </div>Received by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
+                    </div>Received by <i>{{ $altdata['trackings'][$key]->senderName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
                         {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                         <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                         @if($altdata['trackings'][$key]->action == 2)
@@ -491,7 +502,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                     @endif
                     @if( $altdata['trackings'][$key]->action == 2)
                     <h5><div class="top-arrow center">
-                    </div>Forwarded to <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
+                    </div>Forwarded to <i>{{ $altdata['trackings'][$key]->senderName}} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
                         {{-- <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                         <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
                         <li class="">Forwarded by: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
@@ -512,12 +523,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                         @endif
                         {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                         <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
-                        @if($altdata['trackings'][$key]->action == 2)
-                        <p><li class="">Status: <i>In Circulation</i></p>
-                        @endif
-                        @if($altdata['trackings'][$key]->action == 1)
-                            <p><li class="">Status: <i>Processing...</i></p>
-                        @endif
+                        <p><li class="">Status: <i>Has Issue</i></p>
                     @endif
                     @if( $altdata['trackings'][$key]->action == 5)
                     <h5><div class="top-arrow center">
@@ -612,7 +618,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
         })
         })();
         </script>
-    <script>
+
         <script type="text/javascript">
         (function(){
         $('.fixIssue').on('submit', function(){
@@ -621,7 +627,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
         })
         })();
         </script>
-        <script>
+
         <script type="text/javascript">
         (function(){
         $('.sendBack').on('submit', function(){
@@ -637,7 +643,25 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
         }, 4500 );
     });
     </script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $('#search').on('keyup',function(){
+            $value=$(this).val();
+            $.ajax({
+            type : 'get',
+            url : '{{URL::to('search')}}',
+            data:{'search':$value},
+            success:function(data){
+            $('tbody').html(data);
+            $.each(data, function(key, value){
+                $('select[name="receiverOffice"]').append('<option value="'+ value.id +'">' + value.officeName + '</option>');
+            });
+            }
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>

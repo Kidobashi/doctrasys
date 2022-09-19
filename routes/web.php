@@ -136,6 +136,7 @@ Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
 Route::post('qrinfo/received/{referenceNo}', [QrController::class, 'receiveDoc']);
 Route::post('qrinfo/send-back/{referenceNo}', [QrController::class, 'sendBack']);
 Route::post('qrinfo/fix-issue/{referenceNo}', [QrController::class, 'fixIssue']);
+Route::get('/search', [QrController::class, 'search']);
 
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
