@@ -12,6 +12,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Arr;
 use App\Models\Comments;
 use App\Models\Issues;
+use App\Models\User;
 
 class QrController extends Controller
 {
@@ -91,9 +92,9 @@ class QrController extends Controller
                 foreach ($results as $result)
                 {
                     $output.=
-                    '<tr>'.
+                        '</tr>'.
                         '<td>'.$result->name.'</td>'.
-                    '</tr>';
+                        '</tr>';
                 }
 
             }
@@ -103,17 +104,19 @@ class QrController extends Controller
 
     public function altSearch(Request $request)
     {
+        $search = $request->input('search');
+
         if($request->ajax())
         {
             $output = "";
             $results = DB::table('users')
             ->join('offices', 'assignedOffice', 'offices.id')
-            ->where('name','LIKE','%'.$request->search."%")
-            ->orWhere('email','LIKE','%'.$request->search."%")
-            ->orwhere('phone','LIKE','%'.$request->search."%")
+            ->where('name', $search )
+            ->orWhere('email',$search )
+            ->orwhere('phone',$search )
             ->get();
         }
-        return Response($results);
+        return response($results);
     }
 
     public function saveQr(){
@@ -149,18 +152,19 @@ class QrController extends Controller
 
         $doc = TrackingLogs::where('referenceNo', $referenceNo)
         ->orderBy('created_at', 'DESC')->first();
+
         $prevOffice = $doc->receiverOffice;
         $prevReceiver = $doc->receiverName;
         $newSender = Auth::user()->name;
         $newSenderOffice = Auth::user()->assignedOffice;
         $newReceiver = $request->input('receiverName');
-        $newOfficeReceiver = $request->input('receiverOffice');
+        $newOfficeReceiver = User::where('name', $newReceiver)->first();
 
         TrackingLogs::create([
             'senderName' => $newSender,
             'receiverName' => $newReceiver,
             'senderOffice' => $newSenderOffice,
-            'receiverOffice' => $newOfficeReceiver,
+            'receiverOffice' => $newOfficeReceiver->assignedOffice,
             'referenceNo' => $referenceNo,
             'action' => $request->input('action'),
             'prevOffice' => $prevOffice,

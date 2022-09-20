@@ -295,7 +295,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 <div class="container col-lg-10">
                                 <label for="">Forward to:</label>
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" name="receiverName" id="search" placeholder="Name of whom you want to forward " aria-label="Name" aria-describedby="name">
+                                        <input list="receiverNameList" type="text" class="form-control" name="receiverName" id="search" placeholder="" aria-label="Name" aria-describedby="name">
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
@@ -303,30 +303,13 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                             </thead>
                                             <tbody>
                                             </tbody>
-                                        </table>
-
+                                            </table>
                                         @error('receiverName')
                                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="">Receiver Office</label>
-                                        <input class="form-control" id="receiverOffice" name="receiverOffice" value="" readonly required>
-                                    </div>
-                                    <div class="mb-3">
-                                        {{-- <label for="">Current Office Receiver</label>
-                                        <input class="form-control" type="text" value="{{ $officeN->officeName }}" disabled>
-                                        <select class="form-control" id="receiverOffice" name="receiverOffice" required>
-                                        </select> --}}
-                                        {{-- <label for="">Forward Office</label>
-                                        <select class="form-control" id="assignedOffice" name="receiverOffice">
-                                            <option value="" selected disabled>Select Office
-                                                @foreach ($offices as $row)
-                                                <option value="{{ $row->id }}">{{ $row->officeName }}</option>
-                                            </option>
-                                            @endforeach
-                                        </select> --}}
 
+                                    <div class="mb-3">
                                         <input class="form-control "type="text" style="display: none;" name='action' value="2">
                                     </div>
                                 <button class="forward" type="submit">Submit</button>
@@ -653,29 +636,11 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                     url : '{{URL::to('search')}}',
                     data:{'search':$value},
                     success:function(data){
+                    console.log(data);
                     $('tbody').html(data);
-                    // console.log(data[0].officeName);
-                    $.each(data, function(key, value){
-                    $('#receiverOffice').val(value.officeName);
-                    });
                 }
             });
         });
-        $('#search').on('keyup',function(){
-                    $value=$(this).val();
-                    $.ajax({
-                    type : 'get',
-                    url : '{{URL::to('altSearch')}}',
-                    data:{'altSearch':$value},
-                    success:function(data){
-                    // $('tbody').html(data);
-                    console.log(data);
-                    $.each(data, function(key, value){
-                    $('#receiverOffice').val(value.officeName);
-                    });
-                }
-            });
-        })
     </script>
     <script type="text/javascript">
         $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
