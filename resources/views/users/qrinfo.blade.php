@@ -211,7 +211,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                     <p class="text-center">You may proceed to forward this document to the next receiver or send it back</p>
                     <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
                     <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
-                @elseif (isset($light->senderName) && $light->senderName != Auth::user()->name && $light->action == 1 && $light->status == 1)
+                @elseif (isset($light->receiverName) && $light->receiverName != Auth::user()->name)
                     <p class="text-center">You don't have credentials to modify this document</p>
                 @elseif (isset($light->receiverName) == Auth::user()->name && isset($light->receiverOffice) == Auth::user()->assignedOffice)
                     @if(isset($status->senderName) && $status->senderName != Auth::user()->name && $light->action == 3)
@@ -298,8 +298,11 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                         <input type="text" class="form-control" name="receiverName" id="search" placeholder="Name of whom you want to forward " aria-label="Name" aria-describedby="name">
                                         <table class="table table-bordered table-hover">
                                             <thead>
+                                            <tr>
+                                            </tr>
                                             </thead>
                                             <tbody>
+                                            </tbody>
                                         </table>
 
                                         @error('receiverName')
@@ -308,8 +311,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                     </div>
                                     <div class="mb-3">
                                         <label for="">Receiver Office</label>
-                                        <select class="form-control" id="receiverOffice" name="receiverOffice" required>
-                                        </select>
+                                        <input class="form-control" id="receiverOffice" name="receiverOffice" value="" readonly required>
                                     </div>
                                     <div class="mb-3">
                                         {{-- <label for="">Current Office Receiver</label>
@@ -340,7 +342,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                             <h5>In Circulation...</h5>
                         @elseif( $light->action == 1)
                         {{ $light->created_at->diffForHumans() }}
-                            <h5>&nbsp;Received by <i>{{ $light->senderName }}&nbsp;-&nbsp;<i>{{ $light->officeName }}</i></h5>
+                            <h5>&nbsp;Received by <i>{{ $light->receiverName }}&nbsp;-&nbsp;<i>{{ $light->officeName }}</i></h5>
                                 <li class="">Date Received: <i>{{ date_format($light->created_at,'M d Y h:i A')}}</i></li>
                                 @if($light->action == 2)
                                 <p><li class="">Status: <i>In Circulation</i></p>
@@ -351,7 +353,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 @endif
                             @elseif( $light->action == 2)
                         {{ $light->created_at->diffForHumans() }}
-                            <h5>&nbsp;Forwarded to <i>{{ $light->senderName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
+                            <h5>&nbsp;Forwarded to <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
                                 {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
                                 <li class="">Forwarded by: <b>{{ $light->prevReceiver }}</b> - <i>{{ $lightPrev->officeName }}</i></li>
@@ -369,7 +371,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 @if (isset($issue))
                                     <p>Issue Details: {{ $issue->details }}</p>
                                 @endif
-                            <h5>&nbsp;Sent by <i>{{ $light->senderName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
+                            <h5>&nbsp;Sent by <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
                                 {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
                                 @if($light->action == 2)
@@ -383,7 +385,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 @elseif( $light->action == 5)
                             {{ $light->created_at->diffForHumans() }}
                                 <h5>Issue was fixed</h5>
-                            <h5>&nbsp;Sent by <i>{{ $light->senderName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
+                            <h5>&nbsp;Sent by <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
                                 {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
                                 <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
                                 @if($light->action == 2)
@@ -637,25 +639,41 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
         })();
         </script>
     <script>
-    $("document").ready(function(){
-        setTimeout(function(){
-            $("#message").remove();
-        }, 4500 );
-    });
+        $("document").ready(function(){
+            setTimeout(function(){
+                $("#message").remove();
+            }, 4500 );
+        });
     </script>
     <script type="text/javascript">
         $('#search').on('keyup',function(){
-            $value=$(this).val();
-            $.ajax({
-            type : 'get',
-            url : '{{URL::to('search')}}',
-            data:{'search':$value},
-            success:function(data){
-            $('tbody').html(data);
-            $.each(data, function(key, value){
-                $('select[name="receiverOffice"]').append('<option value="'+ value.id +'">' + value.officeName + '</option>');
+                    $value=$(this).val();
+                    $.ajax({
+                    type : 'get',
+                    url : '{{URL::to('search')}}',
+                    data:{'search':$value},
+                    success:function(data){
+                    $('tbody').html(data);
+                    // console.log(data[0].officeName);
+                    $.each(data, function(key, value){
+                    $('#receiverOffice').val(value.officeName);
+                    });
+                }
             });
-            }
+        });
+        $('#search').on('keyup',function(){
+                    $value=$(this).val();
+                    $.ajax({
+                    type : 'get',
+                    url : '{{URL::to('altSearch')}}',
+                    data:{'altSearch':$value},
+                    success:function(data){
+                    // $('tbody').html(data);
+                    console.log(data);
+                    $.each(data, function(key, value){
+                    $('#receiverOffice').val(value.officeName);
+                    });
+                }
             });
         })
     </script>

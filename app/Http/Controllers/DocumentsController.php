@@ -62,12 +62,9 @@ class DocumentsController extends Controller
 
         $docType = DocumentType::all();
 
-        // $assignedOffice = Offices::where('')->first();
-
         $identity = $last->id + 1;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
-        // $prefix = strval(strftime("%Y%m%d"));
         $month = strval(strftime("%M"));
         $day = strval(strftime("%D"));
         $stringVal = strval($number);

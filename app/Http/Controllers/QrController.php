@@ -40,8 +40,6 @@ class QrController extends Controller
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
         ->first();
 
-        // $issue = Issues::where('referenceNo', $referenceNo)->first();
-
         $docCategory = DB::table('documents')
         ->join('document_type', 'docType', 'document_type.id')
         ->where('referenceNo','LIKE', "%{$referenceNo}%")
@@ -88,7 +86,7 @@ class QrController extends Controller
             ->orwhere('phone','LIKE','%'.$request->search."%")
             ->get();
 
-            if(count($results)>0)
+            if($results)
             {
                 foreach ($results as $result)
                 {
@@ -100,7 +98,22 @@ class QrController extends Controller
 
             }
         }
-        return response()->json($results);
+        return Response($output);
+    }
+
+    public function altSearch(Request $request)
+    {
+        if($request->ajax())
+        {
+            $output = "";
+            $results = DB::table('users')
+            ->join('offices', 'assignedOffice', 'offices.id')
+            ->where('name','LIKE','%'.$request->search."%")
+            ->orWhere('email','LIKE','%'.$request->search."%")
+            ->orwhere('phone','LIKE','%'.$request->search."%")
+            ->get();
+        }
+        return Response($results);
     }
 
     public function saveQr(){
@@ -109,7 +122,6 @@ class QrController extends Controller
         $identity = $last->id;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
-        // $prefix = strval(strftime("%Y%m%d"));
         $month = strval(strftime("%M"));
         $day = strval(strftime("%D"));
         $stringVal = strval($number);
@@ -172,15 +184,12 @@ class QrController extends Controller
     }
 
     public function receiveDoc($referenceNo,Request $request){
-        // $sender = Auth::user()->email;
-        // $senderOffice = Auth::user()->assignedOffice;
         $doc = TrackingLogs::where('referenceNo', $referenceNo)
         ->orderBy('created_at', 'DESC')->first();
         $prevOffice = $doc->receiverOffice;
         $prevReceiver = $doc->receiverName;
         $newReceiver = $request->input('receiverName');
         $newOfficeReceiver = $request->input('receiverOffice');
-        // Documents::where('referenceNo', $referenceNo)->update( array('receiverName' => $newReceiver, 'receiverOffice' => $newOfficeReceiver));
 
         TrackingLogs::create([
             'senderName' => Auth::user()->name,

@@ -137,7 +137,7 @@ Route::post('qrinfo/received/{referenceNo}', [QrController::class, 'receiveDoc']
 Route::post('qrinfo/send-back/{referenceNo}', [QrController::class, 'sendBack']);
 Route::post('qrinfo/fix-issue/{referenceNo}', [QrController::class, 'fixIssue']);
 Route::get('/search', [QrController::class, 'search']);
-
+Route::get('/altSearch', [QrController::class, 'altSearch']);
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('offices', [DashboardController::class, 'adminOffice']);
