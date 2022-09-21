@@ -195,6 +195,29 @@ class QrController extends Controller
         $newReceiver = $request->input('receiverName');
         $newOfficeReceiver = $request->input('receiverOffice');
 
+        $initial = Documents::where('referenceNo', $referenceNo)->first();
+
+        if($initial->receiverName == Auth::user()->name){
+
+            $success = 2;
+
+            Documents::where('referenceNo', $referenceNo)->update( array('status' => $success));
+
+            TrackingLogs::create([
+                'senderName' => Auth::user()->name,
+                'receiverName' => $doc->receiverName,
+                'senderOffice' => Auth::user()->assignedOffice,
+                'receiverOffice' => $doc->receiverOffice,
+                'referenceNo' => $referenceNo,
+                'action' => $request->input('action'),
+                'prevOffice' => $prevOffice,
+                'prevReceiver' => $prevReceiver,
+            ]);
+
+            return redirect('qrinfo/'.$referenceNo)->with('success', 'Received by Intended User');
+        }
+        else{
+
         TrackingLogs::create([
             'senderName' => Auth::user()->name,
             'receiverName' => $doc->receiverName,
@@ -206,7 +229,8 @@ class QrController extends Controller
             'prevReceiver' => $prevReceiver,
         ]);
 
-        return redirect('qrinfo/'.$referenceNo)->with('status', 'Profile updated!');
+        return redirect('qrinfo/'.$referenceNo)->with('success', 'Received');
+        }
     }
 
     public function sendBack($referenceNo, Request $request)
