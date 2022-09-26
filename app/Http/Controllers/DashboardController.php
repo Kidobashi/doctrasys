@@ -9,6 +9,7 @@ use App\Models\DocumentType;
 use App\Models\Offices;
 use App\Models\TrackingLogs;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
@@ -41,7 +42,7 @@ class DashboardController extends Controller
     public function addOffice(Request $request)
     {
         $request->validate([
-            'officeName' => 'required',
+            'officeName' => 'required|unique:offices,officeName,except,id',
         ]);
 
         Offices::insert([
@@ -51,11 +52,29 @@ class DashboardController extends Controller
         return redirect('offices')->withSuccess(__('Office Added successfully.'));
     }
 
-    public function deleteOffice($id)
+    public function deleteOffice($id, Request $request)
     {
-        Offices::destroy($id);
+        $offices = Offices::find($id);
 
-        return redirect('offices')->withSuccess(__('Office deleted successfully.'));
+        $name = 'administrator';
+
+        $password = User::where('name', $name)->first();
+
+        if (! $offices) {
+            session()->flash('error_message', 'Model not found with the given id: '. $id);
+            return back();
+        }
+
+        // $password is the password that you have saved somewhere
+        if (request()->password == Hash::check('password', $password->password)) {
+            $offices->delete();
+
+            session()->flash('success_message', 'Model deleted successfully.');
+            return back()->withSuccess(__('Office deleted successfully.'));
+        }
+
+        session()->flash('error_message', 'Invalid password. Try again');
+        return back();
     }
 
     public function docTypes()

@@ -21,13 +21,15 @@
             </div>
             <div class="card-body pt-4 p-3">
                 @foreach ($docType as $row)
-                <div class="d-flex">
-                <p style="white-space: normal;">{{ $row->documentName }}</p>
-                    <div class="">
-                        <a href="#" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit">
-                            <i class="fas fa-user-edit text-secondary"></i>
-                        </a>
-                        <span>
+                <div class="row">
+                    <div class="d-flex">
+                        <div class="col-sm">
+                            <p style="white-space: normal;">{{ $row->documentName }}</p>
+                        </div>
+                        <div class="col-sm">
+
+                        </div>
+                        <div class="col-sm">
                             <span>
                                 <form method="post" action="delDocType/{{ $row->id }}">
                                     @method('delete')
@@ -35,7 +37,7 @@
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
                             </span>
-                        </span>
+                        </div>
                     </div>
                 </div>
                 @endforeach

@@ -105,7 +105,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
 
 <div class="d-flex mt-6 justify-content-center">
     @if(isset($data->referenceNo))
-    <a class="bg-white w-60 border m-2 p-2" href="http://127.0.0.1:8000/qrinfo/{{ $data->referenceNo }}">
+    <a class="bg-white w-80 border m-2 p-2" href="http://127.0.0.1:8000/qrinfo/{{ $data->referenceNo }}">
     <div>
         <h3>Reference Number : {{ $data->referenceNo }}</h3>
         <div class="d-flex justify-content-end">

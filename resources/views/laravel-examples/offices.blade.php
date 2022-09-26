@@ -14,25 +14,29 @@
             <div class="card-header pb-0">
                 <div class="d-flex flex-row justify-content-between">
                         <h3 class="mb-0">{{ __('Central Mindanao University Offices') }}</h3>
+                        <a href="#" class="btn bg-gradient-primary float-end btn-sm mb-0 text-center" type="button" data-toggle="modal" data-target="#exampleModalCenter">+&nbsp; Add new office</a>
                     </div>
-                    <a href="#" class="btn bg-gradient-primary float-end btn-sm mb-0 text-center" type="button" data-toggle="modal" data-target="#exampleModalCenter">+&nbsp; Add new office</a>
                 </div>
             </div>
             <div class="card-body pt-4 p-3">
                 @foreach ($offices as $row)
-                <div class="d-flex">
-                <p style="white-space: normal;">{{ $row->officeName }}</p>
-                    <div class="">
-                        <a href="#" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit">
-                            <i class="fas fa-user-edit text-secondary"></i>
-                        </a>
-                        <span>
-                            <form method="post" action="delOffice/{{ $row->id }}">
-                                @method('delete')
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </span>
+                <div class="row">
+                    <div class="d-flex">
+                        <div class="col-sm">
+                            <p style="white-space: normal;">{{ $row->officeName }}</p>
+                        </div>
+                        <div class="col-sm">
+
+                        </div>
+                        <div class="col-sm">
+                            <span>
+                                <form method="post" action="delOffice/{{ $row->id }}">
+                                    @method('delete')
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 @endforeach

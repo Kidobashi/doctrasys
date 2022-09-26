@@ -383,8 +383,8 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                     </div>
             </div>
             <hr>
-            @include('partials.comments')
-            <div class="justify-content-center">
+            {{-- @include('partials.comments') --}}
+            {{-- <div class="justify-content-center">
                 @foreach ($latestComments as $latestComment)
                 <div class="comments m-1 bg-white p-2" style="white-space: normal;">
                     <div class="d-flex">
@@ -406,8 +406,8 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                         <hr>
                 </div>
                 @endforeach
-                </div>
-                @if (count($comments) >= 5)
+                </div> --}}
+                {{-- @if (count($comments) >= 5)
                 <div class="btn-group w-100 rounded">
                 <button type="button" class="btn dropdown-toggle" style="border-right-radius: 20px;font-weight: bold; background-color: #0275d8; color:white;" data-bs-toggle="dropdown" aria-expanded="false">
                    Show all comments
@@ -439,7 +439,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                 </ul>
               </div>
               @endif
-            </div>
+            </div> --}}
         {{-- <footer>
             <div class="row">
                 <div class="col-md-6">
