@@ -199,7 +199,13 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                 @endguest
 
                 @auth
-                @if ($status->senderName == Auth::user()->name && $status->email == Auth::user()->email && $status->status == 3 )
+                <button type="button" value="" <?php if ($status->status == '1'){ ?> disabled <?php   } ?>>Test</button>
+                <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
+                <button type="button" class="btn btn-success" class="text-white" onclick="">Process</button>
+                <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
+                <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
+                <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit">Issue Fix</button>
+                {{-- @if ($status->senderName == Auth::user()->name && $status->email == Auth::user()->email && $status->status == 3 )
                 <hr>
                     <p class="pt-2 text-center">Fix Issue before forwarding</p>
                     <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit">Issue Fix</button>
@@ -232,7 +238,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                         </div>
                     @endif
                         </div>
-                @endif
+                @endif --}}
                 @endauth
                         @if (isset(Auth::user()->name))
                         <div class="receive" id="receive">

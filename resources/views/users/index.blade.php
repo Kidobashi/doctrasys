@@ -104,18 +104,10 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
 </div>
 
 <div class="d-flex mt-6 justify-content-center">
-    @if(isset($data->referenceNo))
-    <a class="bg-white w-80 border m-2 p-2" href="http://127.0.0.1:8000/qrinfo/{{ $data->referenceNo }}">
-    <div>
-        <h3>Reference Number : {{ $data->referenceNo }}</h3>
-        <div class="d-flex justify-content-end">
-            <p class="details">{{ date_format($data->created_at,'M d Y h:i a') }}</p>
-        </div>
-    </div></a>
-    @elseif (Request::is('index'))
+    @if(session()->has('success'))
+        <p class="display-4">No 'results' found</td></p>
+    @elseif (Request::is('index') || Request::is('tracking'))
         <p class="display-4">Track 'Document' with reference number...</p>
-    @else
-    <p class="display-4">No 'results' found</td></p>
     @endif
 </div>
 @if(Session::has('message'))

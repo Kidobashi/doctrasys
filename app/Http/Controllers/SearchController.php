@@ -20,9 +20,27 @@ class SearchController extends Controller
 
     public function search(Request $request){
         $search = $request['search'];
-        $data = Documents::where('referenceNo', $search)->first();
+        $checkdata = Documents::where('referenceNo', $search)->exists();
 
-        return view('users.index')->with('data', $data);
+        if($checkdata)
+        {
+            $data = Documents::where('referenceNo', $search)->first();
+            return redirect('qrinfo/'.$data->referenceNo);
+        }
+        else
+        {
+            return redirect('index')->with('success', 'No Results Found');
+        }
+    }
+
+    public function getSearch(Request $request){
+
+        $search = $request['search'];
+
+        $data = Documents::where('referenceNo', $search)->first();
+        $exist = Documents::findOrFail($data);
+
+        return redirect('qrinfo/'.$search);
     }
 
     public function dateFilter(Request $request)

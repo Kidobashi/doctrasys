@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\ConfirmPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,8 +34,6 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::group(['middleware' => 'auth'], function () {
-
-    Route::get('/', [HomeController::class, 'home']);
 	Route::get('dashboard', function () {
 		return view('dashboard');
 	})->name('dashboard');
@@ -93,7 +92,7 @@ Route::group(['middleware' => 'guest'], function () {
 
 });
 
-Route::get('/', [HomeController::class, 'home']);
+// Route::get('/', [HomeController::class, 'home']);
 
 Route::get('/login', function () {
     return view('session/login-session');
@@ -106,6 +105,8 @@ Route::get('/coming', function () {
 //Search Controllers
 Route::get('index', [SearchController::class, 'search']);
 Route::get('tracking', [SearchController::class, 'search']);
+// Route::get('getTracking', [SearchController::class, 'getSearch']);
+
 
 
 //Comments Controller
@@ -145,12 +146,15 @@ Route::get('offices', [DashboardController::class, 'adminOffice']);
 Route::post('addOffice', [DashboardController::class, 'addOffice']);
 Route::get('docType', [DashboardController::class, 'docTypes']);
 Route::post('addDocType', [DashboardController::class, 'addDocType']);
-Route::delete('delOffice/{id}', [DashboardController::class, 'deleteOffice']);
+Route::delete('delOffice/{id}', [DashboardController::class, 'deleteOffice'])->middleware('password.confirm');
 Route::delete('delDocType/{id}', [DashboardController::class, 'deleteDocType']);
 
 Route::get('searchByDate', [SearchController::class, 'dateFilter']);
 Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);
 
 Route::get('findCityWithStateID/{id}', [DocumentsController::class, 'getOfficeByUser']);
+
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
