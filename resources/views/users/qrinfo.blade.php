@@ -199,12 +199,34 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                 @endguest
 
                 @auth
-                <button type="button" value="" <?php if ($status->status == '1'){ ?> disabled <?php   } ?>>Test</button>
-                <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
-                <button type="button" class="btn btn-success" class="text-white" onclick="">Process</button>
-                <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
-                <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
-                <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit">Issue Fix</button>
+                @if (isset($status) && $status->status == 1)
+                    <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
+                    <button type="button" class="btn btn-secondary" class="text-white" onclick="" disabled>Process</button>
+                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showForward()" disabled>Forward</button>
+                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showSendBack()" disabled>Send Back</button>
+                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
+                @endif
+                @if (isset($status) && $status->status == 2)
+                    <button class="btn btn-secondary" type="submit" onclick="showReceive()" disabled>Receive</button>
+                    <button type="button" class="btn btn-primary" class="text-white" onclick="">Process</button>
+                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showForward()" disabled>Forward</button>
+                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showSendBack()" disabled>Send Back</button>
+                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
+                @endif
+                @if (isset($status) && $status->status == 3)
+                    <button class="btn btn-secondary" type="submit" onclick="showReceive()" disabled>Receive</button>
+                    <button type="button" class="btn btn-primary" class="text-white" onclick="">Process</button>
+                    <button type="button" class="btn btn-primary" class="text-white" onclick="showForward()">Forward</button>
+                    <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
+                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
+                @endif
+                @if (isset($status) && $status->status == 4)
+                    <button class="btn btn-secondary" type="submit" onclick="showReceive()" disabled>Receive</button>
+                    <button type="button" class="btn btn-primary" class="text-white" onclick="">Process</button>
+                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showForward()" disabled>Forward</button>
+                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showSendBack()" disabled>Send Back</button>
+                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
+                @endif
                 {{-- @if ($status->senderName == Auth::user()->name && $status->email == Auth::user()->email && $status->status == 3 )
                 <hr>
                     <p class="pt-2 text-center">Fix Issue before forwarding</p>

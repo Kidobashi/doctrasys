@@ -94,9 +94,9 @@ Route::group(['middleware' => 'guest'], function () {
 
 // Route::get('/', [HomeController::class, 'home']);
 
-Route::get('/login', function () {
-    return view('session/login-session');
-})->name('login');
+// Route::get('/login', function () {
+//     return view('session/login-session');
+// })->name('login');
 
 Route::get('/coming', function () {
     return view('unused.coming');
@@ -155,6 +155,6 @@ Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);
 Route::get('findCityWithStateID/{id}', [DocumentsController::class, 'getOfficeByUser']);
 
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
