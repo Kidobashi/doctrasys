@@ -197,7 +197,7 @@ class QrController extends Controller
 
         $initial = Documents::where('referenceNo', $referenceNo)->first();
 
-        if($initial->receiverName == Auth::user()->name){
+        // if($initial->receiverName == Auth::user()->name){
 
             $success = 2;
 
@@ -209,28 +209,28 @@ class QrController extends Controller
                 'senderOffice' => Auth::user()->assignedOffice,
                 'receiverOffice' => $doc->receiverOffice,
                 'referenceNo' => $referenceNo,
-                'action' => $request->input('action'),
+                'action' => $success,
                 'prevOffice' => $prevOffice,
                 'prevReceiver' => $prevReceiver,
             ]);
 
-            return redirect('qrinfo/'.$referenceNo)->with('success', 'Received by Intended User');
-        }
-        else{
+            // return redirect('qrinfo/'.$referenceNo)->with('success', 'Received by Intended User');
+        // }
+        // else{
 
-        TrackingLogs::create([
-            'senderName' => Auth::user()->name,
-            'receiverName' => $doc->receiverName,
-            'senderOffice' => Auth::user()->assignedOffice,
-            'receiverOffice' => $doc->receiverOffice,
-            'referenceNo' => $referenceNo,
-            'action' => $request->input('action'),
-            'prevOffice' => $prevOffice,
-            'prevReceiver' => $prevReceiver,
-        ]);
+        // TrackingLogs::create([
+        //     'senderName' => Auth::user()->name,
+        //     'receiverName' => $doc->receiverName,
+        //     'senderOffice' => Auth::user()->assignedOffice,
+        //     'receiverOffice' => $doc->receiverOffice,
+        //     'referenceNo' => $referenceNo,
+        //     'action' => $request->input('action'),
+        //     'prevOffice' => $prevOffice,
+        //     'prevReceiver' => $prevReceiver,
+        // ]);
 
         return redirect('qrinfo/'.$referenceNo)->with('success', 'Received');
-        }
+        // }
     }
 
     public function sendBack($referenceNo, Request $request)
