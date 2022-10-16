@@ -10,9 +10,10 @@ class OfficeController extends Controller
 {
     //
     public function index(){
+
         $offices = Offices::all();
 
-        return view('session.register', compact(['offices']));
+        return view('auth.register', compact(['offices']));
     }
 
     public function store(Request $office)

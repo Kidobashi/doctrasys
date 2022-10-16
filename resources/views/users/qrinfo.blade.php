@@ -208,15 +208,21 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                 @endif
                 @if (isset($status) && $status->status == 2)
                     <button class="btn btn-secondary" type="submit" onclick="showReceive()" disabled>Receive</button>
-                    <button type="button" class="btn btn-primary" class="text-white" onclick="">Process</button>
+                    @if (isset($data->referenceNo))t7
+                        <form action="process/{{ $data->referenceNo }}" method="post">
+                            @csrf
+                            <input type="text" style="display: none;" value="3" name="status">
+                            <button type="submit" class="btn btn-primary" class="text-white" onclick="">Process</button>
+                        </form>
+                    @endif
                     <button type="button" class="btn btn-secondary" class="text-white" onclick="showForward()" disabled>Forward</button>
                     <button type="button" class="btn btn-secondary" class="text-white" onclick="showSendBack()" disabled>Send Back</button>
                     <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
                 @endif
                 @if (isset($status) && $status->status == 3)
                     <button class="btn btn-secondary" type="submit" onclick="showReceive()" disabled>Receive</button>
-                    <button type="button" class="btn btn-primary" class="text-white" onclick="">Process</button>
-                    <button type="button" class="btn btn-primary" class="text-white" onclick="showForward()">Forward</button>
+                    <button type="button" class="btn btn-secondary" class="text-white" onclick="" disabled>Process</button>
+                    <button type="button" class="btn btn-info" class="text-white" onclick="showForward()">Forward</button>
                     <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
                     <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
                 @endif
@@ -227,40 +233,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                     <button type="button" class="btn btn-secondary" class="text-white" onclick="showSendBack()" disabled>Send Back</button>
                     <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
                 @endif
-                {{-- @if ($status->senderName == Auth::user()->name && $status->email == Auth::user()->email && $status->status == 3 )
-                <hr>
-                    <p class="pt-2 text-center">Fix Issue before forwarding</p>
-                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit">Issue Fix</button>
-                @elseif ($status->status == 3 && $status->email != Auth::user()->email && $status->senderName != Auth::user()->name)
-                <hr>
-                    <p class="pt-2 text-center">Send Back to previous owner...</p>
-                @endif
-                @if (isset($light->senderName) && $light->senderName == Auth::user()->name && $light->action == 1 && $light->status == 1)
-                    <p class="text-center">You may proceed to forward this document to the next receiver or send it back</p>
-                    <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
-                    <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
-                @elseif (isset($light->receiverName) && $light->receiverName != Auth::user()->name)
-                    <p class="text-center">You don't have credentials to modify this document</p>
-                @elseif (isset($light->receiverName) == Auth::user()->name && isset($light->receiverOffice) == Auth::user()->assignedOffice)
-                    @if(isset($status->senderName) && $status->senderName != Auth::user()->name && $light->action == 3)
-                        <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
-                    @endif
-                    @if($light->senderName != Auth::user()->name && $light->action == 2 || $light->action == 5)
-                    <hr>
-                        <button class="btn btn-success" type="button" onclick="showReceive()">Receive</button>
-                    @elseif ($status->status != 3)
-                    <hr>
-                        <p class="text-center">Document is circulating...</p>
-                    @endif
 
-                    @if($light->action == 1 && $status->status != 3 && $status->email == Auth::user()->email)
-                        <div class="d-flex">
-                            <button type="button" class="btn btn-success" class="text-white" onclick="showForward()">Forward</button>
-                            <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
-                        </div>
-                    @endif
-                        </div>
-                @endif --}}
                 @endauth
                         @if (isset(Auth::user()->name))
                         <div class="receive" id="receive">

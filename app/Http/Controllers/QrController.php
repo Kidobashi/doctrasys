@@ -233,6 +233,16 @@ class QrController extends Controller
         // }
     }
 
+    public function processDoc($referenceNo, Request $request)
+    {
+        $success = $request->input('status');
+        // dd($success);
+
+        Documents::where('referenceNo', $referenceNo)->update( array('status' => $success));
+
+        return redirect('qrinfo/'.$referenceNo);
+    }
+
     public function sendBack($referenceNo, Request $request)
     {
         $doc = Documents::where('referenceNo', $referenceNo)->first();

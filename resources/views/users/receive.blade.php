@@ -24,7 +24,7 @@
             </select>
 
             <input class="form-control "type="text" style="display: none;" name='action' value="1">
-            </div>
+        </div>
         <button type="submit">Submit</button>
     </div>
 </form>

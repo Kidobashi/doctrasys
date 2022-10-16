@@ -14,6 +14,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Dompdf\Dompdf;
+use Illuminate\Pagination\Paginator;
 
 class DocumentsController extends Controller
 {
@@ -213,23 +214,23 @@ class DocumentsController extends Controller
         $circs = Documents::where('email', $userDocs)
         ->join('offices', 'receiverOffice', 'offices.id')
         ->where('status', 1)
-        ->orderBy('created_at', 'DESC')->get();
+        ->orderBy('created_at', 'DESC')->paginate(20);
 
         $comps = Documents::where('email', $userDocs)
         ->join('offices', 'receiverOffice', 'offices.id')
         ->where('status', 2)
-        ->orderBy('created_at', 'DESC')->get();
+        ->orderBy('created_at', 'DESC')->paginate(20);
 
         $sentBack = Documents::where('email', $userDocs)
         ->join('offices', 'receiverOffice', 'offices.id')
         ->where('status', 3)
-        ->orderBy('created_at', 'DESC')->get();
+        ->orderBy('created_at', 'DESC')->paginate(20);
 
         $offices = Offices::all();
 
         $all = Documents::where('email', $userDocs)
         ->join('offices', 'receiverOffice', 'offices.id')
-        ->orderBy('created_at', 'DESC')->get();
+        ->orderBy('created_at', 'DESC')->paginate(20);
 
         return view('users.documents')->with(['all' => $all])->with(['circs' => $circs])->with(['comps' => $comps])->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
     }

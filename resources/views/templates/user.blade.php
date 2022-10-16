@@ -44,12 +44,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani&family=Raleway:wght@600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
 <body>
 
-{{-- @include('layouts.navbars.auth.nav') --}}
 <style>
 *{
     font-family: 'Biryani', sans-serif;

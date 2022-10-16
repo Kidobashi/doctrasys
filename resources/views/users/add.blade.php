@@ -1,7 +1,7 @@
 @extends('templates.user')
 @section('content')
 <head>
-    <title>Create Traceable Document</title>
+    <title>Generate QR Code</title>
 </head>
 <style>
     .container-fluid {
@@ -15,7 +15,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
         <div class="row">
                 <div class="card">
                     <div class="card-body">
-                        <span class="d-block display-6 text-center"><strong>Create&nbsp;Traceable Document</strong></span>
+                        <span class="d-block display-6 text-center"><strong>Generate&nbsp;QR Code</strong></span>
                         <div class="card-body">
                             <form method="POST" action="/add-documents">
                                 @csrf

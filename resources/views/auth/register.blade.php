@@ -40,6 +40,27 @@
                         </div>
 
                         <div class="row mb-3">
+                            <label for="assignedOffice" class="col-md-4 col-form-label text-md-end">{{ __('Assigned Office') }}</label>
+
+                            <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <select class="form-control" id="assignedOffice" name="assignedOffice">
+                                        <option value="" selected disabled>Select Office
+                                            @foreach ($offices as $row)
+                                            <option value="{{ $row->id }}">{{ $row->officeName }}</option>
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
