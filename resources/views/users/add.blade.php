@@ -71,7 +71,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                             <div class="input-group my-3 ml-1 col-md-12">
                                                 <span class="input-group-text" id="basic-addon1">Document Type</span>
                                                 <select class="form-control" id="" name="docType" required>
-                                                    <option value="" selected disabled>Select Office
+                                                    <option value="" selected disabled>Select Document Type
                                                         @foreach ($docType as $row)
                                                         <option value="{{ $row->id }}">{{ $row->documentName }}</option>
                                                     </option>
