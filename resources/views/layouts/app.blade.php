@@ -86,20 +86,18 @@
         @endif
         <div class="row">
             <div class="d-flex">
-                <div class="col-sm-3">
+                <div>
                     @auth
                         @include('layouts.navbars.auth.sidebar')
                     @endauth
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-sm-10">
                     <main class="py-4">
                         @yield('content')
                     </main>
                 </div>
-                <div class="col-sm-3">
 
-                </div>
             </div>
         </div>
     </div>
