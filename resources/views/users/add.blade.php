@@ -17,74 +17,84 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                     <div class="card-body">
                         <span class="d-block display-6 text-center"><strong>Generate&nbsp;QR Code</strong></span>
                         <div class="card-body">
-                            <form method="POST" action="/add-documents">
-                                @csrf
-                                    <label for="">Sender Name</label>
-                                    <div class="mb-3">
-                                    <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name; }}" readonly>
-                                    @error('senderName')
-                                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                    @enderror
-                                    </div>
+                            <div class="col-md-12 d-flex">
+                                <div class="col-md-7">
+                                    <form method="POST" action="/add-documents">
+                                        @csrf
+                                        <div class="input-group my-3 ml-1 col-md-12">
+                                            <span class="input-group-text" id="basic-addon1">Sender Name</span>
+                                            <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name; }}" readonly>
+                                            @error('senderName')
+                                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
 
-                                    <div class="mb-3" style="display: none;">
-                                        <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email; }}" readonly>
-                                        @error('email')
-                                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                            <div class="mb-3" style="display: none;">
+                                                <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email; }}" readonly>
+                                                @error('email')
+                                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                        <div class="input-group my-3 ml-1 col-md-12">
+                                            <span class="input-group-text" id="basic-addon1">Sender Office</span>
+                                            <input type="text" class="form-control" name="senderOffice" id="name" aria-label="Name" aria-describedby="name" value="{{ $senderOffice }}" readonly>
+                                            @error('senderName')
+                                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
 
-                                    <div class="mb-3">
-                                        <label for="">Sender Office</label>
-                                        <input type="text" class="form-control" name="senderOffice" id="name" aria-label="Name" aria-describedby="name" value="{{ $senderOffice }}" readonly>
-                                    </div>
+                                            {{-- <label for="">Receiver Name</label>
+                                            <div class="mb-3">
+                                            <select class="form-control" id="receiverName" name="receiverName" required>
+                                                <option value="" selected disabled>Select Receiver
+                                                    @foreach ($users as $row)
+                                                    <option value="{{$row->id}}"><p>{{ $row->email }}</p>-<i>{{ $row->name }}</i></option>
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            @error('receiverName')
+                                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                            @enderror
+                                            </div> --}}
 
-                                    <label for="">Receiver Name</label>
-                                    <div class="mb-3">
-                                    <select class="form-control" id="receiverName" name="receiverName" required>
-                                        <option value="" selected disabled>Select Receiver
-                                            @foreach ($users as $row)
-                                            <option value="{{$row->id}}"><p>{{ $row->email }}</p>-<i>{{ $row->name }}</i></option>
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    @error('receiverName')
-                                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                    @enderror
-                                    </div>
+                                            <div class="input-group my-3 ml-1 col-md-12">
+                                                <span class="input-group-text" id="basic-addon1">Receiver Office</span>
+                                                <select class="form-control" id="assignedOffice" name="receiverOffice">
+                                                    <option value="" selected disabled>Select Office
+                                                        @foreach ($offices as $row)
+                                                        <option value="{{ $row->id }}">{{ $row->officeName }}</option>
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
 
-                                    <div class="mb-3">
-                                        <label for="">Receiver Office</label>
-                                        <select class="form-control" id="receiverOffice" name="receiverOffice" required>
-                                        </select>
-                                    </div>
+                                            <div class="input-group my-3 ml-1 col-md-12">
+                                                <span class="input-group-text" id="basic-addon1">Document Type</span>
+                                                <select class="form-control" id="" name="docType" required>
+                                                    <option value="" selected disabled>Select Office
+                                                        @foreach ($docType as $row)
+                                                        <option value="{{ $row->id }}">{{ $row->documentName }}</option>
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
 
-                                    <div class="mb-3">
-                                        <label for="">Choose Document Type</label>
-                                        <select class="form-control" id="" name="docType" required>
-                                            <option value="" selected disabled>Select Office
-                                                @foreach ($docType as $row)
-                                                <option value="{{ $row->id }}">{{ $row->documentName }}</option>
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                            <div class="btn-toolbar mb-2">
+                                                <button class="btn btn-primary shadow" type="submit">Submit</button>
+                                            </div>
 
-                                    <div class="btn-toolbar">
-                                        <button onclick="showQr()" class="btn btn-primary shadow" type="submit">Show QR</button>
-                                    </div>
-
-                                    <div class="btn-toolbar">
-                                        <button class="btn btn-primary shadow" type="submit">Submit</button>
-                                    </div>
-                                </form>
-
-                                <button id="dl-png" style="display: none;" >Download QR</button>
-                                {{-- <label for="">QR Code</label>
-                                <button onclick="showQr()">Generate QR</button> --}}
-                                <div id="qr" style="display: none; position: absolute;">
-                                    @include('partials.qrcode')
+                                            <div class="btn-toolbar">
+                                                <button onclick="showQr()" class="btn btn-primary shadow" type="submit">Show QR</button>
+                                            </div>
+                                        </form>
                                 </div>
+                                <div class="col-md-5">
+                                    <div id="qr"">
+                                        @include('partials.qrcode')
+                                        <button id="dl-png" style="display: none;" >Download QR</button>
+                                    </div>
+                                </div>
+                            </div>
 
                             @if(session('message'))
                                 <div class="alert alert-success"><strong>{{session('message')}}</strong></div>

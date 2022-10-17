@@ -11,13 +11,6 @@
     display: none;
 }
 
-.filter {
-    float: right;
-}
-
-#nav {
-    display: flex;
-}
 </style>
 This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
     @if (isset($offices))
@@ -42,18 +35,19 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
       <div id="All">
         <div class="container mb-4">
             <div class="card bg-white">
-                <div class="input-group my-3 mx-3 col-md-12">
-                    <span class="input-group-text" id="basic-addon1">Filter By:</span>
-                    <input type="text" class="form-control mr-5" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
-                    <div class="input-group-prepend mx-3">
-                        <button onclick="showAll()" class="btn btn-primary">All Documents</button>
+                <div style="display: flex; justify-content: space-between;">
+                    <div class="input-group my-3 ml-1 col-md-5">
+                        <span class="input-group-text" id="basic-addon1">Filter By:</span>
+                        <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group my-3 col-md-5 pl-5">
+                        &nbsp;&ensp;&emsp;&emsp;&emsp;<button onclick="showAll()" class="btn btn-primary">All Documents</button>
                         <button onclick="showOne()" class="btn btn-success">Completed</button>
                         <button onclick="showTwo()" class="btn btn-info">Circulating</button>
                         <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="container">
             <div class="card bg-white">
@@ -109,13 +103,15 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
 
 @if (isset($comps))
 <div id="myDiv1">
-    <div class="container mb-5">
+    <div class="container mb-4">
         <div class="card bg-white">
-            <div class="input-group my-3 mx-3 col-md-12">
-                <span class="input-group-text" id="basic-addon1">Filter By:</span>
-                <input type="text" class="form-control mr-5" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
-                <div class="input-group-prepend mx-3">
-                    <button onclick="showAll()" class="btn btn-primary">All Documents</button>
+            <div style="display: flex; justify-content: space-between;">
+                <div class="input-group my-3 ml-1 col-md-5">
+                    <span class="input-group-text" id="basic-addon1">Filter By:</span>
+                    <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group my-3 col-md-5 pl-5">
+                    &nbsp;&ensp;&emsp;&emsp;&emsp;<button onclick="showAll()" class="btn btn-primary">All Documents</button>
                     <button onclick="showOne()" class="btn btn-success">Completed</button>
                     <button onclick="showTwo()" class="btn btn-info">Circulating</button>
                     <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
@@ -177,13 +173,15 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
 
 @if (isset($circs))
 <div id="myDiv2">
-    <div class="container mb-5">
+    <div class="container mb-4">
         <div class="card bg-white">
-            <div class="input-group my-3 mx-3 col-md-12">
-                <span class="input-group-text" id="basic-addon1">Filter By:</span>
-                <input type="text" class="form-control mr-5" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
-                <div class="input-group-prepend mx-3">
-                    <button onclick="showAll()" class="btn btn-primary">All Documents</button>
+            <div style="display: flex; justify-content: space-between;">
+                <div class="input-group my-3 ml-1 col-md-5">
+                    <span class="input-group-text" id="basic-addon1">Filter By:</span>
+                    <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group my-3 col-md-5 pl-5">
+                    &nbsp;&ensp;&emsp;&emsp;&emsp;<button onclick="showAll()" class="btn btn-primary">All Documents</button>
                     <button onclick="showOne()" class="btn btn-success">Completed</button>
                     <button onclick="showTwo()" class="btn btn-info">Circulating</button>
                     <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
@@ -244,13 +242,15 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
 @endif
 @if (isset($sentBack))
 <div id="myDiv3">
-    <div class="container mb-5">
+    <div class="container mb-4">
         <div class="card bg-white">
-            <div class="input-group my-3 mx-3 col-md-12">
-                <span class="input-group-text" id="basic-addon1">Filter By:</span>
-                <input type="text" class="form-control mr-5" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
-                <div class="input-group-prepend mx-3">
-                    <button onclick="showAll()" class="btn btn-primary">All Documents</button>
+            <div style="display: flex; justify-content: space-between;">
+                <div class="input-group my-3 ml-1 col-md-5">
+                    <span class="input-group-text" id="basic-addon1">Filter By:</span>
+                    <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group my-3 col-md-5 pl-5">
+                    &nbsp;&ensp;&emsp;&emsp;&emsp;<button onclick="showAll()" class="btn btn-primary">All Documents</button>
                     <button onclick="showOne()" class="btn btn-success">Completed</button>
                     <button onclick="showTwo()" class="btn btn-info">Circulating</button>
                     <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
