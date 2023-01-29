@@ -14,8 +14,6 @@ class Documents extends Model
     protected $fillable = [
         'id',
         'referenceNo',
-        'senderName',
-        'receiverName',
         'senderOffice',
         'receiverOffice',
         'docType',

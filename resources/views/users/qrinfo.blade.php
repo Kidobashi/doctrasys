@@ -194,7 +194,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                 </div>
                 @guest
                     <div class="text-center">
-                        <p class="font-italic">Login to receive document</p>
+                        <p class="font-italic">Login to modify document</p>
                     </div>
                 @endguest
 
@@ -208,7 +208,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                 @endif
                 @if (isset($status) && $status->status == 2)
                     <button class="btn btn-secondary" type="submit" onclick="showReceive()" disabled>Receive</button>
-                    @if (isset($data->referenceNo))t7
+                    @if (isset($data->referenceNo))
                         <form action="process/{{ $data->referenceNo }}" method="post">
                             @csrf
                             <input type="text" style="display: none;" value="3" name="status">
@@ -240,12 +240,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                             <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
                             @csrf
                                 <h6>Confirm Receive</h6>
-                                <div class="mb-3">
-                                    <input style="display:none;" type="text" class="form-control" name="receiverName" id="name" value="{{ Auth::user()->name }}" aria-label="Name" aria-describedby="name">
-                                    @error('receiverName')
-                                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                    @enderror
-                                </div>
+
                                 <div class="mb-3">
                                     {{-- <input type="text"  style="display:none;" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}"> --}}
                                     <input class="form-control "type="text" style="display: none;" name='action' value="1">
@@ -295,20 +290,13 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 @csrf
                                 <div class="container col-lg-10">
                                 <label for="">Forward to:</label>
-                                    <div class="mb-3">
-                                        <input list="receiverNameList" type="text" class="form-control" name="receiverName" id="search" placeholder="" aria-label="Name" aria-describedby="name">
-                                        <table class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                            </table>
-                                        @error('receiverName')
-                                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                    <select class="form-control" id="assignedOffice" name="receiverOffice">
+                                    <option value="" selected disabled>Select Office
+                                        @foreach ($selectOffice as $row)
+                                            <option value="{{ $row->id }}">{{ $row->officeName }}</option>
+                                            </option>
+                                        @endforeach
+                                    </select>
 
                                     <div class="mb-3">
                                         <input class="form-control "type="text" style="display: none;" name='action' value="2">
@@ -384,75 +372,6 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                     </div>
             </div>
             <hr>
-            {{-- @include('partials.comments') --}}
-            {{-- <div class="justify-content-center">
-                @foreach ($latestComments as $latestComment)
-                <div class="comments m-1 bg-white p-2" style="white-space: normal;">
-                    <div class="d-flex">
-                        <div class="m-1 d-flex flex-col justify-center">
-                            <div>
-                                <?php
-                                    $parts = explode(' ', $latestComment->author);
-                                    $initials = strtoupper($parts[0][0] . $parts[count($parts) - 1][0]);
-                                ?>
-                                <span class="bg-gray-300 p-2 mb-1 rounded-circle"><strong>{{ $initials }}</strong></span>
-                                <span class="mr-1 text-black-200" style="position:relative; right: 0px;">{{  $latestComment->author   }}</span>
-                            </div>
-                        </div>
-                        <div class="d-flex float-end" style="position: absolute; right:0;">
-                            <span class="text-black-200" style="font-family: Helvetica, sans-serif; font-size:13px">{{ $latestComment->created_at->diffForHumans() }}</span>
-                        </div>
-                    </div>
-                    <p style="word-wrap: break-word;">{{ $latestComment->text }}</p>
-                        <hr>
-                </div>
-                @endforeach
-                </div> --}}
-                {{-- @if (count($comments) >= 5)
-                <div class="btn-group w-100 rounded">
-                <button type="button" class="btn dropdown-toggle" style="border-right-radius: 20px;font-weight: bold; background-color: #0275d8; color:white;" data-bs-toggle="dropdown" aria-expanded="false">
-                   Show all comments
-                </button>
-                <ul class="dropdown-menu p-2 w-100">
-                  <li>
-                    @foreach ($comments as $comment)
-                        <div class="comments m-1 bg-white p-2 w-80" style="white-space: normal;">
-                            <div class="d-flex">
-                                <div class="m-1 d-flex flex-col justify-center">
-                                    <div>
-                                        <?php
-                                            $parts = explode(' ', $comment->author);
-                                            $initials = strtoupper($parts[0][0] . $parts[count($parts) - 1][0]);
-                                        ?>
-                                        <span class="bg-gray-300 p-2 mb-2 rounded-circle"><strong>{{ $initials }}</strong></span>
-                                        <span class="mr-1 text-black-200" style="position:relative; right: 0px;">{{  $comment->author   }}</span>
-                                    </div>
-                                </div>
-                                <div class="d-flex float-end" style="position: absolute; right:0;">
-                                    <span class="text-black-200" style="font-family: Helvetica, sans-serif; font-size:13px">{{ $comment->created_at->diffForHumans() }}</span>
-                                </div>
-                            </div>
-                                <p style="word-wrap: break-word;">{{ $comment->text }}</p>
-                                <hr>
-                        </div>
-                    @endforeach
-                  </li>
-                </ul>
-              </div>
-              @endif
-            </div> --}}
-        {{-- <footer>
-            <div class="row">
-                <div class="col-md-6">
-                    <p>Copyright &copy; 2021 Tutorial Republic</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <a href="#" class="text-dark">Terms of Use</a>
-                    <span class="text-muted mx-2">|</span>
-                    <a href="#" class="text-dark">Privacy Policy</a>
-                </div>
-            </div>
-        </footer> --}}
     </div>
   <!-- Modal -->
   <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">

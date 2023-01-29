@@ -53,6 +53,10 @@ body {
     background: #fafafa;
 }
 
+.ctitle {
+    font-weight: 400;
+}
+
 p {
     font-family: 'Poppins', sans-serif;
     font-size: 1.1em;
@@ -69,8 +73,8 @@ a, a:hover, a:focus {
 
 #sidebar {
     /* don't forget to add all the previously mentioned styles here too */
-    background: #04426E;
-    color: #fff;
+    background: white;
+    color: black;
     transition: all 0.3s;
 }
 
@@ -95,8 +99,8 @@ a, a:hover, a:focus {
     display: block;
 }
 #sidebar ul li a:hover {
-    color: #7386D5;
-    background: #fff;
+    color: white;
+    background: #6d7fcc;
 }
 
 #sidebar ul li.active > a, a[aria-expanded="true"] {
@@ -125,7 +129,7 @@ ul ul a {
                 <a href="{{ url('/dashboard') }}">
                 <span>
                 <img class="p-1" src="{{ asset('images/cmulogo.png') }}" width="40">
-                CMU Document Tracking System</span>
+                <h4><strong>CMU Document Tracking System</strong></h4></span>
                 </a>
             </div>
             <button type="button" id="sidebarCollapse" class="btn btn-info" style="position: relative; left:2.9vw;">
@@ -137,49 +141,49 @@ ul ul a {
             <li class="nav-item {{ request()->is('/dashboard') ? 'active' : ''}}">
                 <a class="nav-link " href="{{ url('dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span><strong>Dashboard</strong></span></a>
             </li>
             <li class="nav-item {{ request()->is('profile') ? 'active' : ''}}">
                 <a class="nav-link " href="{{ url('user-profile') }}">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>User Profile</span></a>
+                    <span><strong>User Profile</strong></span></a>
             </li>
             <li class="nav-item {{ request()->is('/user-management') ? 'active' : ''}}">
                 <a class="nav-link" href="href="{{ url('user-management') }}"">
                     <i class="fas fa-fw fa-globe"></i>
-                    <span>User Management</span></a>
+                    <span><strong>User Management</strong></span></a>
             </li>
             <li class="nav-item {{ request()->is('/offices') ? 'active' : ''}}">
                 <a class="nav-link" href="{{ url('offices') }}">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Offices</span></a>
+                    <span><strong>Offices</strong></span></a>
             </li>
             <li class="nav-item {{ request()->is('/doctype') ? 'active' : ''}}">
                 <a class="nav-link" href="{{ url('docType') }}">
                     <i class="fas fa-fw fa-envelope"></i>
-                    <span>Document Type</span></a>
+                    <span><strong>Document Type</strong></span></a>
             </li>
             <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-            <li class="nav-item dropdown">
-                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                    <i class="fas fa-fw fa-user"></i>
-                    {{ Auth::user()->name }}
+            {{-- <hr class="sidebar-divider my-0"> --}}
+        </ul>
+        <li class="list-group-item p-2 rounded">
+            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                <i class="fas fa-fw fa-user"></i>
+                {{ Auth::user()->name }}
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-end p-2 rounded" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                                 document.getElementById('logout-form').submit();">
+                    {{ __('Logout') }}
                 </a>
 
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
-                    </a>
-
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </div>
-            </li>
-        </ul>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            </div>
+        </li>
     </nav>
 </div>
 <script>

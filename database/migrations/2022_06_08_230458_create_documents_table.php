@@ -18,7 +18,6 @@ return new class extends Migration
             $table->bigInteger('referenceNo');
             $table->string('email');
             $table->string('senderName');
-            $table->string('receiverName');
             $table->bigInteger('senderOffice');
             $table->bigInteger('receiverOffice');
             $table->bigInteger('status');

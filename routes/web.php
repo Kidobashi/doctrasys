@@ -128,6 +128,9 @@ Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('o
 Route::get('download/{token}', [DocumentsController::class, 'fileGenerator'])->name('download');
 Route::post('add-documents', [DocumentsController::class, 'store']);
 Route::get('documents', [DocumentsController::class, 'userDocs']);
+Route::get('/documents/completed', [DocumentsController::class, 'completedDocs']);
+Route::get('/documents/circulating', [DocumentsController::class, 'circulatingDocs']);
+Route::get('/documents/sentBack', [DocumentsController::class, 'sentBackDocs']);
 
 
 //Qr Controllers
@@ -143,6 +146,7 @@ Route::get('/search', [QrController::class, 'search']);
 Route::get('/altSearch', [QrController::class, 'altSearch']);
 
 
+
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('offices', [DashboardController::class, 'adminOffice']);
 Route::post('addOffice', [DashboardController::class, 'addOffice']);
@@ -153,8 +157,9 @@ Route::delete('delDocType/{id}', [DashboardController::class, 'deleteDocType']);
 
 Route::get('searchByDate', [SearchController::class, 'dateFilter']);
 Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);
+Route::post('/filters/search',[ DocumentsController::class, 'searchTest'])->name('document.search');
 
-Route::get('findCityWithStateID/{id}', [DocumentsController::class, 'getOfficeByUser']);
+Route::get('/getLiveUpdate', [DocumentsController::class, 'getOfficeByUser']);
 
 Route::get('/', [HomeController::class, 'index']);
 // Route::get('/home', [HomeController::class, 'index'])->name('home');

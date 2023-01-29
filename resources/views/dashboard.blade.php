@@ -6,8 +6,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
+                    <h4><strong>Documents Summary</strong></h4>
                     <div class="card col-md-12">
-                        <h4><strong>Documents Summary</strong></h4>
                         <div class="my-3">
                                 <div class="d-flex flex-row justify-content-center py-4">
                                     <div class="card mx-3 p-3 text-center">

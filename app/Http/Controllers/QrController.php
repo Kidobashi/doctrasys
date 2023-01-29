@@ -14,6 +14,8 @@ use App\Models\Comments;
 use App\Models\Issues;
 use App\Models\User;
 
+use function GuzzleHttp\json_encode;
+
 class QrController extends Controller
 {
     //
@@ -28,6 +30,8 @@ class QrController extends Controller
         $comments = Comments::where('documents_id', $id)->orderBy('created_at', 'DESC')->get();
 
         $latestComments = Comments::where('documents_id', $id)->orderBy('created_at', 'DESC')->take(4)->get();
+
+        $selectOffice = Offices::all();
 
         $officeN = DB::table('documents')
         ->join('offices', 'receiverOffice', 'offices.id')
@@ -72,34 +76,44 @@ class QrController extends Controller
 
         $altdata = array_merge(['prev' => $prev] , ['trackings' => $trackings]);
 
-        return view('users.qrinfo')->with('issue', $issue)->with('status', $status)->with('offices', $offices)->with('officeN', $officeN)->with('docCategory', $docCategory)->with('latestComments', $latestComments)->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings]);
+        return view('users.qrinfo')->with('issue', $issue)->with('status', $status)->with('offices', $offices)->with('officeN', $officeN)->with('docCategory', $docCategory)->with('latestComments', $latestComments)->with(['comments'=> $comments])->with('lightPrev', $lightPrev)->with('light', $light)->with(['altdata' => $altdata])->with('data', $data)->with(['prev' => $prev])->with(['trackings' => $trackings])->with(['selectOffice' => $selectOffice]);
     }
 
     public function search(Request $request)
     {
-        if($request->ajax())
-        {
-            $output = "";
-            $results = DB::table('users')
-            ->join('offices', 'assignedOffice', 'offices.id')
-            ->where('name','LIKE','%'.$request->search."%")
-            ->orWhere('email','LIKE','%'.$request->search."%")
-            ->orwhere('phone','LIKE','%'.$request->search."%")
-            ->get();
+        //
+        $output = "";
+        $last = DB::table('documents')->latest('id')->first();
 
-            if($results)
+        $identity = $last->id + 1;
+        $number = sprintf('%04d', $identity);
+        $prefix = date('Ymd');
+    // $prefix = strval(strftime("%Y%m%d"));
+        $month = strval(strftime("%M"));
+            $day = strval(strftime("%D"));
+            $stringVal = strval($number);
+            // $refNo = "$prefix$stringVal";
+
+            $senderOffice = Auth::user()->assignedOffice;
+
+            if($senderOffice < 10)
             {
-                foreach ($results as $result)
-                {
-                    $output.=
-                        '</tr>'.
-                        '<td>'.$result->name.'</td>'.
-                        '</tr>';
-                }
-
+                $extraZero = '0';
+                $refNo = "$prefix$extraZero$senderOffice$stringVal";
             }
-        }
-        return Response($output);
+             else{
+                $refNo = "$prefix$senderOffice$stringVal";
+            }
+
+
+        return view('users.add', compact('refNo'));
+    }
+
+    public function selectOffice()
+    {
+        $selectOffice = Offices::all();
+
+        return view ('users.qrinfo')->with(['selectOffice' => $selectOffice]);
     }
 
     public function altSearch(Request $request)
@@ -153,6 +167,8 @@ class QrController extends Controller
         $doc = TrackingLogs::where('referenceNo', $referenceNo)
         ->orderBy('created_at', 'DESC')->first();
 
+        $newOffice = $request->input('receiverOffice');
+
         $prevOffice = $doc->receiverOffice;
         $prevReceiver = $doc->receiverName;
         $newSender = Auth::user()->name;
@@ -164,7 +180,7 @@ class QrController extends Controller
             'senderName' => $newSender,
             'receiverName' => $newReceiver,
             'senderOffice' => $newSenderOffice,
-            'receiverOffice' => $newOfficeReceiver->assignedOffice,
+            'receiverOffice' => $newOffice,
             'referenceNo' => $referenceNo,
             'action' => $request->input('action'),
             'prevOffice' => $prevOffice,

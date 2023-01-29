@@ -12,39 +12,41 @@
 }
 
 </style>
-This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
-    @if (isset($offices))
-    <div class="filter float-start" id="filter">
-        <form action="filterByRcvOffice" method="get">
-        <select name="receiverOffice" class="form-control">
-            <option value="" selected disabled>Receiving Office
-                @foreach ($offices as $row)
-                    <option value="{{ $row->id }}">{{ $row->officeName }}</option>
-                </option>
-                @endforeach
-            </select>
-            </select>
-            <button class="btn border d-flex justify-content-center border border-dark">Filter</button>
-        </form>
-    </div>
-    @endif
+This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
+@if (isset($offices))
+<div class="filter float-start" id="filter">
+    <form action="filterByRcvOffice" method="get">
+    <select name="receiverOffice" class="form-control">
+        <option value="" selected disabled>Receiving Office
+            @foreach ($offices as $row)
+               <option value="{{ $row->id }}">{{ $row->officeName }}</option>
+            </option>
+            @endforeach
+        </select>
+        </select>
+        <button class="btn border d-flex justify-content-center border border-dark">Filter</button>
+    </form>
+</div>
+@endif
 
-    @if (count($all) == '0')
-            <p class="display-4">No documents found</p>
-      @elseif (isset($all) != 0)
-      <div id="All">
+@if (count($all) == '0')
+    <p class="display-4">No documents found</p>
+@elseif (isset($all) != 0)
+    <div id="All">
         <div class="container mb-4">
-            <div class="card bg-white">
-                <div style="display: flex; justify-content: space-between;">
-                    <div class="input-group my-3 ml-1 col-md-5">
-                        <span class="input-group-text" id="basic-addon1">Filter By:</span>
-                        <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
-                    </div>
-                    <div class="input-group my-3 col-md-5 pl-5">
-                        &nbsp;&ensp;&emsp;&emsp;&emsp;<button onclick="showAll()" class="btn btn-primary">All Documents</button>
-                        <button onclick="showOne()" class="btn btn-success">Completed</button>
-                        <button onclick="showTwo()" class="btn btn-info">Circulating</button>
-                        <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
+            <div class="bg-white">
+                <div class="card">
+                    <div class="grid-container d-flex col-md">
+                        <div class="input-group p-3">
+                            <span class="input-group-text" id="basic-addon1">Filter By:</span>
+                            <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="justify-content-end input-group p-3">
+                            <button class="btn btn-primary"><a href="{{ url('documents') }}" style="text-decoration: none; color:white;">All Documents</a></button>
+                            <button onclick="showOne()" class="btn btn-success">Completed</button>
+                            <button onclick="showTwo()" class="btn btn-info">Circulating</button>
+                            <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,7 +54,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
         <div class="container">
             <div class="card bg-white">
                 <div class="m-3">
-                    <button class="btn btn-success float-right" data-toggle="modal" data-target="#addSubscriberModal">+ Add new Document</button>
+                    <a href="add-document"><button class="btn btn-success float-end" data-toggle="modal"><i class="fas fa-plus"></i></i></button></a>
                     <div class="card-header bg-white">
                         <h4>List of Documents</h4>
                     </div>
@@ -62,98 +64,26 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 <tr>
                                     <th class="text-center" scope="col">No.</th>
                                     <th class="text-center" scope="col">Reference No.</th>
-                                    <th class="text-center" scope="col">Receiver</th>
                                     <th class="text-center" scope="col">Receiving Office</th>
                                     <th class="text-center" scope="col">Status</th>
                                     <th class="text-center" scope="col">Details</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                @foreach ($all as $doc)
-                                    <tr>
-                                        <td class="text-center"> {{ $loop->iteration }} </td>
-                                        <td class="text-center"> {{ $doc->referenceNo }}</td>
-                                        <td class="text-center">{{ $doc->receiverName }}</td>
-                                        <td class="text-center">{{ $doc->officeName }}</td>
-                                        @if ($doc->status == 3)
-                                                <td><span class="badge badge-danger d-inline">Sent Back</span></td>
-                                            @endif
-                                            @if ($doc->status == 2)
-                                                <td><span class="badge badge-success d-inline">Completed</span></td>
-                                            @endif
-                                            @if ($doc->status == 1)
-                                            <td><span class="badge badge-info d-inline">Circulating</span></td>
-                                            @endif
-                                        <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $doc->referenceNo }}" title="Click for more Information"><i class="fa fa-link" aria-hidden="true"></i></a></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer bg-white">
-                        <div class="float-right">
-                            {{ $all->links('pagination::bootstrap-5') }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-      </div>
-      @endif
-
-@if (isset($comps))
-<div id="myDiv1">
-    <div class="container mb-4">
-        <div class="card bg-white">
-            <div style="display: flex; justify-content: space-between;">
-                <div class="input-group my-3 ml-1 col-md-5">
-                    <span class="input-group-text" id="basic-addon1">Filter By:</span>
-                    <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
-                </div>
-                <div class="input-group my-3 col-md-5 pl-5">
-                    &nbsp;&ensp;&emsp;&emsp;&emsp;<button onclick="showAll()" class="btn btn-primary">All Documents</button>
-                    <button onclick="showOne()" class="btn btn-success">Completed</button>
-                    <button onclick="showTwo()" class="btn btn-info">Circulating</button>
-                    <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="card bg-white">
-            <div class="m-3">
-                <button class="btn btn-success float-right" data-toggle="modal" data-target="#addSubscriberModal">+ Add new Document</button>
-                <div class="card-header bg-white">
-                    <h4>List of Documents</h4>
-                </div>
-                <div class="card-body">
-                    <table class="table text-center">
-                        <thead class="bg-light">
-                            <tr>
-                                <th class="text-center" scope="col">No.</th>
-                                <th class="text-center" scope="col">Reference No.</th>
-                                <th class="text-center" scope="col">Receiver</th>
-                                <th class="text-center" scope="col">Receiving Office</th>
-                                <th class="text-center" scope="col">Status</th>
-                                <th class="text-center" scope="col">Details</th>
-                              </tr>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach ($comps as $doc)
+                            @foreach ($all as $doc)
                                 <tr>
                                     <td class="text-center"> {{ $loop->iteration }} </td>
                                     <td class="text-center"> {{ $doc->referenceNo }}</td>
-                                    <td class="text-center">{{ $doc->receiverName }}</td>
                                     <td class="text-center">{{ $doc->officeName }}</td>
-                                    @if ($doc->status == 3)
-                                            <td class="d-flex text-center" style="justify-content: center;"><p>Sent Back</p>&nbsp;<button type="button" class="btn btn-danger"></button></td>
+                                     @if ($doc->status == 3)
+                                            <td><span class="badge bg-danger d-inline">Sent Back</span></td>
                                         @endif
                                         @if ($doc->status == 2)
-                                        <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
+                                            <td><span class="badge bg-success d-inline">Completed</span></td>
                                         @endif
                                         @if ($doc->status == 1)
-                                        <td class="d-flex text-center" style="justify-content: center;"><p>Circulating</p>&nbsp;<button type="button" class="btn btn-info"></button></td>
-                                        @endif
+                                        <td><span class="badge bg-info d-inline">Circulating</span></td>
+                                    @endif
                                     <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $doc->referenceNo }}" title="Click for more Information"><i class="fa fa-link" aria-hidden="true"></i></a></td>
                                 </tr>
                             @endforeach
@@ -162,263 +92,28 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                 </div>
                 <div class="card-footer bg-white">
                     <div class="float-right">
-                        {{ $comps->links('pagination::bootstrap-5') }}
+                        {{ $all->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-  </div>
+</div>
 @endif
 
-@if (isset($circs))
-<div id="myDiv2">
-    <div class="container mb-4">
-        <div class="card bg-white">
-            <div style="display: flex; justify-content: space-between;">
-                <div class="input-group my-3 ml-1 col-md-5">
-                    <span class="input-group-text" id="basic-addon1">Filter By:</span>
-                    <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
-                </div>
-                <div class="input-group my-3 col-md-5 pl-5">
-                    &nbsp;&ensp;&emsp;&emsp;&emsp;<button onclick="showAll()" class="btn btn-primary">All Documents</button>
-                    <button onclick="showOne()" class="btn btn-success">Completed</button>
-                    <button onclick="showTwo()" class="btn btn-info">Circulating</button>
-                    <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="card bg-white">
-            <div class="m-3">
-                <button class="btn btn-success float-right" data-toggle="modal" data-target="#addSubscriberModal">+ Add new Document</button>
-                <div class="card-header bg-white">
-                    <h4>List of Documents</h4>
-                </div>
-                <div class="card-body">
-                    <table class="table text-center">
-                        <thead class="bg-light">
-                            <tr>
-                                <th class="text-center" scope="col">No.</th>
-                                <th class="text-center" scope="col">Reference No.</th>
-                                <th class="text-center" scope="col">Receiver</th>
-                                <th class="text-center" scope="col">Receiving Office</th>
-                                <th class="text-center" scope="col">Status</th>
-                                <th class="text-center" scope="col">Details</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            @foreach ($circs as $doc)
-                                <tr>
-                                    <td class="text-center"> {{ $loop->iteration }} </td>
-                                    <td class="text-center"> {{ $doc->referenceNo }}</td>
-                                    <td class="text-center">{{ $doc->receiverName }}</td>
-                                    <td class="text-center">{{ $doc->officeName }}</td>
-                                    @if ($doc->status == 3)
-                                            <td class="d-flex text-center" style="justify-content: center;"><p>Sent Back</p>&nbsp;<button type="button" class="btn btn-danger"></button></td>
-                                        @endif
-                                        @if ($doc->status == 2)
-                                        <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
-                                        @endif
-                                        @if ($doc->status == 1)
-                                        <td class="d-flex text-center" style="justify-content: center;"><p>Circulating</p>&nbsp;<button type="button" class="btn btn-info"></button></td>
-                                        @endif
-                                    <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $doc->referenceNo }}" title="Click for more Information"><i class="fa fa-link" aria-hidden="true"></i></a></td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer bg-white">
-                    <div class="float-right">
-                        {{ $comps->links('pagination::bootstrap-5') }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  </div>
-@endif
-@if (isset($sentBack))
-<div id="myDiv3">
-    <div class="container mb-4">
-        <div class="card bg-white">
-            <div style="display: flex; justify-content: space-between;">
-                <div class="input-group my-3 ml-1 col-md-5">
-                    <span class="input-group-text" id="basic-addon1">Filter By:</span>
-                    <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
-                </div>
-                <div class="input-group my-3 col-md-5 pl-5">
-                    &nbsp;&ensp;&emsp;&emsp;&emsp;<button onclick="showAll()" class="btn btn-primary">All Documents</button>
-                    <button onclick="showOne()" class="btn btn-success">Completed</button>
-                    <button onclick="showTwo()" class="btn btn-info">Circulating</button>
-                    <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="card bg-white">
-            <div class="m-3">
-                <button class="btn btn-success float-right" data-toggle="modal" data-target="#addSubscriberModal">+ Add new Document</button>
-                <div class="card-header bg-white">
-                    <h4>List of Documents</h4>
-                </div>
-                <div class="card-body">
-                    <table class="table text-center">
-                        <thead class="bg-light">
-                            <tr>
-                                <th class="text-center" scope="col">No.</th>
-                                <th class="text-center" scope="col">Reference No.</th>
-                                <th class="text-center" scope="col">Receiver</th>
-                                <th class="text-center" scope="col">Receiving Office</th>
-                                <th class="text-center" scope="col">Status</th>
-                                <th class="text-center" scope="col">Details</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            @foreach ($comps as $doc)
-                                <tr>
-                                    <td class="text-center"> {{ $loop->iteration }} </td>
-                                    <td class="text-center"> {{ $doc->referenceNo }}</td>
-                                    <td class="text-center">{{ $doc->receiverName }}</td>
-                                    <td class="text-center">{{ $doc->officeName }}</td>
-                                    @if ($doc->status == 3)
-                                            <td class="d-flex text-center" style="justify-content: center;"><p>Sent Back</p>&nbsp;<button type="button" class="btn btn-danger"></button></td>
-                                        @endif
-                                        @if ($doc->status == 2)
-                                        <td class="d-flex text-center" style="justify-content: center;"><p>Completed</p>&nbsp;<button type="button" class="btn btn-success"></button></td>
-                                        @endif
-                                        @if ($doc->status == 1)
-                                        <td class="d-flex text-center" style="justify-content: center;"><p>Circulating</p>&nbsp;<button type="button" class="btn btn-info"></button></td>
-                                        @endif
-                                    <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $doc->referenceNo }}" title="Click for more Information"><i class="fa fa-link" aria-hidden="true"></i></a></td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer bg-white">
-                    <div class="float-right">
-                        {{ $sentBack->links('pagination::bootstrap-5') }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  </div>
-  @endif
 <script>
-
-function showAll() {
-    if (document.getElementById('All')) {
-        if (document.getElementById('All').style.display == 'none') {
-            document.getElementById('All').style.display = 'block';
-            document.getElementById('myDiv1').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('myDiv3').style.display = 'none';
-            document.getElementById('searchDate').style.display = 'none';
-        }
-        else {
-            document.getElementById('All').style.display = 'block';
-            document.getElementById('myDiv1').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('searchDate').style.display = 'none';
-        }
-    }
-}
-
 function showOne() {
-    if (document.getElementById('myDiv1')) {
-        if (document.getElementById('myDiv1').style.display == 'none') {
-            document.getElementById('myDiv1').style.display = 'block';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('All').style.display = 'none';
-            document.getElementById('myDiv3').style.display = 'none';
-            document.getElementById('searchDate').style.display = 'none';
-        }
-        else {
-            document.getElementById('myDiv1').style.display = 'block';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('All').style.display = 'none';
-            document.getElementById('searchDate').style.display = 'none';
-        }
-    }
+    window.location.href = "http://127.0.0.1:8000/documents/completed";
 }
 
 function showTwo() {
-    if (document.getElementById('myDiv2')) {
-        if (document.getElementById('myDiv2').style.display == 'none') {
-            document.getElementById('myDiv1').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'block';
-            document.getElementById('All').style.display = 'none';
-            document.getElementById('myDiv3').style.display = 'none';
-            document.getElementById('searchDate').style.display = 'none';
-        }
-        else {
-            document.getElementById('myDiv1').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'block';
-            document.getElementById('myDiv3').style.display = 'none';
-            document.getElementById('searchDate').style.display = 'none';
-            document.getElementById('All').style.display = 'none';
-        }
-    }
+    window.location.href = "http://127.0.0.1:8000/documents/circulating";
 }
 
 function showThree() {
-    if (document.getElementById('myDiv3')) {
-        if (document.getElementById('myDiv3').style.display == 'none') {
-            document.getElementById('myDiv1').style.display = 'none';
-            document.getElementById('All').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('myDiv3').style.display = 'block';
-            document.getElementById('searchDate').style.display = 'none';
-        }
-        else {
-            document.getElementById('myDiv1').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('myDiv3').style.display = 'block';
-            document.getElementById('All').style.display = 'none';
-            document.getElementById('searchDate').style.display = 'none';
-        }
-    }
+    window.location.href = "http://127.0.0.1:8000/documents/sentBack";
 }
 
-function showSearchDate() {
-    if (document.getElementById('searchDate')) {
-        if (document.getElementById('searchDate').style.display == 'none') {
-            document.getElementById('myDiv1').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('All').style.display = 'none';
-            document.getElementById('myDiv3').style.display = 'none';
-            document.getElementById('searchDate').style.display = 'block';
-        }
-        else {
-            document.getElementById('myDiv1').style.display = 'none';
-            document.getElementById('myDiv2').style.display = 'none';
-            document.getElementById('myDiv3').style.display = 'none';
-            document.getElementById('All').style.display = 'none';
-            document.getElementById('searchDate').style.display = 'block';
-        }
-    }
-}
-
-function showFilter() {
-    if (document.getElementById('filter')) {
-        if (document.getElementById('filter').style.display == 'none') {
-            document.getElementById('filter').style.display = 'block';
-        }
-        else {
-            document.getElementById('filter').style.display = 'none';
-        }
-    }
-}
-</script>
-
-  <script>
     // Add active class to the current button (highlight it)
     var header = document.getElementById("nav");
     var btns = header.getElementsByClassName("btn");
@@ -429,5 +124,5 @@ function showFilter() {
       this.className += " active";
       });
     }
-    </script>
+</script>
 @endsection

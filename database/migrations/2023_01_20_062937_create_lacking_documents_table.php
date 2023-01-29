@@ -13,15 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tracking_logs', function (Blueprint $table) {
+        Schema::create('lacking_documents', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('referenceNo');
-            $table->bigInteger('senderOffice');
-            $table->bigInteger('receiverOffice');
-            $table->bigInteger('status');
-            $table->string('prevReceiver')->nullable();
-            $table->string('prevOffice')->nullable();
-            $table->bigInteger('action')->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -33,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tracking_logs');
+        Schema::dropIfExists('lacking_documents');
     }
 };

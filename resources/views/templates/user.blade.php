@@ -22,13 +22,17 @@
 @endif
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ config('app.name', 'Laravel') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <!-- Fontawesome -->
     {{-- <link rel="icon" href="../../../public/images/CMU-LOGO.png"> --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" /> --}}
     <!-- Bootsgrap CSS file -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"> --}}
     <!-- Link to your CSS file -->
     <link rel="stylesheet" href="multiple-form-submit-prevent.css">
 
@@ -38,13 +42,20 @@
     <!-- Link to your Javascript file -->
     <script src="multiple-form-submit-prevent.js"></script>
 
+    <script src="https://kit.fontawesome.com/7e4de09da3.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani&family=Raleway:wght@600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+
+     href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </head>
 
 <body>
@@ -75,7 +86,6 @@
   margin: 0;
   padding: 0;
   width: 100%;
-  background-color: #f1f1f1;
   overflow: hidden;
   z-index: 99;
 }
@@ -88,7 +98,7 @@
 }
 
 .side-navbar a.active {
-  background-color: #1B3FAB;
+  background-color: #f1f1f1;
   border-radius: 10px;
   color: white;
 }
@@ -97,10 +107,6 @@
   background-color: #555;
   border-radius: 10px;
   color: white;
-}
-
-.side-navbar ul{
-    background: #04426E;
 }
 
 div.content {
@@ -215,19 +221,20 @@ div.content {
 }
 </style>
 
-<div class="col-lg-12 side-navbar active-nav d-flex justify-content-between" id="sidebar">
-    <ul class="nav text-white w-100">
+<div class="col-lg-12 side-navbar active-nav d-flex justify-content-between bg-success" id="sidebar">
+  <div>
+    <ul class="nav text-black w-100">
       <a href="{{ route('dashboard') }}" class="nav-link h3 text-white my-2">
         <span>Document Tracking System</span>
       </a>
       <li href="#" class="nav-link">
-        <a class="nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
+        <a class="nav-link text-black {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
             <span class="mx-2">Tracking</span>
         </a>
       </li>
       @auth
       <li href="#" class="nav-link">
-        <a class="nav-link {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">
+        <a class="nav-link text-black {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">
             <span class="mx-2">My Documents</span>
         </a>
         </a>
@@ -235,20 +242,12 @@ div.content {
       @endauth
       @auth
       <li href="#" class="nav-link">
-        <a class="nav-link {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
+        <a class="nav-link text-black {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
             <span class="mx-2">Create&nbsp;Document</span>
         </a>
         </a>
       </li>
       @endauth
-      @guest
-            <li class="nav-link" style="position: absolute; right: 0; padding-right: 25px;">
-                <a href="{{ url('/login')}}" class="nav-link text-body font-weight-bold px-0">
-                <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none text-white">Login</span>
-                </a>
-            </li>
-        @endguest
         @auth
         <li class="nav-link" style="position: absolute; right: 0; padding-right: 25px;">
             <a href="{{ url('/logout')}}" class="nav-link text-body font-weight-bold px-0">
@@ -258,6 +257,23 @@ div.content {
         </li>
         @endauth
     </ul>
+  </div>
+    @guest
+    <div class="d-flex userstatecontainer" style="float:right; text-align: center;">
+          <li class="nav-link" style="padding-right: 25px;">
+              <a href="{{ route('register') }}" class="nav-link text-body font-weight-bold px-0">
+              <i class="fa-sharp fa-solid fa-user"></i>
+              <span class="d-sm-inline d-none text-white">Register</span>
+              </a>
+          </li>
+          <li class="nav-link" style="position: relative; padding-right: 25px;">
+            <a href="{{ url('/login')}}" class="nav-link text-body font-weight-bold px-0">
+            <i class="fa-sharp fa-solid fa-right-to-bracket"></i>
+            <span class="d-sm-inline d-none text-white">Login</span>
+            </a>
+        </li>
+      </div>
+      @endguest
 </div>
 
   <div class="content">
@@ -272,6 +288,14 @@ div.content {
       sidebar.classList.toggle("active-nav");
       container.classList.toggle("active-cont");
     });
+
+    window.addEventListener('alert', event => {
+            toastr[event.detail.type](event.detail.message,
+            event.detail.title ?? ''), toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+            }
+        });
   </script>
   {{-- @include('layouts.footers.auth.footer') --}}
 </body>

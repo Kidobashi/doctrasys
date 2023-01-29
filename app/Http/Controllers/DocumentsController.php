@@ -14,7 +14,9 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Dompdf\Dompdf;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use League\CommonMark\Node\Block\Document;
 
 class DocumentsController extends Controller
 {
@@ -31,16 +33,33 @@ class DocumentsController extends Controller
         return view('users.index', compact(['docs']));
     }
 
-    public function getOfficeByUser($id)
+    public function getOfficeByUser(Request $request)
     {
-        $assOff = User::where('id', $id)->pluck('assignedOffice');
+        $last = DB::table('documents')->latest('id')->first();
 
-        $city = DB::table('users')
-        ->join('offices', 'assignedOffice', 'offices.id')
-        ->where('users.assignedOffice', $assOff)
-        ->get();
+        $identity = $last->id + 1;
+        $number = sprintf('%04d', $identity);
+        $prefix = date('Ymd');
+        // $prefix = strval(strftime("%Y%m%d"));
+        $month = strval(strftime("%M"));
+        $day = strval(strftime("%D"));
+        $stringVal = strval($number);
+        // $refNo = "$prefix$stringVal";
 
-        return response()->json($city);
+        $senderOffice = Auth::user()->assignedOffice;
+
+        if($senderOffice < 10)
+        {
+            $extraZero = '0';
+            $city = "$prefix$extraZero$senderOffice$stringVal";
+
+            return response()->json($city);
+        }
+        else{
+            $city = "$prefix$senderOffice$stringVal";
+
+            return response()->json($city);
+        }
     }
     /**
      * Show the form for creating a new resource.
@@ -69,9 +88,17 @@ class DocumentsController extends Controller
         $month = strval(strftime("%M"));
         $day = strval(strftime("%D"));
         $stringVal = strval($number);
-        $refNo = "$prefix$stringVal";
+        // $refNo = "$prefix$stringVal";
 
-        return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users]);
+        if($senderOffice < 10)
+        {
+            $extraZero = '0';
+            $refNo = "$prefix$extraZero$senderOffice$stringVal";
+            return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users]);
+        }else{
+            $refNo = "$prefix$senderOffice$stringVal";
+            return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users]);
+        }
     }
 
     public function create()
@@ -92,9 +119,6 @@ class DocumentsController extends Controller
         //
         $sender = Auth::user()->name;
         $senderOffice = Auth::user()->assignedOffice;
-        $rcvId = request('receiverName');
-
-        $receiverName = User::where('id', $rcvId )->first();
 
         $last = DB::table('documents')->latest('id')->first();
 
@@ -105,13 +129,40 @@ class DocumentsController extends Controller
         $month = strval(strftime("%M"));
         $day = strval(strftime("%D"));
         $stringVal = strval($number);
-        $refNo = "$prefix$stringVal";
+        // $refNo = "$prefix$stringVal";
 
+        if($senderOffice < 10)
+        {
+            $extraZero = '0';
+            $refNo = "$prefix$extraZero$senderOffice$stringVal";
+
+            Documents::insert([
+                'senderName' => $sender,
+                'email' => request('email'),
+                'senderOffice' =>  $senderOffice,
+                'receiverOffice' => request('receiverOffice'),
+                'docType' => request('docType'),
+                'referenceNo' => $refNo,
+                'created_at' => date('Y-m-d'),
+            ]);
+
+            TrackingLogs::create([
+                'senderName' => $sender,
+                'senderOffice' => $senderOffice,
+                'receiverOffice' => request('receiverOffice'),
+                'referenceNo' => $refNo,
+            ]);
+
+            return redirect('add-document')->with('message', 'Successfully Added!');
+        }
+        else{
         // $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
+
+        $refNo = "$prefix$senderOffice$stringVal";
 
         $request->validate([
             'senderName' => 'required',
-            'receiverName' => 'required',
+            // 'receiverName' => 'required',
             'senderOffice' =>  'required',
             'receiverOffice' => 'required',
         ]);
@@ -119,7 +170,6 @@ class DocumentsController extends Controller
         Documents::insert([
             'senderName' => $sender,
             'email' => request('email'),
-            'receiverName' => $receiverName->name,
             'senderOffice' =>  $senderOffice,
             'receiverOffice' => request('receiverOffice'),
             'docType' => request('docType'),
@@ -129,13 +179,13 @@ class DocumentsController extends Controller
 
         TrackingLogs::create([
             'senderName' => $sender,
-            'receiverName' => $receiverName->name,
             'senderOffice' => $senderOffice,
             'receiverOffice' => request('receiverOffice'),
             'referenceNo' => $refNo,
         ]);
 
         return redirect('add-document')->with('message', 'Successfully Added!');
+        }
     }
 
     /**
@@ -211,27 +261,54 @@ class DocumentsController extends Controller
     {
         $userDocs = Auth::user()->email;
 
-        $circs = Documents::where('email', $userDocs)
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('status', 1)
-        ->orderBy('created_at', 'DESC')->paginate(20);
-
-        $comps = Documents::where('email', $userDocs)
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('status', 2)
-        ->orderBy('created_at', 'DESC')->paginate(20);
-
-        $sentBack = Documents::where('email', $userDocs)
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('status', 3)
-        ->orderBy('created_at', 'DESC')->paginate(20);
-
         $offices = Offices::all();
 
         $all = Documents::where('email', $userDocs)
         ->join('offices', 'receiverOffice', 'offices.id')
         ->orderBy('created_at', 'DESC')->paginate(20);
 
-        return view('users.documents')->with(['all' => $all])->with(['circs' => $circs])->with(['comps' => $comps])->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
+        return view('users.documents')->with(['all' => $all])->with(['offices' => $offices]);
+    }
+
+    public function circulatingDocs()
+    {
+        $userDocs = Auth::user()->email;
+
+        $offices = Offices::all();
+
+        $circulating = Documents::where('email', $userDocs)
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('status', 1)
+        ->orderBy('created_at', 'DESC')->paginate(20);
+
+        return view('users.documentList.circulatingDocs')->with(['circulating' => $circulating])->with(['offices' => $offices]);
+    }
+
+    public function completedDocs()
+    {
+        $userDocs = Auth::user()->email;
+
+        $offices = Offices::all();
+
+        $completed = Documents::where('email', $userDocs)
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('status', 2)
+        ->orderBy('created_at', 'DESC')->paginate(20);
+
+        return view('users.documentList.completedDocs')->with(['completed' => $completed])->with(['offices' => $offices]);
+    }
+
+    public function sentBackDocs()
+    {
+        $userDocs = Auth::user()->email;
+
+        $offices = Offices::all();
+
+        $sentBack = Documents::where('email', $userDocs)
+        ->join('offices', 'receiverOffice', 'offices.id')
+        ->where('status', 3)
+        ->orderBy('created_at', 'DESC')->paginate(20);
+
+        return view('users.documentList.sentBackDocs')->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
     }
 }

@@ -96,7 +96,7 @@ button {
 
 </style>
 This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
-<div class="search d-flex ml-4 col-lg-12 col-md-12 col-md-8">
+<div class="search d-flex col-lg-12 col-md-12 col-md-8">
     <form action="tracking" method="get">
         <input type="text" name="search">
         <button type="submit">Track Document</button>

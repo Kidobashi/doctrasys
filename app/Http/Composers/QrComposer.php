@@ -6,6 +6,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class QrComposer
 {
@@ -20,11 +21,26 @@ class QrComposer
         $month = strval(strftime("%M"));
         $day = strval(strftime("%D"));
         $stringVal = strval($number);
-        $refNo = "$prefix$stringVal";
+        // $refNo = "$prefix$stringVal";
 
-        $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$refNo));
-        $qr = base64_encode($qr);
+        $senderOffice = Auth::user()->assignedOffice;
 
-        $view->with('qr', $qr)->with('refNo', $refNo);
+        if($senderOffice < 10)
+        {
+            $extraZero = '0';
+            $refNo = "$prefix$extraZero$senderOffice$stringVal";
+            $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$refNo));
+            $qr = base64_encode($qr);
+
+            $view->with('qr', $qr)->with('refNo', $refNo);
+        }
+        else{
+            $refNo = "$prefix$senderOffice$stringVal";
+
+            $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$refNo));
+            $qr = base64_encode($qr);
+
+            $view->with('qr', $qr)->with('refNo', $refNo);
+        }
     }
 }
