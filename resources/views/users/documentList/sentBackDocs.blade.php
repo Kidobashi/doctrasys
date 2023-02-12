@@ -2,27 +2,28 @@
 @section('content')
 @if (isset($sentBack))
 <div id="myDiv1">
-    <div class="bg-white">
-        <div class="card">
-            <div class="d-flex col-md">
-                <div class="input-group p-3">
-                    <span class="input-group-text" id="basic-addon1">Filter By:</span>
-                    <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
-                </div>
-                <div class="input-group p-3">
-                    <button class="btn btn-primary"><a href="{{ url('documents') }}" style="text-decoration: none; color:white;">All Documents</a></button>
-                    <button onclick="showOne()" class="btn btn-success">Completed</button>
-                    <button onclick="showTwo()" class="btn btn-info">Circulating</button>
-                    <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
+    <div class="container mb-4">
+        <div class="bg-white">
+            <div class="card">
+                <div class="d-flex col-md">
+                    <div class="input-group p-3">
+                        <span class="input-group-text" id="basic-addon1">Filter By:</span>
+                        <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="justify-content-end input-group p-3">
+                        <button class="btn btn-primary"><a href="{{ url('documents') }}" style="text-decoration: none; color:white;">All Documents</a></button>
+                        <button onclick="showOne()" class="btn btn-success">Completed</button>
+                        <button onclick="showTwo()" class="btn btn-info">Circulating</button>
+                        <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
     <div class="container">
         <div class="card bg-white">
             <div class="m-3">
-                <button class="btn btn-success float-right" data-toggle="modal" data-target="#addSubscriberModal">+ Add new Document</button>
+                <a href="add-document"><button class="btn btn-success float-end" data-toggle="modal"><i class="fas fa-plus"></i></i></button></a>
                 <div class="card-header bg-white">
                     <h4>List of Documents</h4>
                 </div>

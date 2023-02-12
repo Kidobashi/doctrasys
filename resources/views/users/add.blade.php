@@ -1,13 +1,19 @@
 @extends('templates.user')
 @section('content')
-<head>
-    <title>Generate QR Code</title>
-</head>
 <style>
-    .container-fluid {
-        position: relative;
-        top: 40px;
-        height: 100%;
+    #qrdata{
+        display: none;
+    }
+
+    .details {
+        display: flex;
+    }
+
+    @media screen and (max-width: 700px)
+    {
+    .details {
+        display: block;
+        }
     }
 </style>
 
@@ -16,9 +22,9 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
     <div class="row">
         <div class="card">
             <div class="card-body">
-                <span class="d-block display-6 text-center"><strong>Generate&nbsp;QR Code</strong></span>
+                <span><h1 class="display-6 text-center"><strong>Generate&nbsp;QR Code</strong></h1></span>
                 <div class="card-body">
-                    <div class="col-md-12 d-flex">
+                    <div class="details col-md-12 justify-content-center">
                         <div class="col-md-7">
                             <form method="POST" action="/add-documents">
                                 @csrf
@@ -47,7 +53,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
 
                             <div class="input-group my-3 ml-1 col-md-12">
                                 <span class="input-group-text" id="basic-addon1">Receiver Office</span>
-                                    <select class="form-control" id="assignedOffice" name="receiverOffice">
+                                    <select class="form-control" id="assignedOffice" name="receiverOffice" required>
                                     <option value="" selected disabled>Select Office
                                         @foreach ($offices as $row)
                                             <option value="{{ $row->id }}">{{ $row->officeName }}</option>
@@ -68,22 +74,23 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                             </div>
 
                             <div class="btn-toolbar mb-2">
-                                <button class="btn btn-primary shadow" type="submit">Submit</button>
-                            </div>
 
+                            </div>
                             <div class="btn-toolbar">
+                                <button class="btn btn-primary shadow mr-1" type="submit">Submit</button>
                                 <button onclick="showQr()" class="btn btn-primary shadow">Show QR</button>
                             </div>
                             </form>
-                            <div class="">
+
+                            {{-- <div class="">
                                 <a id="showNumber" class="btn btn-primary shadow" type="submit" onclick="liveUpdate()">Show Reference Number</a>
-                            </div>
+                            </div> --}}
                         </div>
-                        <div class="col-md mx-auto" style="width: 100%; height: 100%; max-width:320px; max-height:320px;">
-                            <div id="qrdata">
+                        <div id="qrdata" class="col-md-4 m-auto" style="width: 100%; height: 100%; max-width:280px; max-height:280px;">
+                            <div>
                                 @include('partials.qrcode')
+                                {{-- <button id="dl-png" style="display: none;">Download QR</button> --}}
                             </div>
-                                <button id="dl-png" style="display: none;">Download QR</button>
                         </div>
 
                             @if(session('message'))
@@ -123,9 +130,9 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
     });
 </script>
 {{-- <script src="../../../public/js/html2canva.js"></script> --}}
-<script type="text/javascript" src="{{URL::asset('assets/js/html2canva.min.js')}}"></script>
-<script src="../public/assets/js/html2canva.min.js"></script>
-<script>
+{{-- <script type="text/javascript" src="{{URL::asset('assets/js/html2canva.min.js')}}"></script>
+<script src="../public/assets/js/html2canva.min.js"></script> --}}
+{{-- <script>
     document.getElementById("dl-png").onclick = function() {
         const screenshotTarget = document.getElementById("qr");
 
@@ -138,10 +145,10 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
             anchor.remove();
         });
     };
-</script>
+</script> --}}
 <script>
 function showQr() {
-  var x = document.getElementById("qr");
+  var x = document.getElementById("qrdata");
   var y = document.getElementById("dl-png");
   if (x.style.display === "block") {
     x.style.display = "none";

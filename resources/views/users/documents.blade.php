@@ -2,10 +2,6 @@
 @extends('templates.user')
 @section('content')
 <style>
-.active, .btn:hover {
-  background-color: #666;
-  color: white;
-}
 
 #filter, #myDiv2, #myDiv3, #myDiv1{
     display: none;

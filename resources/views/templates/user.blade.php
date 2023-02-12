@@ -34,13 +34,13 @@
     <!-- Bootsgrap CSS file -->
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"> --}}
     <!-- Link to your CSS file -->
-    <link rel="stylesheet" href="multiple-form-submit-prevent.css">
+    {{-- <link rel="stylesheet" href="multiple-form-submit-prevent.css"> --}}
+    {{-- <script src="multiple-form-submit-prevent.js"></script> --}}
 
     <!-- Bootstrap & jQuery file -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Link to your Javascript file -->
-    <script src="multiple-form-submit-prevent.js"></script>
 
     <script src="https://kit.fontawesome.com/7e4de09da3.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
@@ -93,20 +93,25 @@
 .side-navbar a {
   display: block;
   color: white;
-  padding: 20px;
+  margin-top: 5px;
+  padding: 12px;
   text-decoration: none;
+  font-weight: 800;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 0 #000000;
+  transition: color .25s ease-in-out, box-shadow .25s ease-in-out;
 }
 
 .side-navbar a.active {
-  background-color: #f1f1f1;
+  background-color: #000000;
   border-radius: 10px;
-  color: white;
 }
 
-.side-navbar a:hover:not(.active) {
-  background-color: #555;
-  border-radius: 10px;
+.fa-sharp, .side-navbar a:hover:not(.active) {
+  box-shadow: inset 550px 0 0 0 #000000;
   color: white;
+
+  border-radius: 10px;
 }
 
 div.content {
@@ -220,73 +225,29 @@ div.content {
   }
 }
 </style>
-
-<div class="col-lg-12 side-navbar active-nav d-flex justify-content-between bg-success" id="sidebar">
-  <div>
-    <ul class="nav text-black w-100">
-      <a href="{{ route('dashboard') }}" class="nav-link h3 text-white my-2">
-        <span>Document Tracking System</span>
-      </a>
-      <li href="#" class="nav-link">
-        <a class="nav-link text-black {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
-            <span class="mx-2">Tracking</span>
-        </a>
-      </li>
-      @auth
-      <li href="#" class="nav-link">
-        <a class="nav-link text-black {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">
-            <span class="mx-2">My Documents</span>
-        </a>
-        </a>
-      </li>
-      @endauth
-      @auth
-      <li href="#" class="nav-link">
-        <a class="nav-link text-black {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
-            <span class="mx-2">Create&nbsp;Document</span>
-        </a>
-        </a>
-      </li>
-      @endauth
-        @auth
-        <li class="nav-link" style="position: absolute; right: 0; padding-right: 25px;">
-            <a href="{{ url('/logout')}}" class="nav-link text-body font-weight-bold px-0">
-                <i class="fa fa-user me-sm-1 white"></i>
-                <span class="d-sm-inline d-none text-white">{{ Auth::user()->name }} | Sign Out</span>
-            </a>
-        </li>
-        @endauth
-    </ul>
-  </div>
-    @guest
-    <div class="d-flex userstatecontainer" style="float:right; text-align: center;">
-          <li class="nav-link" style="padding-right: 25px;">
-              <a href="{{ route('register') }}" class="nav-link text-body font-weight-bold px-0">
-              <i class="fa-sharp fa-solid fa-user"></i>
-              <span class="d-sm-inline d-none text-white">Register</span>
-              </a>
-          </li>
-          <li class="nav-link" style="position: relative; padding-right: 25px;">
-            <a href="{{ url('/login')}}" class="nav-link text-body font-weight-bold px-0">
-            <i class="fa-sharp fa-solid fa-right-to-bracket"></i>
-            <span class="d-sm-inline d-none text-white">Login</span>
-            </a>
-        </li>
-      </div>
-      @endguest
-</div>
+@include('layouts.navbars.auth.nav')
 
   <div class="content">
         @yield('content')
   </div>
 
   <script>
-      var menu_btn = document.querySelector("#iconNavbarSidenav");
-      var sidebar = document.querySelector("#sidebar");
-      var container = document.querySelector(".my-container");
-      menu_btn.addEventListener("click", () => {
-      sidebar.classList.toggle("active-nav");
-      container.classList.toggle("active-cont");
+    //   var menu_btn = document.querySelector("#iconNavbarSidenav");
+    //   var sidebar = document.querySelector("#sidebar");
+    //   var container = document.querySelector(".my-container");
+    //   menu_btn.addEventListener("click", () => {
+    //   sidebar.classList.toggle("active-nav");
+    //   container.classList.toggle("active-cont");
+    // });
+
+    $(document).ready(function () {
+
+    $('ul.nav-item > li')
+            .click(function (e) {
+            $('ul.nav-item > li')
+                .removeClass('active');
+            $(this).addClass('active');
+        });
     });
 
     window.addEventListener('alert', event => {

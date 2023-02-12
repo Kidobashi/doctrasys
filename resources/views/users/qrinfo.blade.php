@@ -112,9 +112,22 @@ ul:not(first-child) ul{
   z-index: 1;
 }
 
+.docDetails {
+    display: flex;
+}
 
+.vl {
+    border: 1px solid black;
+    height: 100%;
+}
 
 @media screen and (max-width: 700px) {
+.highlights {
+    margin: 6px;
+}
+.docDetails {
+    display:block;
+}
 h5{
     font-size: 4.5vw;
 }
@@ -136,6 +149,37 @@ h5{
 }
 </style>
 This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
+<div class="col-md-12 d-flex justify-content-center">
+    <div class="col-md-10 row mx-3 rounded" style="padding:15px; background-color: #f5f5f5;border: 1px solid #d3d3d3;">
+        <h2 class="text-center">Document Details</h2>
+        <div class="docDetails mt-3">
+            <div class="d-inline highlights col-md-4 text-center">
+            <p>Reference Number</p>
+            <h1>{{$data->referenceNo}}</h1>
+            </div>
+            <div class="vl"></div>
+            <div class="d-inline highlights col-md-4 text-center">
+                <p>Document Type</p>
+                <h1>@if (isset($docCategory->documentName))
+                   {{$docCategory->documentName}}
+                    @endif
+                </h1>
+            </div>
+            <div class="vl"></div>
+            <div class="d-inline highlights col-md-4 text-center">
+                <p>From</p>
+                <h1>{{$data->officeName}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 d-flex justify-content-center">
+    <div class="col-md-10">
+        <hr>
+    </div>
+</div>
+<div>
+
     <div class="container-fluid col-lg-6">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
@@ -149,49 +193,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                 <h5 class="m-0">{{ session('danger')}}</h5>
             </div>
             @endif
-                <h4 class="card-title">Document Details</h4>
-                <hr>
-                <div style=" margin: 10px; background-color: #ECECEC; border-radius: 10px;">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm p-2">
-                               Reference No
-                            </div>
-                            <div class="col-sm p-2">
-                                <h5>{{$data->referenceNo}}</h5>
-                             </div>
-                             <div class="col-sm p-2">
-                                Document Type
-                             </div>
-                             @if (isset($docCategory->documentName))
-                             <div class="col-sm p-2">
-                                <h5>{{$docCategory->documentName}}</h5>
-                             </div>
-                             @endif
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-3 p-2">
-                                From Office
-                            </div>
-                            <div class="col-8 p-2">
-                                <h5 class="text-start">{{$data->officeName}}</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-3 p-2">
-                                Sender
-                            </div>
-                            <div class="col-8 p-2">
-                                <h5 class="text-start">{{$data->senderName}}</h5>
-                             </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
+
                 @guest
                     <div class="text-center">
                         <p class="font-italic">Login to modify document</p>
@@ -370,7 +372,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
                                 <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
                             @endif
                     </div>
-            </div>
+                </div>
             <hr>
     </div>
   <!-- Modal -->

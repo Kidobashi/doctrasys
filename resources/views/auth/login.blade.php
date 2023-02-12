@@ -5,9 +5,6 @@
 html, body {
     height: 100%;
     width: 100%;
-    background-image: url('/images/bg-sign-in.png');
-    background-size: cover;
-    background-repeat: no-repeat;
     overflow:hidden;
 }
 input {
@@ -19,6 +16,18 @@ input[type=text], input[type=email], input[type=password]{
     border-radius: 20px;
     margin: auto;
     font-size: 18px;
+}
+
+.container {
+    position: relative;
+    z-index: 2;
+}
+.bg-img{
+    opacity: .4;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
 }
 </style>
 <section>
@@ -80,5 +89,8 @@ input[type=text], input[type=email], input[type=password]{
           </div>
         </div>
       </div>
+    <div class="bg-img">
+        <img src="/images/bg-sign-in.png" alt="">
+    </div>
   </section>
 @endsection

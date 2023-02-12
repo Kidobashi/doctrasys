@@ -27,7 +27,6 @@ class DocumentsController extends Controller
      */
     public function index()
     {
-        //
         $docs = Documents::all();
 
         return view('users.index', compact(['docs']));
@@ -51,14 +50,14 @@ class DocumentsController extends Controller
         if($senderOffice < 10)
         {
             $extraZero = '0';
-            $city = "$prefix$extraZero$senderOffice$stringVal";
+            $refNo = "$prefix$extraZero$senderOffice$stringVal";
 
-            return response()->json($city);
+            return response()->json($refNo);
         }
         else{
-            $city = "$prefix$senderOffice$stringVal";
+            $refNo = "$prefix$senderOffice$stringVal";
 
-            return response()->json($city);
+            return response()->json($refNo);
         }
     }
     /**
@@ -88,7 +87,6 @@ class DocumentsController extends Controller
         $month = strval(strftime("%M"));
         $day = strval(strftime("%D"));
         $stringVal = strval($number);
-        // $refNo = "$prefix$stringVal";
 
         if($senderOffice < 10)
         {
@@ -125,11 +123,7 @@ class DocumentsController extends Controller
         $identity = $last->id + 1;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
-        // $prefix = strval(strftime("%Y%m%d"));
-        $month = strval(strftime("%M"));
-        $day = strval(strftime("%D"));
         $stringVal = strval($number);
-        // $refNo = "$prefix$stringVal";
 
         if($senderOffice < 10)
         {
