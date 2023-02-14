@@ -26,6 +26,14 @@ input[type=text], input[type=email], input[type=password], select, option{
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+@media only screen and (max-width: 600px) {
+    input[type=text], input[type=email], input[type=password], select, option{
+    border-radius: 20px;
+    margin: auto;
+    font-size: 12px;
+}
+}
 </style>
   <!-- Section: Design Block -->
   <section class="h-100 rounded my-1" style="">
@@ -35,7 +43,7 @@ input[type=text], input[type=email], input[type=password], select, option{
             -moz-box-shadow: 0px 3px 8px rgb(100,100,100);
             -webkit-box-shadow: 0px 3px 8px rgb(100,100,100);
             box-shadow: 0px 3px 8px rgb(100,100,100);">
-        <div class="card-body px-5 text-center">
+        <div class="card-body text-center">
               <h3 class="text-center"><strong>Sign Up</strong></h3>
                 <p class="my-3 text-center">Fill in to sign up </p>
                 <form method="POST" action="{{ route('register') }}">

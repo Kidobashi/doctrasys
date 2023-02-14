@@ -4,16 +4,18 @@
     <title>Tracking</title>
 </head>
 <style>
+body, html {
+    overflow: hidden;
+}
 .search{
     justify-content: center;
     position: relative;
-    top: 120px;
     height: 30%;
 }
 input {
     font-size: 16px;
     margin-top: 120px;
-    width: 480px;
+    width: 520px;
     padding:10px;
     border-radius:25px 0 0 25px;
 }
@@ -22,9 +24,30 @@ button {
     padding:10px;
     font-size: 16px;
     border-radius:0 25px 25px 0;
-
 }
 
+@media screen and (max-width: 600px) {
+
+.search {
+    position: relative;
+    display: block;
+    justify-content: center;
+}
+input {
+    width: 100%;
+    position: relative;
+    font-size: 12px;
+    padding: 5px;
+    border-radius:25px;
+  }
+button {
+    margin-top: 10px;
+    width: 40%;
+    padding: 12px;
+    font-size: 5px;
+    border-radius:25px;
+}
+}
 @media screen and (max-width: 400px) {
 
 .search {
@@ -103,7 +126,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
     </form>
 </div>
 
-<div class="d-flex mt-6 justify-content-center">
+<div class="d-flex justify-content-center">
     @if(session()->has('success'))
         <p class="display-4">No 'results' found</td></p>
     @elseif (Request::is('index') || Request::is('tracking'))

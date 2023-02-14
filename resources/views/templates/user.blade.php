@@ -120,7 +120,11 @@ div.content {
   height: 1000px;
 }
 
-@media screen and (max-width: 700px) {
+/* @media screen and (max-width: 700px) {
+    html, body {
+        max-width: 700px;
+        display: block;
+    }
   .side-navbar {
     width: 100%;
     height: auto;
@@ -147,9 +151,18 @@ div.content {
     text-align: center;
     float: none;
   }
+  html, body {
+        max-width: 400px;
+        display: block;
+    }
 
 }
 @media screen and (max-width: 950px) {
+
+    html, body {
+        max-width: 950px;
+        display: block;
+    }
     .side-navbar {
     width: 100%;
     height: auto;
@@ -199,6 +212,11 @@ div.content {
 }
 
 @media screen and (max-width: 1500px) {
+
+    html, body {
+        max-width: 1500px;
+        display: block;
+    }
     .side-navbar {
     width: 100%;
     height: auto;
@@ -223,7 +241,7 @@ div.content {
     text-align: center;
     float: none;
   }
-}
+} */
 </style>
 @include('layouts.navbars.auth.nav')
 
@@ -232,13 +250,13 @@ div.content {
   </div>
 
   <script>
-    //   var menu_btn = document.querySelector("#iconNavbarSidenav");
-    //   var sidebar = document.querySelector("#sidebar");
-    //   var container = document.querySelector(".my-container");
-    //   menu_btn.addEventListener("click", () => {
-    //   sidebar.classList.toggle("active-nav");
-    //   container.classList.toggle("active-cont");
-    // });
+      var menu_btn = document.querySelector("#iconNavbarSidenav");
+      var sidebar = document.querySelector("#sidebar");
+      var container = document.querySelector(".my-container");
+      menu_btn.addEventListener("click", () => {
+      sidebar.classList.toggle("active-nav");
+      container.classList.toggle("active-cont");
+    });
 
     $(document).ready(function () {
 

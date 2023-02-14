@@ -29,7 +29,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     <p class="display-4">No documents found</p>
 @elseif (isset($all) != 0)
     <div id="All">
-        <div class="container mb-4">
+        <div class="container mb-2">
             <div class="bg-white">
                 <div class="card">
                     <div class="grid-container d-flex col-md">
@@ -37,24 +37,32 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <span class="input-group-text" id="basic-addon1">Filter By:</span>
                             <input type="text" class="form-control" placeholder="Office, Date" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
-                        <div class="justify-content-end input-group p-3">
-                            <button class="btn btn-primary"><a href="{{ url('documents') }}" style="text-decoration: none; color:white;">All Documents</a></button>
-                            <button onclick="showOne()" class="btn btn-success">Completed</button>
-                            <button onclick="showTwo()" class="btn btn-info">Circulating</button>
-                            <button onclick="showThree()" class="btn btn-danger">Sent Back</button>
+                        <div class="dropdown show p-3">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Filter by Status
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <a class="dropdown-item bg-primary text-white" href="{{ url('documents') }}" >All Documents</a>
+                              <a class="dropdown-item bg-success text-white" onclick="showOne()" href="#">Completed</a>
+                              <a class="dropdown-item bg-info text-white" onclick="showTwo()" href="#">Circulating</a>
+                              <a class="dropdown-item bg-danger text-white" onclick="showThree()" href="#">Sent Back</button>
+                              </div></a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="container">
             <div class="card bg-white">
-                <div class="m-3">
+                <div class="mx-3 my-1">
                     <a href="add-document"><button class="btn btn-success float-end" data-toggle="modal"><i class="fas fa-plus"></i></i></button></a>
                     <div class="card-header bg-white">
                         <h4>List of Documents</h4>
                     </div>
                     <div class="card-body">
+                        <div class="table-responsive">
                         <table class="table text-center">
                             <thead class="bg-light">
                                 <tr>
@@ -70,7 +78,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <tr>
                                     <td class="text-center"> {{ $loop->iteration }} </td>
                                     <td class="text-center"> {{ $doc->referenceNo }}</td>
-                                    <td class="text-center">{{ $doc->officeName }}</td>
+                                    <td class="text-center"> {{ $doc->officeName }}</td>
                                      @if ($doc->status == 3)
                                             <td><span class="badge bg-danger d-inline">Sent Back</span></td>
                                         @endif
@@ -85,8 +93,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                 </div>
-                <div class="card-footer bg-white">
+                <div class="d-flex card-footer bg-white justify-content-center">
                     <div class="float-right">
                         {{ $all->links('pagination::bootstrap-5') }}
                     </div>
@@ -94,7 +103,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             </div>
         </div>
     </div>
-</div>
+    <div style="height: 10%;">
+
+    </div>
 @endif
 
 <script>

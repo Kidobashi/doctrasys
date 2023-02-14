@@ -1,4 +1,5 @@
 <style>
+
 .nav-item {
   display: inline-block;
   position: relative;
@@ -25,6 +26,46 @@
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
+.fa-circle-user {
+    font-weight: 800;
+    color: white;
+}
+
+#loginMobile, #myLinks, .mobileDropDown{
+    display: none;
+}
+
+#myLinks li {
+    list-style-type: none;
+    color: white;
+}
+
+@media only screen and (max-width: 600px) {
+  header nav {
+    display: none;
+  }
+
+ #loginMobile, #myLinks , .mobileDropDown, .mobile-menu-container{
+    display: block;
+  }
+.mobile-menu-container {
+  overflow:hidden;
+  border: 1px solid grey;
+  background-color: green;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.mobile-menu-container p {
+    font-size: 11.5px;
+    font-weight: 800;
+}
+.active {
+    background-color: white;
+    color: green;
+}
+}
 </style>
 
 <!-- Navbar -->
@@ -33,11 +74,36 @@
       <a class="navbar-brand" href="#">
         <span>{{ config('app.name', 'Laravel') }}</span>
       </a>
-      <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
-        data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-        aria-label="Toggle navigation">
-        <i class="fas fa-bars"></i>
-      </button>
+      @guest
+      <div class="container" id="loginMobile">
+        <div class="row">
+          <div class="col text-center border border-white rounded mx-1">
+            <a href="{{ route('register') }}" class="nav-link text-body font-weight-bold px-0">
+                <i class="fa fa-user-circle-o fa-lg text-white" aria-hidden="true"></i>
+                <span class="d-sm-inline text-white bolder">Register</span>
+            </a>
+          </div>
+          <div class="col text-center border border-white rounded mx-1">
+            <a href="{{ route('login') }}" class="nav-link text-body font-weight-bold px-0">
+                <i class="fa fa-sign-in fa-lg text-white" aria-hidden="true"></i>
+                <span class="d-sm-inline text-white bolder">Login</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      @endguest
+        @auth
+        <div class="dropdown mobileDropDown">
+            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ Auth::user()->name }}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a href="{{ url('/logout')}}" class="nav-link text-center font-weight-bold px-0">
+                    <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fa-solid fa-right-from-bracket"></i>Sign Out</span>
+                </a>
+            </div>
+        </div>
+        @endauth
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item mx-2">
@@ -68,7 +134,6 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a href="{{ url('/logout')}}" class="nav-link text-center font-weight-bold px-0">
-                        <i class="fa fa-user me-sm-1 white"></i>
                         <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fa-solid fa-right-from-bracket"></i>Sign Out</span>
                     </a>
                 </div>
@@ -76,23 +141,40 @@
             @endauth
             @guest
             <div>
-            <li class="nav-item">
-                <a href="{{ route('register') }}" class="nav-link text-body font-weight-bold px-0">
-                <i class="fa-sharp fa-solid fa-user"></i>
-                <span class="d-sm-inline text-black">Register</span>
-                </a>
-            </li>
-        </div>
+                <li class="nav-item mx-2">
+                    <a href="{{ route('register') }}" class="nav-link text-body font-weight-bold px-0">
+                    <i class="fa-sharp fa-solid fa-user white"></i>
+                    <span class="d-sm-inline text-black">Register</span>
+                    </a>
+                </li>
+            </div>
             <div>
-            <li class="nav-item">
-                <a href="{{ url('/login')}}" class="nav-link text-body font-weight-bold px-0">
-                <i class="fa-sharp fa-solid fa-right-to-bracket"></i>
-                <span class="d-sm-inline text-black">Login</span>
-                </a>
-            </li>
-        </div>
+                <li class="nav-item mx-2">
+                    <a href="{{ url('/login')}}" class="nav-link text-body font-weight-bold px-0">
+                    <i class="fa-sharp fa-solid fa-right-to-bracket white"></i>
+                    <span class="d-sm-inline text-black">Login</span>
+                    </a>
+                </li>
+            </div>
             @endguest
         </ul>
       </div>
     </div>
   </nav>
+
+@auth
+<nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom">
+    <a class="nav-item nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
+        <i class="fa-solid fa-location-dot fa-lg mb-3"></i>
+        <p>Tracking</p>
+    </a>
+    <a class="nav-item nav-link {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
+        <i class="fa-solid fa-qrcode fa-lg mb-3"></i>
+        <p>Generate QR</p>
+    </a>
+    <a class="nav-item nav-link {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">
+        <i class="fa fa-list fa-lg mb-3" aria-hidden="true"></i>
+        <p>My Documents</p>
+    </a>
+  </nav>
+@endauth

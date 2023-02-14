@@ -29,6 +29,14 @@ input[type=text], input[type=email], input[type=password]{
     left: 0;
     top: 0;
 }
+
+@media only screen and (max-width: 600px) {
+    input[type=text], input[type=email], input[type=password], select, option{
+    border-radius: 20px;
+    margin: auto;
+    font-size: 12px;
+}
+}
 </style>
 <section>
     <div class="container vh-100">
@@ -62,12 +70,12 @@ input[type=text], input[type=email], input[type=password]{
                 </div>
 
                 <!-- Checkbox -->
-                <div class="form-check d-flex justify-content-center mb-4">
+                <div class="form-check d-flex justify-content-center mb-3">
                   <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} id="form1Example3" />
                   <label class="form-check-label" for="form1Example3">&nbsp; Remember password </label>
                 </div>
 
-                <button class="btn btn-success btn-lg btn-block w-30 mb-4 px-5 fs-6" style="border-radius: 18px;" type="submit">Sign In</button>
+                <button class="btn btn-success btn-lg btn-block w-30 mb-2 px-5 fs-6" style="border-radius: 18px;" type="submit">Sign In</button>
                 <div class="form-outline mb-2">
                     @if (Route::has('password.request'))
                     <a class="btn btn-link" href="{{ route('password.request') }}">
