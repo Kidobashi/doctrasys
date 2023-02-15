@@ -35,7 +35,7 @@ input[type=text], input[type=email], input[type=password]{
     border-radius: 20px;
     margin: auto;
     font-size: 12px;
-}
+  }
 }
 </style>
 <section>

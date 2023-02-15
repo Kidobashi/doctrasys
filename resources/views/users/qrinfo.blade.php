@@ -42,11 +42,6 @@ li .comments:nth-child(4){
     display: none;
 }
 
- .container-fluid{
-        position: relative;
-        top: 20px;
-        height: 100%;
-    }
 .top-arrow {
     position: relative;
     right: 65px;
@@ -121,12 +116,39 @@ ul:not(first-child) ul{
     height: 100%;
 }
 
+.docDetails {
+    margin-top: 10px;
+}
+
 @media screen and (max-width: 700px) {
 .highlights {
     margin: 6px;
 }
+
 .docDetails {
-    display:block;
+    margin-top: 10px;
+}
+.docDetails {
+    display:flex;
+    flex-direction: column;
+}
+
+.docDetails h2 {
+    font-size: 16px;
+}
+
+.docDetails h1{
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.docDetails p{
+    font-size: 12px;
+}
+
+.vl {
+    border: 1px solid gray;
+    width: 100%;
 }
 h5{
     font-size: 4.5vw;
@@ -148,11 +170,11 @@ h5{
     }
 }
 </style>
-This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
+This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
 <div class="col-md-12 d-flex justify-content-center">
     <div class="col-md-10 row mx-3 rounded" style="padding:15px; background-color: #f5f5f5;border: 1px solid #d3d3d3;">
         <h2 class="text-center">Document Details</h2>
-        <div class="docDetails mt-3">
+        <div class="docDetails">
             <div class="d-inline highlights col-md-4 text-center">
             <p>Reference Number</p>
             <h1>{{$data->referenceNo}}</h1>
@@ -180,7 +202,7 @@ This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
 </div>
 <div>
 
-    <div class="container-fluid col-lg-6">
+    <div class="container col-lg-6">
         <div class="row">
             <div class="col-xxs-6 col-xs-4">
             @if(session()->has('success'))

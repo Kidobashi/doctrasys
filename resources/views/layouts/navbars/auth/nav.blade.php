@@ -1,5 +1,9 @@
 <style>
 
+nav a{
+    outline: none;
+    text-decoration: none !important;
+}
 .nav-item {
   display: inline-block;
   position: relative;
@@ -9,6 +13,7 @@
 .active {
     border-bottom: 2px solid white;
 }
+
 .nav-item:after {
   content: '';
   position: absolute;
@@ -55,13 +60,32 @@
   background-color: green;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+  padding: 0;
+}
+
+.mobile-menu-container a{
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .mobile-menu-container p {
     font-size: 11.5px;
     font-weight: 800;
 }
-.active {
+
+.mobile-menu-container a:focus, .mobile-menu-container a:active, .mobile-menu-container a.active {
+    background-color: white;
+    color: green;
+}
+
+.btn-success:focus,
+.btn-success:active,
+.btn-sucess.active {
     background-color: white;
     color: green;
 }
@@ -163,18 +187,18 @@
   </nav>
 
 @auth
-<nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom">
-    <a class="nav-item nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
+<nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom pb-0">
+    <a class="nav-item nav-link pb-0 mb-0 {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
         <i class="fa-solid fa-location-dot fa-lg mb-3"></i>
-        <p>Tracking</p>
+        <p class="pb-0 mb-0">Tracking</p>
     </a>
-    <a class="nav-item nav-link {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
+    <a class="nav-item nav-link pb-0 mb-0  {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
         <i class="fa-solid fa-qrcode fa-lg mb-3"></i>
-        <p>Generate QR</p>
+        <p class="pb-0 mb-0">Generate QR</p>
     </a>
-    <a class="nav-item nav-link {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">
+    <a class="nav-item nav-link pb-0 mb-0 {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">
         <i class="fa fa-list fa-lg mb-3" aria-hidden="true"></i>
-        <p>My Documents</p>
+        <p class="pb-0 mb-0">My Documents</p>
     </a>
   </nav>
 @endauth

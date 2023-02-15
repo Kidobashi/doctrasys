@@ -8,9 +8,16 @@ body, html {
     overflow: hidden;
 }
 .search{
+    display: flex;
     justify-content: center;
     position: relative;
     height: 30%;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.script {
+    text-align: center;
 }
 input {
     font-size: 16px;
@@ -27,25 +34,25 @@ button {
 }
 
 @media screen and (max-width: 600px) {
-
-.search {
-    position: relative;
-    display: block;
-    justify-content: center;
-}
-input {
-    width: 100%;
-    position: relative;
-    font-size: 12px;
-    padding: 5px;
-    border-radius:25px;
-  }
-button {
+.search button {
     margin-top: 10px;
     width: 40%;
-    padding: 12px;
-    font-size: 5px;
+    padding: 8px;
+    font-size: 12px;
     border-radius:25px;
+    justify-content: center;
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.script{
+    text-align: center;
+    position: relative;
+    bottom:50px;
 }
 }
 @media screen and (max-width: 400px) {
@@ -77,10 +84,15 @@ button {
     font-size: 28px;
     justify-content: center;
 }
+.search {
+    position: relative;
+    display: block;
+    justify-content: center;
+}
 input {
     width: 100%;
     position: relative;
-    font-size: 14px;
+    font-size: 12px;
     padding: 5px;
     border-radius:25px;
 
@@ -119,19 +131,21 @@ button {
 
 </style>
 This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
-<div class="search d-flex col-lg-12 col-md-12 col-md-8">
+<div class="d-flex flex-column">
+<div class="search col-lg-12 col-md-12 col-sm-12">
     <form action="tracking" method="get">
         <input type="text" name="search">
         <button type="submit">Track Document</button>
     </form>
 </div>
 
-<div class="d-flex justify-content-center">
+<div class="script">
     @if(session()->has('success'))
         <p class="display-4">No 'results' found</td></p>
     @elseif (Request::is('index') || Request::is('tracking'))
         <p class="display-4">Track 'Document' with reference number...</p>
     @endif
+</div>
 </div>
 @if(Session::has('message'))
     <p style="color: white; position: fixed; top: 5px;width: 400px;" id="divID" style="display: block;" class="alert {{ Session::get('alert-class', 'alert-danger') }} text-center"><strong>{{ Session::get('message') }}</strong></p>

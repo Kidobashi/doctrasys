@@ -17,7 +17,7 @@
     }
 </style>
 
-This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
+This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
 <div class="container-fluid col-lg-6 col-md-6">
     <div class="row">
         <div class="card">

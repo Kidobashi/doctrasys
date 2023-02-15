@@ -61,6 +61,9 @@
 <body>
 
 <style>
+    html {
+  -webkit-tap-highlight-color: transparent;
+}
 *{
     font-family: 'Biryani', sans-serif;
     font-family: 'Raleway', sans-serif;
