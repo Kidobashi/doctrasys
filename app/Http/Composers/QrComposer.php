@@ -14,7 +14,7 @@ class QrComposer
     {
         $last = DB::table('documents')->latest('id')->first();
 
-        $identity = $last->id + 1;
+        $identity = $last->id;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
         $stringVal = strval($number);

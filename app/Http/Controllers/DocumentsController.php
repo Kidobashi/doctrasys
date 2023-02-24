@@ -36,7 +36,7 @@ class DocumentsController extends Controller
     {
         $last = DB::table('documents')->latest('id')->first();
 
-        $identity = $last->id + 1;
+        $identity = $last->id;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
         // $prefix = strval(strftime("%Y%m%d"));
@@ -81,21 +81,23 @@ class DocumentsController extends Controller
 
         $docType = DocumentType::all();
 
+        $document = new Documents();
+
         $identity = $last->id + 1;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
-        $month = strval(strftime("%M"));
-        $day = strval(strftime("%D"));
+        // $month = strval(strftime("%M"));
+        // $day = strval(strftime("%D"));
         $stringVal = strval($number);
 
         if($senderOffice < 10)
         {
             $extraZero = '0';
             $refNo = "$prefix$extraZero$senderOffice$stringVal";
-            return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users]);
+            return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users])->with(['document' => $document]);
         }else{
             $refNo = "$prefix$senderOffice$stringVal";
-            return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users]);
+            return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users])->with(['document' => $document]);
         }
     }
 
@@ -120,7 +122,7 @@ class DocumentsController extends Controller
 
         $last = DB::table('documents')->latest('id')->first();
 
-        $identity = $last->id + 1;
+        $identity = $last->id;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
         $stringVal = strval($number);
@@ -130,15 +132,36 @@ class DocumentsController extends Controller
             $extraZero = '0';
             $refNo = "$prefix$extraZero$senderOffice$stringVal";
 
-            Documents::insert([
-                'senderName' => $sender,
-                'email' => request('email'),
-                'senderOffice' =>  $senderOffice,
-                'receiverOffice' => request('receiverOffice'),
-                'docType' => request('docType'),
-                'referenceNo' => $refNo,
-                'created_at' => date('Y-m-d'),
-            ]);
+            // $document = Documents::insert([
+            //     'senderName' => $sender,
+            //     'email' => request('email'),
+            //     'senderOffice' =>  $senderOffice,
+            //     'receiverOffice' => request('receiverOffice'),
+            //     'docType' => request('docType'),
+            //     'referenceNo' => $refNo,
+            //     'created_at' => date('Y-m-d'),
+            // ]);
+
+            // $validatedData = $request->validate([
+            //     'refNo' => 'required',
+            //     'senderName' => 'required',
+            //     'senderOffice' => 'required',
+            //     'receiverOffice' => 'required',
+            //     'docType' => 'required',
+            //     'email' => 'required',
+            // ]);
+
+            // Documents::create($validatedData);
+
+            $document = new Documents();
+            $document->senderName = $request->input('senderName');
+            $document->email = $request->input('email');
+            $document->senderOffice = $senderOffice;
+            $document->receiverOffice = $request->input('receiverOffice');
+            $document->docType = $request->input('docType');
+            $document->referenceNo = $refNo;
+            $document->created_at = date('Y-m-d');
+            $document->save();
 
             TrackingLogs::create([
                 'senderName' => $sender,
@@ -147,7 +170,9 @@ class DocumentsController extends Controller
                 'referenceNo' => $refNo,
             ]);
 
-            return redirect('add-document')->with('message', 'Successfully Added!');
+            // return response()->json($document);
+
+            return redirect('add-document')->with('message', 'Successfully Added!')->withInput($request->only('refNo', 'receiverOffice', 'docType'));
         }
         else{
         // $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
@@ -161,15 +186,36 @@ class DocumentsController extends Controller
             'receiverOffice' => 'required',
         ]);
 
-        Documents::insert([
-            'senderName' => $sender,
-            'email' => request('email'),
-            'senderOffice' =>  $senderOffice,
-            'receiverOffice' => request('receiverOffice'),
-            'docType' => request('docType'),
-            'referenceNo' => $refNo,
-            'created_at' => date('Y-m-d'),
-        ]);
+
+        // $validatedData = $request->validate([
+        //     'refNo' => 'required',
+        //     'senderName' => 'required',
+        //     'senderOffice' => 'required',
+        //     'receiverOffice' => 'required',
+        //     'docType' => 'required',
+        //     'email' => 'required',
+        // ]);
+
+        // Documents::create($validatedData);
+        // $document = Documents::insert([
+        //     'senderName' => $sender,
+        //     'email' => request('email'),
+        //     'senderOffice' =>  $senderOffice,
+        //     'receiverOffice' => request('receiverOffice'),
+        //     'docType' => request('docType'),
+        //     'referenceNo' => $refNo,
+        //     'created_at' => date('Y-m-d'),
+        // ]);
+
+            $document = new Documents();
+            $document->senderName = $sender;
+            $document->email = $request->input('email');
+            $document->senderOffice = $senderOffice;
+            $document->receiverOffice = $request->input('receiverOffice');
+            $document->docType = $request->input('docType');
+            $document->referenceNo = $refNo;
+            $document->created_at = date('Y-m-d');
+            $document->save();
 
         TrackingLogs::create([
             'senderName' => $sender,
@@ -178,7 +224,8 @@ class DocumentsController extends Controller
             'referenceNo' => $refNo,
         ]);
 
-        return redirect('add-document')->with('message', 'Successfully Added!');
+        // return response()->json($document);
+        return redirect('add-document')->with('message', 'Successfully Added!')->withInput($request->only('refNo', 'receiverOffice', 'docType'));
         }
     }
 
@@ -305,4 +352,19 @@ class DocumentsController extends Controller
 
         return view('users.documentList.sentBackDocs')->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
     }
+
+    // public function fetchNames(Request $request)
+    // {
+    //     $officeFrom = $request->input('senderOfficeId');
+    //     $officeTo = $request->input('receiverOfficeOfficeId');
+    //     $docType = $request->input('docTypeId');
+
+    //     $senderOfficeName = Offices::where('id', $officeFrom)->pluck('officeName');
+    //     $receiverOfficeName = Offices::where('id', $officeTo)->pluck('officeName');
+    //     $docTypeName = DocumentType::where('id', $docType)->pluck('documentName');
+
+    //     return response()->json(['officeFrom' => $officeFrom, 'officeTo' => $officeTo, 'docType' => $docType]);
+
+    //     // return response()->json(['senderOfficeName' => $senderOfficeName, 'receiverOfficeName' => $receiverOfficeName, 'docTypeName' => $docTypeName]);
+    // }
 }

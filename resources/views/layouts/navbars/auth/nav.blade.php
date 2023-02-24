@@ -37,7 +37,7 @@ nav a{
     color: white;
 }
 
-#loginMobile, #myLinks, .mobileDropDown{
+#loginMobile, #myLinks, .mobileDropDown, .mobile-menu-container, .mobile-menu-container a{
     display: none;
 }
 
@@ -51,7 +51,7 @@ nav a{
     display: none;
   }
 
- #loginMobile, #myLinks , .mobileDropDown, .mobile-menu-container{
+ #loginMobile, #myLinks , .mobileDropDown, .mobile-menu-container, .mobile-menu-container a{
     display: block;
   }
 .mobile-menu-container {
@@ -79,13 +79,6 @@ nav a{
 }
 
 .mobile-menu-container a:focus, .mobile-menu-container a:active, .mobile-menu-container a.active {
-    background-color: white;
-    color: green;
-}
-
-.btn-success:focus,
-.btn-success:active,
-.btn-sucess.active {
     background-color: white;
     color: green;
 }

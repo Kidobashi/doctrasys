@@ -26,7 +26,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                 <div class="card-body">
                     <div class="details col-md-12 justify-content-center">
                         <div class="col-md-7">
-                            <form method="POST" action="/add-documents">
+                            <form id="post-form" method="POST" action="/add-documents">
                                 @csrf
                             <div class="input-group my-3 ml-1 col-md-12">
                                 <span class="input-group-text" id="basic-addon1">Sender Name</span>
@@ -56,7 +56,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <select class="form-control" id="assignedOffice" name="receiverOffice" required>
                                     <option value="" selected disabled>Select Office
                                         @foreach ($offices as $row)
-                                            <option value="{{ $row->id }}">{{ $row->officeName }}</option>
+                                            <option value="{{ $row->id }}" {{ old('receiverOffice', $document->receiverOffice) == $row->id ? 'selected' : '' }}>{{ $row->officeName }}</option>
                                             </option>
                                         @endforeach
                                     </select>
@@ -67,12 +67,17 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <select class="form-control" id="" name="docType" required>
                                     <option value="" selected disabled>Select Document Type
                                         @foreach ($docType as $row)
-                                            <option value="{{ $row->id }}">{{ $row->documentName }}</option>
+                                            <option value="{{ $row->id }}" {{ old('docType', $document->docType) == $row->id ? 'selected' : '' }}>{{ $row->documentName }}</option>
                                             </option>
                                         @endforeach
                                         </select>
                             </div>
-
+                            {{-- $identity = $last->id + 1;
+                            $number = sprintf('%04d', $identity);
+                            $prefix = date('Ymd');
+                            $stringVal = strval($number); --}}
+                            {{-- {{ $prefix = date('Ymd')}}
+                            {{  dd("$prefix")}} --}}
                             <div class="btn-toolbar mb-2">
 
                             </div>
@@ -93,16 +98,71 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         </div>
 
-                            @if(session('message'))
-                                <div class="alert alert-success"><strong>{{session('message')}}</strong></div>
-                            @endif
-                            </>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Post</h5>
+                    {{-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button> --}}
+                </div>
+                <div class="modal-body">
+                    <p>From: <span id="senderOffice"></span></p>
+                    <p>To: <span id="receiverOffice"></span></p>
+                    <p>Document Type: <span id="docType"></></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+        keyboard: false,
+        backdrop: 'static',
+        show: false,
+        } )
+        // $('#post-form').submit(function(event) {
+        //     event.preventDefault();
+
+        //     // send the form data as a post request
+        //     $.post($(this).attr('action'), $(this).serialize())
+        //         .done(function(data) {
+        //             //fetch data from database
+        //             // console.log(data.senderOffice)
+        //             // console.log(data.receiverOffice)
+        //             // console.log(data.docType)
+        //             const senderOfficeId = data.senderOffice;
+        //             const receiverOfficeId = data.receiverOffice;
+        //             const docTypeId = data.docType;
+
+        //             // $.get('/fetch-names', {id:senderOfficeId, id:receiverOfficeId, id:docTypeId}, function(data){
+        //             //     console.log(data)
+        //             //     $('#senderOffice').text(data.senderOfficeName);
+        //             //     $('#receiverOffice').text(data.receiverOfficeName);
+        //             //     $('#docType').text(data.docTypeName);
+        //             // });
+        //             // update the modal with the new post data
+        //             // $('#senderOffice').text(data.senderOffice);
+        //             // $('#receiverOffice').text(data.receiverOffice);
+        //             // $('#docType').text(data.docType);
+
+        //             $('#myModal').modal('show');
+        //         })
+        //         .fail(function(error) {
+        //             console.log(error);
+        //         });
+        // });
+    </script>
 <script>
     function liveUpdate()
     {

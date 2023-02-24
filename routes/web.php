@@ -126,7 +126,8 @@ Route::get('user-management', [UserController::class, 'index'])->name('user');
 Route::get('index', [DocumentsController::class, 'index'])->name('docs');
 Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
 Route::get('download/{token}', [DocumentsController::class, 'fileGenerator'])->name('download');
-Route::post('add-documents', [DocumentsController::class, 'store']);
+Route::post('add-documents', [DocumentsController::class, 'store'])->name('add-documents');
+// Route::get('add-document', [DocumentsController::class, 'store']);
 Route::get('documents', [DocumentsController::class, 'userDocs']);
 Route::get('/documents/completed', [DocumentsController::class, 'completedDocs']);
 Route::get('/documents/circulating', [DocumentsController::class, 'circulatingDocs']);
@@ -160,7 +161,7 @@ Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);
 Route::post('/filters/search',[ DocumentsController::class, 'searchTest'])->name('document.search');
 
 Route::get('/getLiveUpdate', [DocumentsController::class, 'getOfficeByUser']);
-
+// Route::get('/fetch-names	', [DocumentsController::class, 'fetchNames']);
 Route::get('/', [HomeController::class, 'index']);
 // Route::get('/home', [HomeController::class, 'index'])->name('home');
 
