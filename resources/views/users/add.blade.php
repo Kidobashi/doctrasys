@@ -9,6 +9,15 @@
         display: flex;
     }
 
+    .button-container{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .button-container button {
+        margin-right: 10px;
+    }
+
     @media screen and (max-width: 700px)
     {
     .details {
@@ -30,22 +39,24 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 @csrf
                             <div class="input-group my-3 ml-1 col-md-12">
                                 <span class="input-group-text" id="basic-addon1">Sender Name</span>
-                                <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name; }}" readonly>
+                                <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" readonly>
+                                <div class="mb-3" style="display: none;">
+                                    <input type="text" class="form-control" name="senderName" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" readonly>
+                                </div>
                                 @error('senderName')
                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            <div class="mb-3" style="display: none;">
-                                <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email; }}" readonly>
-                                @error('email')
-                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
+                            <div id="invis-input" class="mb-3" style="display: none;">
+                                <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email }}" readonly>
+                                <input type="text" class="form-control" name="referenceNo" id="name" aria-label="Name" aria-describedby="name" value="{{ $refNo }}" readonly>
+                                <input type="text" class="form-control" name="senderOffice" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->assignedOffice }}" readonly>
                             </div>
 
                             <div class="input-group my-3 ml-1 col-md-12">
                                 <span class="input-group-text" id="basic-addon1">Sender Office</span>
-                                <input type="text" class="form-control" name="senderOffice" id="name" aria-label="Name" aria-describedby="name" value="{{ $senderOffice }}" readonly>
+                                <input type="text" class="form-control" id="name" aria-label="Name" aria-describedby="name" value="{{ $senderOffice }}" readonly>
                                 @error('senderName')
                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
@@ -72,29 +83,23 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         @endforeach
                                         </select>
                             </div>
-                            {{-- $identity = $last->id + 1;
-                            $number = sprintf('%04d', $identity);
-                            $prefix = date('Ymd');
-                            $stringVal = strval($number); --}}
-                            {{-- {{ $prefix = date('Ymd')}}
-                            {{  dd("$prefix")}} --}}
+
                             <div class="btn-toolbar mb-2">
 
                             </div>
-                            <div class="btn-toolbar">
-                                <button class="btn btn-primary shadow mr-1" type="submit">Submit</button>
-                                <button onclick="showQr()" class="btn btn-primary shadow">Show QR</button>
+                            <div class="btn-toolbar button-container">
+                                <button type="button" style="display:none;" id="printable-mdl-btn" class="btn btn-primary" data-toggle="modal" data-target="#printable-modal">
+                                    Show Printable
+                                </button>
+                                <button class="btn btn-primary shadow mr-1" id="submit-doc-btn" type="submit">Submit</button>
+                                <button type="button" class="btn btn-success float-end" style="display:none;" id="create-btn" style="display: none;" onclick="location.href='{{ url()->current() }}';">Create New +</button>
                             </div>
                             </form>
-
-                            {{-- <div class="">
-                                <a id="showNumber" class="btn btn-primary shadow" type="submit" onclick="liveUpdate()">Show Reference Number</a>
-                            </div> --}}
                         </div>
+
                         <div id="qrdata" class="col-md-4 m-auto" style="width: 100%; height: 100%; max-width:280px; max-height:280px;">
                             <div>
                                 @include('partials.qrcode')
-                                {{-- <button id="dl-png" style="display: none;">Download QR</button> --}}
                             </div>
                         </div>
 
@@ -105,27 +110,46 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         </div>
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">New Post</h5>
-                    {{-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button> --}}
-                </div>
-                <div class="modal-body">
-                    <p>From: <span id="senderOffice"></span></p>
-                    <p>To: <span id="receiverOffice"></span></p>
-                    <p>Document Type: <span id="docType"></></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+    <div class="modal fade" id="printable-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Complete Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
+
+            <div class="modal-body">
+                <p>
+                    {{ old('referenceNo') }}
+                </p>
+
+                @if(session('goods') )
+                <div class="alert alert-success">
+                    <p>{{ session('goods') }}</p>
+                    <p>{{ session('flashRefNo') }}</p>
+                    <p>{{ session('recv') }}</p>
+                    <p>{{ session('dctyp') }}</p>
+                </div>
+                @endif
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+
+
     <script>
+        $(document).ready(function() {
+            if ('{{ session('message') }}') {
+                $('#submit-doc-btn').hide();
+                $('#printable-mdl-btn').show();
+                $('#create-btn').show();
+                }
+            });
         var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
         keyboard: false,
         backdrop: 'static',
@@ -133,34 +157,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         } )
         // $('#post-form').submit(function(event) {
         //     event.preventDefault();
+        //     $('#printable-modal').modal('show');
 
-        //     // send the form data as a post request
-        //     $.post($(this).attr('action'), $(this).serialize())
-        //         .done(function(data) {
-        //             //fetch data from database
-        //             // console.log(data.senderOffice)
-        //             // console.log(data.receiverOffice)
-        //             // console.log(data.docType)
-        //             const senderOfficeId = data.senderOffice;
-        //             const receiverOfficeId = data.receiverOffice;
-        //             const docTypeId = data.docType;
-
-        //             // $.get('/fetch-names', {id:senderOfficeId, id:receiverOfficeId, id:docTypeId}, function(data){
-        //             //     console.log(data)
-        //             //     $('#senderOffice').text(data.senderOfficeName);
-        //             //     $('#receiverOffice').text(data.receiverOfficeName);
-        //             //     $('#docType').text(data.docTypeName);
-        //             // });
-        //             // update the modal with the new post data
-        //             // $('#senderOffice').text(data.senderOffice);
-        //             // $('#receiverOffice').text(data.receiverOffice);
-        //             // $('#docType').text(data.docType);
-
-        //             $('#myModal').modal('show');
-        //         })
-        //         .fail(function(error) {
-        //             console.log(error);
-        //         });
         // });
     </script>
 <script>

@@ -124,7 +124,7 @@ Route::get('user-management', [UserController::class, 'index'])->name('user');
 
 //Documents Controller
 Route::get('index', [DocumentsController::class, 'index'])->name('docs');
-Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('offices');
+Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('add-document');
 Route::get('download/{token}', [DocumentsController::class, 'fileGenerator'])->name('download');
 Route::post('add-documents', [DocumentsController::class, 'store'])->name('add-documents');
 // Route::get('add-document', [DocumentsController::class, 'store']);

@@ -10,4 +10,6 @@ class DocumentType extends Model
     use HasFactory;
 
     protected $table='document_type';
+
+    
 }

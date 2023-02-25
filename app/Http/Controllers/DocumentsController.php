@@ -94,10 +94,10 @@ class DocumentsController extends Controller
         {
             $extraZero = '0';
             $refNo = "$prefix$extraZero$senderOffice$stringVal";
-            return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users])->with(['document' => $document]);
+            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users])->with(['document' => $document]);
         }else{
             $refNo = "$prefix$senderOffice$stringVal";
-            return view('users.add')->with('docType', $docType)->with('offices', $offices)->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users])->with(['document' => $document]);
+            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users])->with(['document' => $document]);
         }
     }
 
@@ -132,36 +132,31 @@ class DocumentsController extends Controller
             $extraZero = '0';
             $refNo = "$prefix$extraZero$senderOffice$stringVal";
 
-            // $document = Documents::insert([
-            //     'senderName' => $sender,
-            //     'email' => request('email'),
-            //     'senderOffice' =>  $senderOffice,
-            //     'receiverOffice' => request('receiverOffice'),
-            //     'docType' => request('docType'),
-            //     'referenceNo' => $refNo,
-            //     'created_at' => date('Y-m-d'),
-            // ]);
+        $validatedData = $request->validate([
+            'senderName' => 'required',
+            'referenceNo' => 'required',
+            'senderOffice' => 'required',
+            'receiverOffice' => 'required',
+            'docType' => 'required',
+            'email' => 'required',
+        ]);
 
-            // $validatedData = $request->validate([
-            //     'refNo' => 'required',
-            //     'senderName' => 'required',
-            //     'senderOffice' => 'required',
-            //     'receiverOffice' => 'required',
-            //     'docType' => 'required',
-            //     'email' => 'required',
-            // ]);
+        Documents::create($validatedData);
 
-            // Documents::create($validatedData);
+        // $document = new Documents();
+        // $document->senderName = $validatedData['senderName'];
+        // $document->email = $validatedData['email'];
+        // $document->senderOffice = $senderOffice;
+        // $document->receiverOffice = $validatedData['receiverOffice'];
+        // $document->docType = $validatedData['docType'];
+        // $document->referenceNo = $validatedData['referenceNo'];
+        // $document->created_at = date('Y-m-d');
+        // $document->save();
 
-            $document = new Documents();
-            $document->senderName = $request->input('senderName');
-            $document->email = $request->input('email');
-            $document->senderOffice = $senderOffice;
-            $document->receiverOffice = $request->input('receiverOffice');
-            $document->docType = $request->input('docType');
-            $document->referenceNo = $refNo;
-            $document->created_at = date('Y-m-d');
-            $document->save();
+        $receiverOfficeName = Offices::findOrFail($validatedData['receiverOffice'])->officeName;
+        $senderOfficeName = Offices::findOrFail($validatedData['senderOffice'])->officeName;
+        $flashRefNo = $validatedData['referenceNo'];
+        $flashDocType = DocumentType::findOrFail($validatedData['docType'])->documentName;
 
             TrackingLogs::create([
                 'senderName' => $sender,
@@ -170,52 +165,43 @@ class DocumentsController extends Controller
                 'referenceNo' => $refNo,
             ]);
 
-            // return response()->json($document);
-
-            return redirect('add-document')->with('message', 'Successfully Added!')->withInput($request->only('refNo', 'receiverOffice', 'docType'));
+            return redirect()->back()->with('message', "Successfully Added!")->with('dctyp', "'$flashDocType'")->with('recv', "'$receiverOfficeName'")->with('goods', "'$senderOfficeName'" )->with('flashRefNo', "'$flashRefNo'"); //
         }
         else{
         // $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
 
         $refNo = "$prefix$senderOffice$stringVal";
 
-        $request->validate([
+        $validatedData = $request->validate([
+            'referenceNo' => 'required',
             'senderName' => 'required',
-            // 'receiverName' => 'required',
-            'senderOffice' =>  'required',
+            'senderOffice' => 'required',
             'receiverOffice' => 'required',
+            'docType' => 'required',
+            'email' => 'required',
         ]);
 
+        Documents::create($validatedData);
 
-        // $validatedData = $request->validate([
-        //     'refNo' => 'required',
-        //     'senderName' => 'required',
-        //     'senderOffice' => 'required',
-        //     'receiverOffice' => 'required',
-        //     'docType' => 'required',
-        //     'email' => 'required',
-        // ]);
+        $document = new Documents();
+        $document->senderName = $request->input('senderName');
+        $document->email = $request->input('email');
+        $document->senderOffice = $senderOffice;
+        $document->receiverOffice = $request->input('receiverOffice');
+        $document->docType = $request->input('docType');
+        $document->referenceNo = $request->input('referenceNo');
+        $document->created_at = date('Y-m-d');
 
-        // Documents::create($validatedData);
-        // $document = Documents::insert([
-        //     'senderName' => $sender,
-        //     'email' => request('email'),
-        //     'senderOffice' =>  $senderOffice,
-        //     'receiverOffice' => request('receiverOffice'),
-        //     'docType' => request('docType'),
-        //     'referenceNo' => $refNo,
-        //     'created_at' => date('Y-m-d'),
-        // ]);
+        $receiverOfficeName = Offices::find($document->receiverOffice);
+        $request->flash('receiverOfficeName', $receiverOfficeName->officeName);
 
-            $document = new Documents();
-            $document->senderName = $sender;
-            $document->email = $request->input('email');
-            $document->senderOffice = $senderOffice;
-            $document->receiverOffice = $request->input('receiverOffice');
-            $document->docType = $request->input('docType');
-            $document->referenceNo = $refNo;
-            $document->created_at = date('Y-m-d');
-            $document->save();
+        $senderOfficeName = Offices::find($document->senderOffice);
+        $request->flash('item_name', $senderOfficeName->officeName);
+
+        $documentTypeName = DocumentType::find($document->docType);
+        $request->flash('docTypeName', $documentTypeName->documentName);
+
+        $document->save();
 
         TrackingLogs::create([
             'senderName' => $sender,
@@ -225,7 +211,7 @@ class DocumentsController extends Controller
         ]);
 
         // return response()->json($document);
-        return redirect('add-document')->with('message', 'Successfully Added!')->withInput($request->only('refNo', 'receiverOffice', 'docType'));
+        return redirect('add-document')->with('message', 'Successfully Added!');
         }
     }
 

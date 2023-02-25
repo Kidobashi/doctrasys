@@ -14,6 +14,7 @@ class Documents extends Model
     protected $fillable = [
         'id',
         'referenceNo',
+        'senderName',
         'senderOffice',
         'receiverOffice',
         'docType',
@@ -21,4 +22,14 @@ class Documents extends Model
         'createad_at',
         'email'
     ];
+
+    // public function office()
+    // {
+    //     return $this->hasOne(Offices::class);
+    // }
+
+    // public function docType()
+    // {
+    //     return $this->belongsTo(DocumentType::class);
+    // }
 }
