@@ -109,32 +109,32 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="printable-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    {{-- @if (session('qrpng'))
+    <h1>{{ session('qrpng') }}</h1>
+    @endif --}}
+    <img src='data:image/png;base64,../public/assets/qrcodes/qr20230226030613.png' />
+    <img src='data:image/png;base64,{{ asset('qrcodes/qr20230226030610.png') }}'>
+    <img src='data:image/png;base64,{{ $qr }}'>
+    <div class="modal fade m-0 p-0" id="printable-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Complete Details</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
 
             <div class="modal-body">
-                <p>
-                    {{ old('referenceNo') }}
-                </p>
-
-                @if(session('goods') )
-                <div class="alert alert-success">
-                    <p>{{ session('goods') }}</p>
-                    <p>{{ session('flashRefNo') }}</p>
-                    <p>{{ session('recv') }}</p>
-                    <p>{{ session('dctyp') }}</p>
+                @if(session('sndr') )
+                <div class="card p-3">
+                    <div class="card-body">
+                        <h5 class="card-title "><strong>Document Complete Details</strong></h5>
+                            <p>Document Reference Number:<span><h4>{{ session('flashRefNo') }}</h4></span></p>
+                            <p>Sending Office:<span><h4>{{ session('sndr') }}</h4></span></p>
+                            <p>Receiving Office:<span><h4>{{ session('recv') }}</h4></span></p>
+                            <p>Document Type:<span><h4>{{ session('dctyp') }}</h4></span></p>
+                            <img src="{{ session('qrcode') }}" alt="QR code">
+                        <a href="#" class="btn btn-primary">Download</a>
+                    </div>
                 </div>
-                @endif
             </div>
-            <div class="modal-footer">
+            @endif
+            <div class="modal-footer m-0 p-0">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>
