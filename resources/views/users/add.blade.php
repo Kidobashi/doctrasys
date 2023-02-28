@@ -1,6 +1,58 @@
 @extends('templates.user')
 @section('content')
 <style>
+    @media print {
+  /* Hide everything except the specified div */
+
+    body * {
+        visibility: hidden;
+    }
+    #printable-modal #mdl-con, #printable-modal #mdl-con * {
+    visibility: visible;
+    }
+    #printable-modal #mdl-con {
+        page-break-after: always;
+        width: 100vw;
+        height: 100vh;
+        margin: 0 auto;
+    }
+    @page {
+        size: A4;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 100px;
+        margin: 0 auto;
+    }
+
+    @page {
+        size: Letter;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 100px;
+        margin: 0 auto;
+    }
+
+    @page {
+        size: Legal;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 100px;
+        margin: 0 auto;
+    }
+
+    @page {
+        size: Folio;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 100px;
+        margin: 0 auto;
+    }
+}
+
     #qrdata{
         display: none;
     }
@@ -10,6 +62,11 @@
     }
 
     .button-container{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .modal-btn-container {
         display: flex;
         justify-content: space-between;
     }
@@ -36,30 +93,13 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                     <div class="details col-md-12 justify-content-center">
                         <div class="col-md-7">
                             <form id="post-form" method="POST" action="/add-documents">
-                                @csrf
-                            <div class="input-group my-3 ml-1 col-md-12">
-                                <span class="input-group-text" id="basic-addon1">Sender Name</span>
-                                <input type="text" class="form-control" name="senderName" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" readonly>
-                                <div class="mb-3" style="display: none;">
-                                    <input type="text" class="form-control" name="senderName" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" readonly>
-                                </div>
-                                @error('senderName')
-                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
+                            @csrf
 
                             <div id="invis-input" class="mb-3" style="display: none;">
+                                <input type="text" class="form-control" name="senderName" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" readonly>
                                 <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email }}" readonly>
                                 <input type="text" class="form-control" name="referenceNo" id="name" aria-label="Name" aria-describedby="name" value="{{ $refNo }}" readonly>
                                 <input type="text" class="form-control" name="senderOffice" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->assignedOffice }}" readonly>
-                            </div>
-
-                            <div class="input-group my-3 ml-1 col-md-12">
-                                <span class="input-group-text" id="basic-addon1">Sender Office</span>
-                                <input type="text" class="form-control" id="name" aria-label="Name" aria-describedby="name" value="{{ $senderOffice }}" readonly>
-                                @error('senderName')
-                                    <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
                             </div>
 
                             <div class="input-group my-3 ml-1 col-md-12">
@@ -84,9 +124,6 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         </select>
                             </div>
 
-                            <div class="btn-toolbar mb-2">
-
-                            </div>
                             <div class="btn-toolbar button-container">
                                 <button type="button" style="display:none;" id="printable-mdl-btn" class="btn btn-primary" data-toggle="modal" data-target="#printable-modal">
                                     Show Printable
@@ -109,114 +146,116 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             </div>
         </div>
     </div>
-    {{-- @if (session('qrpng'))
-    <h1>{{ session('qrpng') }}</h1>
-    @endif --}}
-    <img src='data:image/png;base64,../public/assets/qrcodes/qr20230226030613.png' />
-    <img src='data:image/png;base64,{{ asset('qrcodes/qr20230226030610.png') }}'>
-    <img src='data:image/png;base64,{{ $qr }}'>
+
     <div class="modal fade m-0 p-0" id="printable-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
+            <div class="modal-content">
 
-            <div class="modal-body">
-                @if(session('sndr') )
-                <div class="card p-3">
-                    <div class="card-body">
-                        <h5 class="card-title "><strong>Document Complete Details</strong></h5>
-                            <p>Document Reference Number:<span><h4>{{ session('flashRefNo') }}</h4></span></p>
-                            <p>Sending Office:<span><h4>{{ session('sndr') }}</h4></span></p>
-                            <p>Receiving Office:<span><h4>{{ session('recv') }}</h4></span></p>
-                            <p>Document Type:<span><h4>{{ session('dctyp') }}</h4></span></p>
-                            <img src="{{ session('qrcode') }}" alt="QR code">
-                        <a href="#" class="btn btn-primary">Download</a>
+                <div class="modal-body">
+                    @if(session('sndr') )
+                    <div class="container mdl-container m-0" id="mdl-con">
+                        <div class="row p-3" style="border-bottom: 1px solid black; display: flex; justify-content: center; align-items: center;">
+                            <div class="col-6 p-3 text-center"> <!-- 1/2 column width, centered -->
+                                <p>Document Reference Number:</p>
+                                <h2><strong>{{ session('flashRefNo') }}</strong></h2>
+                            </div>
+                            <div class="col-6 p-3 text-center" style="border-left: 1px solid black;"> <!-- 1/2 column width, centered -->
+                                <img src="{{ session('qrcode') }}" alt="QR code">
+                            </div>
+                        </div>
+                        <div class="row p-3" style="display: flex; justify-content: center; align-items: center;">
+                            <div class="col-4 text-center"> <!-- 1/3 column width, centered -->
+                                <p>Sending Office:</p>
+                                <h5>{{ session('sndr') }}</h5>
+                            </div>
+                            <div class="col-4 text-center" style="border-right: 1px solid black; border-left: 1px solid black;"> <!-- 1/3 column width, centered -->
+                                <p>Receiving Office:</p>
+                                <h5>{{ session('recv') }}</h5>
+                            </div>
+                            <div class="col-4 text-center"> <!-- 1/3 column width, centered -->
+                                <p>Document Type:</p>
+                                <h5>{{ session('dctyp') }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                  @endif
+
+                    <div class="modal-footer modal-btn-container m-0 p-0">
+                        <div style=" display: flex; justify-content: space-between;">
+                            <button class="btn btn-primary" id="download-btn" style="margin-right: 10px;">Download</button>
+                            <button class="btn btn-success" id="print-btn" onclick="printDiv()">Print</button>
+                        </div>
+                        <div class="">
+                            <button type="button" class="btn btn-secondary" id="close-btn" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            @endif
-            <div class="modal-footer m-0 p-0">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
 
 
-    <script>
-        $(document).ready(function() {
-            if ('{{ session('message') }}') {
-                $('#submit-doc-btn').hide();
-                $('#printable-mdl-btn').show();
-                $('#create-btn').show();
-                }
-            });
-        var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
-        keyboard: false,
-        backdrop: 'static',
-        show: false,
-        } )
-        // $('#post-form').submit(function(event) {
-        //     event.preventDefault();
-        //     $('#printable-modal').modal('show');
-
-        // });
-    </script>
 <script>
-    function liveUpdate()
-    {
-        // event.preventDefault();
-        const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
-        $.ajax({
-            url:"/getLiveUpdate",
-            type:'get',
-            data:{
-                CSRF_TOKEN
-            },
-            success:function (data) {
-                $(".refNumber").val(data);
-            },
-            complete:function(data)
-            {
-                setTimeout(liveUpdate, 3000);
-            }
-        })
+    $(document).ready(function()
+    {
+        if ('{{ session('message') }}')
+        {
+            $('#submit-doc-btn').hide();
+            $('#printable-mdl-btn').show();
+            $('#create-btn').show();
+        }
+    });
+
+    function printDiv() {
+    // Get the print CSS file and append it to the head
+    var printCss = document.createElement('link');
+    printCss.rel = 'stylesheet';
+    printCss.type = 'text/css';
+    printCss.href = '{{ asset('css/app.css') }}';
+    document.head.appendChild(printCss);
+
+    // Trigger the print dialog
+    window.print();
+
+    // Remove the print CSS file from the head
+    document.head.removeChild(printCss);
     }
 
-    $(document).ready(function(){
-    setTimeout(liveUpdate,3000);
+    const downloadBtn = document.getElementById('download-btn');
+    const contentDiv = document.getElementById('mdl-con'); // replace with the ID of your content div
+    const fileRefNo = {{ session('flashRefNo') }};
+
+    downloadBtn.addEventListener('click', () => {
+
+        // display the flash message on the page
+        const flashEl = document.createElement('div');
+        flashEl.innerText = fileRefNo;
+        document.body.appendChild(flashEl);
+
+        const filename = fileRefNo.toString().replace(/\W+/g, '-').toLowerCase() + '.pdf';
+        const options = {
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { format: 'letter', orientation: 'portrait' },
+        };
+
+        html2pdf()
+        .from(contentDiv)
+        .set(options)
+        .save();
+
+        // remove the flash message from the page
+        document.body.removeChild(flashEl);
     });
-</script>
-{{-- <script src="../../../public/js/html2canva.js"></script> --}}
-{{-- <script type="text/javascript" src="{{URL::asset('assets/js/html2canva.min.js')}}"></script>
-<script src="../public/assets/js/html2canva.min.js"></script> --}}
-{{-- <script>
-    document.getElementById("dl-png").onclick = function() {
-        const screenshotTarget = document.getElementById("qr");
 
-        html2canvas(screenshotTarget).then((canvas) => {
-            const base64image = canvas.toDataURL("image/png");
-            var anchor = document.createElement('a');
-            anchor.setAttribute("href", base64image);
-            anchor.setAttribute("download", "qrcode.png");
-            anchor.click();
-            anchor.remove();
-        });
-    };
-</script> --}}
+    var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+    keyboard: false,
+    backdrop: 'static',
+    show: false,
+    })
+    </script>
 <script>
-function showQr() {
-  var x = document.getElementById("qrdata");
-  var y = document.getElementById("dl-png");
-  if (x.style.display === "block") {
-    x.style.display = "none";
-    y.style.display = "none";
-  } else {
-    x.style.display = "block";
-    y.style.display = "block";
-  }
-}
-
 function downloadQr() {
     window.open('http://127.0.0.1:8000/download/'+{{ $refNo }});
     alert('Document is being downloaded...');
