@@ -16,6 +16,11 @@
         height: 100vh;
         margin: 0 auto;
     }
+
+    #mdl-con .first-row{
+        border-bottom: 1px solid black;
+    }
+
     @page {
         size: A4;
         position: fixed;
@@ -154,16 +159,16 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                 <div class="modal-body">
                     @if(session('sndr') )
                     <div class="container mdl-container m-0" id="mdl-con">
-                        <div class="row p-3" style="border-bottom: 1px solid black; display: flex; justify-content: center; align-items: center;">
+                        <div class="row first-row p-3" style="border-bottom: 1px solid black; display: flex; justify-content: center; align-items: center;">
                             <div class="col-6 p-3 text-center"> <!-- 1/2 column width, centered -->
                                 <p>Document Reference Number:</p>
                                 <h2><strong>{{ session('flashRefNo') }}</strong></h2>
                             </div>
-                            <div class="col-6 p-3 text-center" style="border-left: 1px solid black;"> <!-- 1/2 column width, centered -->
+                            <div class="col-6 p-3 text-center" id="img-only" style="border-left: 1px solid black;"> <!-- 1/2 column width, centered -->
                                 <img src="{{ session('qrcode') }}" alt="QR code">
                             </div>
                         </div>
-                        <div class="row p-3" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="row second-row p-3" style="display: flex; justify-content: center; align-items: center;">
                             <div class="col-4 text-center"> <!-- 1/3 column width, centered -->
                                 <p>Sending Office:</p>
                                 <h5>{{ session('sndr') }}</h5>
@@ -183,7 +188,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                     <div class="modal-footer modal-btn-container m-0 p-0">
                         <div style=" display: flex; justify-content: space-between;">
                             <button class="btn btn-primary" id="download-btn" style="margin-right: 10px;">Download</button>
-                            <button class="btn btn-success" id="print-btn" onclick="printDiv()">Print</button>
+                            <button class="btn btn-success" id="print-btn" style="margin-right: 10px;" onclick="printDiv()">Print</button>
+                            <button type="button" class="btn btn-outline-success" id="dl-img">Download (QR Code Image Only)</button>
                         </div>
                         <div class="">
                             <button type="button" class="btn btn-secondary" id="close-btn" data-dismiss="modal">Close</button>
@@ -213,6 +219,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     printCss.type = 'text/css';
     printCss.href = '{{ asset('css/app.css') }}';
     document.head.appendChild(printCss);
+
+    console.log();
 
     // Trigger the print dialog
     window.print();
@@ -247,6 +255,43 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
 
         // remove the flash message from the page
         document.body.removeChild(flashEl);
+    });
+
+    var qrImgDlBtn = document.getElementById("dl-img");
+
+    qrImgDlBtn.addEventListener("click", function() {
+        // Get the div element and the image element
+        var filename = "{{ session('flashRefNo') }}";
+        var div = document.getElementById("img-only");
+        var img = div.getElementsByTagName("img")[0];
+        var canvas = document.createElement("canvas");
+
+        // Create a new anchor element for downloading
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Draw the image on the canvas
+        var context = canvas.getContext("2d");
+            context.drawImage(img, 0, 0);
+
+        var base64 = canvas.toDataURL("image/png");
+
+        var downloadLink = document.createElement("a");
+
+        // Set the href attribute of the anchor element to the image source
+        downloadLink.href = base64;
+
+        // Set the download attribute of the anchor element to the image name
+        downloadLink.download = filename;
+
+        // Append the anchor element to the div
+        document.body.appendChild(downloadLink);
+
+        // Simulate a click on the anchor element to start the download
+        downloadLink.click();
+
+        // Remove the anchor element from the div
+        div.removeChild(downloadLink);
     });
 
     var myModal = new bootstrap.Modal(document.getElementById('myModal'), {

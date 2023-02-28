@@ -165,45 +165,19 @@ class DocumentsController extends Controller
             return redirect()->back()->with('message', "Successfully Added!")->with('dctyp', $flashDocType)->with('recv', $receiverOfficeName)->with('sndr', $senderOfficeName)->with('flashRefNo', $flashRefNo); //
         }
         else{
-        // $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url($refNo),'../public/qrcodes/qr'. $refNo .'.png');
-
-        $refNo = "$prefix$senderOffice$stringVal";
 
         $validatedData = $request->validate([
-            'referenceNo' => 'required',
             'senderName' => 'required',
+            'referenceNo' => 'required',
             'senderOffice' => 'required',
             'receiverOffice' => 'required',
             'docType' => 'required',
             'email' => 'required',
         ]);
 
+        $refNo = "$prefix$senderOffice$stringVal";
+
         Documents::create($validatedData);
-
-        $receiverOfficeName = Offices::findOrFail($validatedData['receiverOffice'])->officeName;
-        $senderOfficeName = Offices::findOrFail($validatedData['senderOffice'])->officeName;
-        $flashRefNo = $validatedData['referenceNo'];
-        $flashDocType = DocumentType::findOrFail($validatedData['docType'])->documentName;
-
-        // $document = new Documents();
-        // $document->senderName = $request->input('senderName');
-        // $document->email = $request->input('email');
-        // $document->senderOffice = $senderOffice;
-        // $document->receiverOffice = $request->input('receiverOffice');
-        // $document->docType = $request->input('docType');
-        // $document->referenceNo = $request->input('referenceNo');
-        // $document->created_at = date('Y-m-d');
-
-        // $receiverOfficeName = Offices::find($document->receiverOffice);
-        // $request->flash('receiverOfficeName', $receiverOfficeName->officeName);
-
-        // $senderOfficeName = Offices::find($document->senderOffice);
-        // $request->flash('item_name', $senderOfficeName->officeName);
-
-        // $documentTypeName = DocumentType::find($document->docType);
-        // $request->flash('docTypeName', $documentTypeName->documentName);
-
-        // $document->save();
 
         TrackingLogs::create([
             'senderName' => $sender,
@@ -212,7 +186,18 @@ class DocumentsController extends Controller
             'referenceNo' => $refNo,
         ]);
 
-        // return response()->json($document);
+        $receiverOfficeName = Offices::findOrFail($validatedData['receiverOffice'])->officeName;
+        $senderOfficeName = Offices::findOrFail($validatedData['senderOffice'])->officeName;
+        $flashRefNo = $validatedData['referenceNo'];
+        $flashDocType = DocumentType::findOrFail($validatedData['docType'])->documentName;
+
+        $qrs = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$flashRefNo));
+        $filename = 'qr'.$flashRefNo.'.png';
+        $filePath = public_path('qrcodes/') . $filename;
+        file_put_contents($filePath, $qrs);
+
+        session()->flash('qrcode', asset('qrcodes/' . $filename));
+
         return redirect('add-document')->with('message', 'Successfully Added!')->with('dctyp', $flashDocType)->with('recv', $receiverOfficeName)->with('sndr', $senderOfficeName)->with('flashRefNo', $flashRefNo);
         }
     }
