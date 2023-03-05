@@ -4,16 +4,58 @@
     <title>Tracking Information</title>
 </head>
 <style>
-#sendBack {
-    display: none;
-}
-#forward, #fixIssue {
-    display: none;
+
+.neo-btn {
+    padding-top: 10px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
 }
 
-#receive {
-    display: none;
+.red-neo-btn {
+    padding-top: 10px;
+    background-color: #dc3545;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
 }
+
+.red-neo-btn:hover
+{
+    background-color: black;
+    border-color: #bbbbbb;
+    color: #f94449;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+}
+.neo-btn:hover
+{
+    background-color: black;
+    border-color: #bbbbbb;
+    color: #ffffff;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.neo-btn:focus {
+  outline: none;
+}
+
 #message {
     position: fixed;
     text-align: center;
@@ -121,12 +163,20 @@ ul:not(first-child) ul{
 }
 
 @media screen and (max-width: 700px) {
-.highlights {
-    margin: 6px;
+
+.tracking-margin{
+    margin-top: 15px;
 }
 
-.docDetails {
-    margin-top: 10px;
+.vl{
+    display: none;
+}
+.highlights {
+    margin: 2px;
+}
+
+.docDetails h3{
+    font-size: 1rem;
 }
 .docDetails {
     display:flex;
@@ -172,168 +222,136 @@ h5{
 </style>
 This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
 <div class="col-md-12 d-flex justify-content-center">
-    <div class="col-md-10 row mx-3 rounded" style="padding:15px; background-color: #f5f5f5;border: 1px solid #d3d3d3;">
+    <div class="col-md-8 row py-4 mx-auto neomorphic-bg" style="border-radius:20px; border:1px solid #d3d3d3;">
         <h2 class="text-center">Document Details</h2>
-        <div class="docDetails">
-            <div class="d-inline highlights col-md-4 text-center">
-            <p>Reference Number</p>
-            <h1>{{$data->referenceNo}}</h1>
+        <div class="docDetails mt-2 m-0 p-0">
+            <div class="d-inline highlights col-md-4 text-center m-0 p-0">
+                <p>Reference Number</p>
+                @if (isset($data->referenceNo))
+                    <h3>{{ $data->referenceNo }}</h3>
+                @endif
             </div>
-            <div class="vl"></div>
-            <div class="d-inline highlights col-md-4 text-center">
+            <div class="vl">
+            </div>
+            <div class="d-inline highlights col-md-4 text-center m-0 p-0">
                 <p>Document Type</p>
-                <h1>@if (isset($docCategory->documentName))
-                   {{$docCategory->documentName}}
+                <h3>
+                    @if (isset($docCategory->documentName))
+                        {{ $docCategory->documentName }}
                     @endif
-                </h1>
+                </h3>
             </div>
-            <div class="vl"></div>
-            <div class="d-inline highlights col-md-4 text-center">
+            <div class="vl">
+            </div>
+            <div class="d-inline highlights col-md-4 text-center m-0 p-0">
                 <p>From</p>
-                <h1>{{$data->officeName}}</h1>
+                @if (isset($data->officeName))
+                    <h3>{{ $data->officeName }}</h3>
+                @endif
             </div>
         </div>
     </div>
 </div>
-<div class="col-md-12 d-flex justify-content-center">
-    <div class="col-md-10">
-        <hr>
+<div class="col-8 mx-auto">
+    @guest
+    <div class="col-md-6 mx-auto text-center neomorphic-bg">
+        <h3 class="font-italic">Login to modify document</h3>
     </div>
+@endguest
 </div>
-<div>
-
-    <div class="container col-lg-6">
-        <div class="row">
-            <div class="col-xxs-6 col-xs-4">
-            @if(session()->has('success'))
-                <div id="message" class="col-lg-5 bg-success rounded right-3 text-sm py-2 px-4">
-                    <h5 class="m-0">{{ session('success')}}</h5>
+    @auth
+    <div class="col-md-8 mx-auto p-3" style="border-radius: 20px;">
+        <div class="row" style="justify-content: space-between;">
+            <div class="col-md-3 col-sm-5">
+                @if ($status->status == 1)
+                <div class="neomorphic-bg d-flex justify-content-center">
+                {{-- Received Status --}}
+                    <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
+                        @csrf
+                        <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                        <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                        <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                        <button class="neo-btn btn" type="submit"><h2>Receive</h2></button>
+                    </form>
                 </div>
-            @endif
-            @if(session()->has('danger'))
-            <div id="message" class="col-lg-5 bg-danger rounded right-3 text-sm py-2 px-4">
-                <h5 class="m-0">{{ session('danger')}}</h5>
-            </div>
-            @endif
-
-                @guest
-                    <div class="text-center">
-                        <p class="font-italic">Login to modify document</p>
-                    </div>
-                @endguest
-
-                @auth
-                @if (isset($status) && $status->status == 1)
-                    <button class="btn btn-success" type="submit" onclick="showReceive()">Receive</button>
-                    <button type="button" class="btn btn-secondary" class="text-white" onclick="" disabled>Process</button>
-                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showForward()" disabled>Forward</button>
-                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showSendBack()" disabled>Send Back</button>
-                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
-                @endif
-                @if (isset($status) && $status->status == 2)
-                    <button class="btn btn-secondary" type="submit" onclick="showReceive()" disabled>Receive</button>
-                    @if (isset($data->referenceNo))
-                        <form action="process/{{ $data->referenceNo }}" method="post">
-                            @csrf
-                            <input type="text" style="display: none;" value="3" name="status">
-                            <button type="submit" class="btn btn-primary" class="text-white" onclick="">Process</button>
-                        </form>
-                    @endif
-                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showForward()" disabled>Forward</button>
-                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showSendBack()" disabled>Send Back</button>
-                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
-                @endif
-                @if (isset($status) && $status->status == 3)
-                    <button class="btn btn-secondary" type="submit" onclick="showReceive()" disabled>Receive</button>
-                    <button type="button" class="btn btn-secondary" class="text-white" onclick="" disabled>Process</button>
-                    <button type="button" class="btn btn-info" class="text-white" onclick="showForward()">Forward</button>
-                    <button type="button" class="btn btn-danger" class="text-white" onclick="showSendBack()">Send Back</button>
-                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
-                @endif
-                @if (isset($status) && $status->status == 4)
-                    <button class="btn btn-secondary" type="submit" onclick="showReceive()" disabled>Receive</button>
-                    <button type="button" class="btn btn-primary" class="text-white" onclick="">Process</button>
-                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showForward()" disabled>Forward</button>
-                    <button type="button" class="btn btn-secondary" class="text-white" onclick="showSendBack()" disabled>Send Back</button>
-                    <button class="btn btn-secondary text-white" onclick="fixIssue()" type="submit" disabled>Issue Fix</button>
-                @endif
-
-                @endauth
-                        @if (isset(Auth::user()->name))
-                        <div class="receive" id="receive">
-                            <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
-                            @csrf
-                                <h6>Confirm Receive</h6>
-
-                                <div class="mb-3">
-                                    {{-- <input type="text"  style="display:none;" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}"> --}}
-                                    <input class="form-control "type="text" style="display: none;" name='action' value="1">
-                                </div>
-                                    <button class="receive btn btn-success text-white" type="submit">Confirm</button>
-                            </form>
-                        </div>
-                        @endif
-
-                        <div class="fixIssue" id="fixIssue">
-                            <form class="fixIssue" action="fix-issue/{{ $data->referenceNo }}" method="post">
-                            @csrf
-                                <h6>Confirm Fix</h6>
-                                <div class="mb-3">
-                                </div>
-                                <div class="mb-3">
-                                    {{-- <input type="text"  style="display:none;" class="form-control" name="receiverOffice" value="{{ Auth::user()->assignedOffice }}"> --}}
-                                    <input class="form-control "type="text" style="display: none;" name='status' value="1">
-                                    <input class="form-control "type="text" style="display: none;" name='action' value="5">
-                                </div>
-                                    <button class="fixIssue btn btn-success text-white" type="submit">Confirm</button>
-                            </form>
-                        </div>
-
-                        <div class="sendBack" id="sendBack" style="width: 18rem;">
-                            <hr>
-                            <form class="sendBack" action="send-back/{{ $data->referenceNo }}" method="post">
+                @elseif ($status->status == 2)
+                {{-- Process Status --}}
+                    <form action="process/{{ $data->referenceNo }}" method="post">
+                        @csrf
+                        <input type="text" style="display: none;" value="3" name="status">
+                        <input type="text" style="display: none;" value="3" name="action">
+                        <button type="submit" class="neo-btn btn" onclick=""><h1>Process</h1></button>
+                    </form>
+                    @elseif ($status->status == 3)
+                {{-- Return/Forward --}}
+                    <div class="text-center justify-content-center">
+                        <div class="">
+                            <div class="neomorphic-bg text-center">
+                                <form action="rejected-return/{{ $data->referenceNo }}" method="post">
                                 @csrf
-                            <div class="card-body">
-                              <h5 class="card-title">Send Back</h5>
-                              <h6 class="card-subtitle mb-2 text-muted">Issue:</h6>
-                              <textarea class="card-text w-100" name="details" required></textarea>
-                              <input class="form-control "type="text" style="display: none;" name='status' value="3">
-                              <input class="form-control "type="text" style="display: none;" name='email'
-                              @if (isset(Auth::user()->email))
-                              value="{{ Auth::user()->email }}"
-                              @endif
-                              >
-                              <button type="submit" class="sendBack btn btn-danger" class="text-white">Send Report</button>
+                                    <h6>Is something wrong with the document?</h6>
+                                    <select class="form-control text-center" id="assignedOffice" name="primary_reason_of_return_id">
+                                    <option value="" selected disabled>Select
+                                    @foreach ($primaryReason as $row)
+                                        <option value="{{ $row->id }}">{{ $row->reason }}</option>
+                                        </option>
+                                    @endforeach
+                                    </select>
+                                    @foreach ($lacking as $row)
+                                        <div class="m-0 p-0">
+                                            <input type="checkbox" name="lacking_doc_id[]" value="{{ $row->id }}">
+                                            <label>{{ $row->name }}</label>
+                                        </div>
+                                    @endforeach
+                                    <textarea name="others" id="" cols="30" rows="10" placeholder="others"></textarea>
+                                    <input class="form-control "type="text" style="display: none;" name='receiverOffice_id' value="{{ $getDocumentCreator }}">
+                                    <input class="form-control "type="text" style="display: none;" name='status' value="5">
+                                    <input class="form-control "type="text" style="display: none;" name='action' value="5">
+                                    <button class="red-neo-btn btn mt-2 text-white" type="submit"><h6>Submit</h6></button>
                                 </form>
                             </div>
                         </div>
 
-                        @if (isset( Auth::user()->name ))
-                        <div class="forward" id="forward">
-                            <form class="forward" action="forwarded/{{ $data->referenceNo }}" method="post">
-                                @csrf
-                                <div class="container col-lg-10">
-                                <label for="">Forward to:</label>
-                                    <select class="form-control" id="assignedOffice" name="receiverOffice">
-                                    <option value="" selected disabled>Select Office
+                        <div class="mt-2">
+                            <div class="neomorphic-bg text-center">
+                                <form class="" action="forwarded/{{ $data->referenceNo }}" method="post">
+                                    @csrf
+                                    <h6>Forward Document to next the Office</h6>
+                                        <select class="form-control text-center" id="assignedOffice" name="receiverOffice">
+                                        <option value="" selected disabled>Select Office
                                         @foreach ($selectOffice as $row)
                                             <option value="{{ $row->id }}">{{ $row->officeName }}</option>
                                             </option>
                                         @endforeach
-                                    </select>
-
-                                    <div class="mb-3">
-                                        <input class="form-control "type="text" style="display: none;" name='action' value="2">
-                                    </div>
-                                <button class="forward" type="submit">Submit</button>
+                                        </select>
+                                        <input class="form-control "type="text" style="display: none;" name='action' value="4">
+                                        <input class="form-control "type="text" style="display: none;" name='status' value="4">
+                                        <button class="neo-btn px-4 mt-2" type="submit"><h2>Submit</h2></button>
+                                    </form>
                                 </div>
-                            </form>
+                            </div>
+                        </div>
+                        @elseif ($status->status == 4)
+                        {{-- Forward Form Status = 4 --}}
+
+                        @elseif ($status->status == 5)
+                        {{-- Report = 5 --}}
+                        <div class="neomorphic-bg text-center">
+                            @foreach ($boxArray as $item)
+                                @foreach ($item as $value)
+                                    <h1>{{ $value }}</h1>
+                                @endforeach
+                            @endforeach
                         </div>
                         @endif
-            <hr>
-            <h4>Tracking Information</h4>
-            <div class="col-xxs-6 col-xs-4" id="latestTrack">
-                    <div>
+            </div>
+
+            <div class="neomorphic-bg col-md-9 col-sm-7 tracking-margin">
+                <!-- 80% width on desktop, 50% width on mobile -->
+                    @if (isset($light->action))
+                        <h4>Tracking Information</h4>
+                        <div class="col-xxs-6 col-xs-4" id="latestTrack">
+                        <div>
                         @if ($light->action == 3)
                             <h5>In Circulation...</h5>
                         @elseif( $light->action == 1)
@@ -393,10 +411,37 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </li>
                                 <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
                             @endif
+                        @elseif (isset($light->action) === false)
+                            <h1>Empty</h1>
+                        @endif
                     </div>
+                    </div>
+                {{-- HISTORY DIV GOES HERE --}}
                 </div>
-            <hr>
+            </div>
+        </div>
     </div>
+    @endauth
+
+    <div class="container col-lg-6">
+        <div class="row">
+            <div class="col-xxs-6 col-xs-4">
+            @if(session()->has('success'))
+                <div id="message" class="col-lg-5 bg-success rounded right-3 text-sm py-2 px-4">
+                    <h5 class="m-0">{{ session('success')}}</h5>
+                </div>
+            @endif
+            @if(session()->has('danger'))
+            <div id="message" class="col-lg-5 bg-danger rounded right-3 text-sm py-2 px-4">
+                <h5 class="m-0">{{ session('danger')}}</h5>
+            </div>
+            @endif
+    </div>
+
+
+
+
+
   <!-- Modal -->
   <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -411,6 +456,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             {{-- {{ dd($altdata['prev']) }} --}}
             <div class="card col-lg-12" id="tracking">
                 @foreach($altdata['prev'] as $key => $prev)
+                @if (isset($altdata['trackings'][$key]->action))
                 <ul class="unor list-group list-group-flush">
                 <div class="section-header">
                     <li>
@@ -450,7 +496,6 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <p style="color:red;">Issue Details: {{ $issue->details }}</p>
                             Issue was reported by <i>{{ $issue->email }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
                         @endif
-                        {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                         <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                         <p><li class="">Status: <i>Has Issue</i></p>
                     @endif
@@ -462,7 +507,6 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             Issue was fixed by <i>{{ $status->email }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
                         @endif
                         Issue fixed by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
-                        {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
                         <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
                         @if($altdata['trackings'][$key]->action == 2)
                         <p><li class="">Status: <i>In Circulation</i></p>
@@ -474,6 +518,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </li>
                     </div>
                 </ul>
+                @endif
                 @endforeach
             </div>
         </div>
@@ -531,7 +576,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     }
 
   </script>
-  <script type="text/javascript">
+  {{-- <script type="text/javascript">
     (function(){
     $('.receive').on('submit', function(){
         $('.receive').attr('disabled','true');
@@ -564,7 +609,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             $('.sendBack').show();
         })
         })();
-        </script>
+        </script> --}}
     <script>
         $("document").ready(function(){
             setTimeout(function(){

@@ -18,9 +18,11 @@ return new class extends Migration
             $table->bigInteger('referenceNo');
             $table->string('email');
             $table->string('senderName');
-            $table->bigInteger('senderOffice');
-            $table->bigInteger('receiverOffice');
-            $table->bigInteger('status');
+            $table->unsignedBigInteger('senderOffice_id');
+            $table->unsignedBigInteger('receiverOffice_id');
+            $table->foreign('senderOffice_id')->references('id')->on('offices')->onDelete('cascade');
+            $table->foreign('receiverOffice_id')->references('id')->on('offices')->onDelete('cascade');
+            $table->bigInteger('status')->default(1);
             $table->bigInteger('docType');
             $table->timestamps();
         });

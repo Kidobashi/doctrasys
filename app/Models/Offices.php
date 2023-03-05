@@ -10,4 +10,9 @@ class Offices extends Model
     use HasFactory;
 
     protected $table='offices';
+
+    public function documents()
+    {
+        return $this->hasMany('App\Models\Document', 'office_id');
+    }
 }

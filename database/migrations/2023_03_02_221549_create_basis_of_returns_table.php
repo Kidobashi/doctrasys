@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tracking_logs', function (Blueprint $table) {
+        Schema::create('basis_of_returns', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('referenceNo');
-            $table->bigInteger('senderOffice');
-            $table->bigInteger('receiverOffice');
-            $table->bigInteger('status');
-            $table->string('prevReceiver')->nullable();
-            $table->string('prevOffice')->nullable();
-            $table->bigInteger('action')->nullable();
+            $table->string('referenceNumber');
+            $table->unsignedBigInteger('primary_reason_of_return_id')->references('id')->on('reasons_for_return')->onDelete('cascade')->nullable();
+            $table->string('lacking_doc_id')->nullable();
+            $table->text('others')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tracking_logs');
+        Schema::dropIfExists('basis_of_returns');
     }
 };

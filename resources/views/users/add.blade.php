@@ -24,25 +24,27 @@
     @page {
         size: A4;
         position: fixed;
-        width: 100vw;
+        width: 100%;
         height: 100vh;
         top: 100px;
-        margin: 0 auto;
+        margin: 0px;
+        scale: 2;
     }
 
     @page {
         size: Letter;
         position: fixed;
-        width: 100vw;
+        width: 100%;
         height: 100vh;
         top: 100px;
-        margin: 0 auto;
+        margin: 0px;
+        scale: 2;
     }
 
     @page {
         size: Legal;
         position: fixed;
-        width: 100vw;
+        width: 100%;
         height: 100vh;
         top: 100px;
         margin: 0 auto;
@@ -51,7 +53,7 @@
     @page {
         size: Folio;
         position: fixed;
-        width: 100vw;
+        width: 100%;
         height: 100vh;
         top: 100px;
         margin: 0 auto;
@@ -90,67 +92,56 @@
 
 This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
 <div class="container-fluid col-lg-6 col-md-6">
-    <div class="row">
-        <div class="card">
+    <div class="row neomorphic-bg">
+        <span><h1 class="display-6 text-center"><strong>Generate&nbsp;QR Code</strong></h1></span>
             <div class="card-body">
-                <span><h1 class="display-6 text-center"><strong>Generate&nbsp;QR Code</strong></h1></span>
-                <div class="card-body">
-                    <div class="details col-md-12 justify-content-center">
-                        <div class="col-md-7">
-                            <form id="post-form" method="POST" action="/add-documents">
-                            @csrf
+                <div class="details col-md-12 justify-content-center">
+                    <div class="col-md-7">
+                    <form id="post-form" method="POST" action="/add-documents">
+                    @csrf
 
-                            <div id="invis-input" class="mb-3" style="display: none;">
-                                <input type="text" class="form-control" name="senderName" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" readonly>
-                                <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email }}" readonly>
-                                <input type="text" class="form-control" name="referenceNo" id="name" aria-label="Name" aria-describedby="name" value="{{ $refNo }}" readonly>
-                                <input type="text" class="form-control" name="senderOffice" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->assignedOffice }}" readonly>
-                            </div>
-
-                            <div class="input-group my-3 ml-1 col-md-12">
-                                <span class="input-group-text" id="basic-addon1">Receiver Office</span>
-                                    <select class="form-control" id="assignedOffice" name="receiverOffice" required>
-                                    <option value="" selected disabled>Select Office
-                                        @foreach ($offices as $row)
-                                            <option value="{{ $row->id }}" {{ old('receiverOffice', $document->receiverOffice) == $row->id ? 'selected' : '' }}>{{ $row->officeName }}</option>
-                                            </option>
-                                        @endforeach
-                                    </select>
-                            </div>
-
-                            <div class="input-group my-3 ml-1 col-md-12">
-                                <span class="input-group-text" id="basic-addon1">Document Type</span>
-                                    <select class="form-control" id="" name="docType" required>
-                                    <option value="" selected disabled>Select Document Type
-                                        @foreach ($docType as $row)
-                                            <option value="{{ $row->id }}" {{ old('docType', $document->docType) == $row->id ? 'selected' : '' }}>{{ $row->documentName }}</option>
-                                            </option>
-                                        @endforeach
-                                        </select>
-                            </div>
-
-                            <div class="btn-toolbar button-container">
-                                <button type="button" style="display:none;" id="printable-mdl-btn" class="btn btn-primary" data-toggle="modal" data-target="#printable-modal">
-                                    Show Printable
-                                </button>
-                                <button class="btn btn-primary shadow mr-1" id="submit-doc-btn" type="submit">Submit</button>
-                                <button type="button" class="btn btn-success float-end" style="display:none;" id="create-btn" style="display: none;" onclick="location.href='{{ url()->current() }}';">Create New +</button>
-                            </div>
-                            </form>
-                        </div>
-
-                        <div id="qrdata" class="col-md-4 m-auto" style="width: 100%; height: 100%; max-width:280px; max-height:280px;">
-                            <div>
-                                @include('partials.qrcode')
-                            </div>
-                        </div>
-
-                        </div>
+                    <div id="invis-input" class="mb-3" style="display: none;">
+                        <input type="text" class="form-control" name="senderName" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" readonly>
+                        <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email }}" readonly>
+                        <input type="text" class="form-control" name="referenceNo" id="name" aria-label="Name" aria-describedby="name" value="{{ $refNo }}" readonly>
+                        <input type="text" class="form-control" name="senderOffice_id" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->assignedOffice }}" readonly>
                     </div>
+
+                    <div class="input-group my-3 ml-1 col-md-12">
+                        <span class="input-group-text" id="basic-addon1">Receiver Office</span>
+                            <select class="form-control" id="assignedOffice" name="receiverOffice_id" required>
+                            <option value="" selected disabled>Select Office
+                                @foreach ($offices as $row)
+                                    <option value="{{ $row->id }}" {{ old('receiverOffice_id', session('recv') ) == $row->id ? 'selected' : '' }}>{{ $row->officeName }}</option>
+                                    </option>
+                                @endforeach
+                            </select>
+                    </div>
+
+                    <div class="input-group my-3 ml-1 col-md-12">
+                        <span class="input-group-text" id="basic-addon1">Document Type</span>
+                            <select class="form-control" id="" name="docType" required>
+                            <option value="" selected disabled>Select Document Type
+                                @foreach ($docType as $row)
+                                    <option value="{{ $row->id }}" {{ old('docType', session('dctyp') ) == $row->id ? 'selected' : '' }}>{{ $row->documentName }}</option>
+                                    </option>
+                                @endforeach
+                            </select>
+                    </div>
+
+                    <div class="btn-toolbar button-container">
+                        <button type="button" style="display:none;" id="printable-mdl-btn" class="btn btn-primary" data-toggle="modal" data-target="#printable-modal">
+                            Show Printable
+                        </button>
+                        <button class="btn btn-primary shadow mr-1" id="submit-doc-btn" type="submit">Submit</button>
+                        <button type="submit" class="btn btn-success float-end" style="display:none;" id="create-btn" style="display: none;" >Create New +</button>
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <div class="modal fade m-0 p-0" id="printable-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -186,7 +177,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                   @endif
 
                     <div class="modal-footer modal-btn-container m-0 p-0">
-                        <div style=" display: flex; justify-content: space-between;">
+                        <div style="display: flex; justify-content: space-between;">
                             <button class="btn btn-primary" id="download-btn" style="margin-right: 10px;">Download</button>
                             <button class="btn btn-success" id="print-btn" style="margin-right: 10px;" onclick="printDiv()">Print</button>
                             <button type="button" class="btn btn-outline-success" id="dl-img">Download (QR Code Image Only)</button>
@@ -198,8 +189,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                 </div>
         </div>
     </div>
-
-
+</div>
 <script>
 
     $(document).ready(function()
@@ -299,11 +289,5 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     backdrop: 'static',
     show: false,
     })
-    </script>
-<script>
-function downloadQr() {
-    window.open('http://127.0.0.1:8000/download/'+{{ $refNo }});
-    alert('Document is being downloaded...');
-}
 </script>
 @endsection

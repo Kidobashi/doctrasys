@@ -4,7 +4,7 @@
     <p class="display-4">No documents found</p>
 @elseif (isset($sentBack) != 0)
     <div id="All">
-        <div class="container mb-2">
+        <div class="container neomorphic-bg mb-2">
             <div class="bg-white">
                 <div class="card">
                     <div class="grid-container d-flex col-md">

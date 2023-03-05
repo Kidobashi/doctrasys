@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Documents;
 use App\Models\DocumentType;
 use App\Models\Offices;
-use App\Models\TrackingLogs;
+use App\Models\TrackingHistory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,7 +27,7 @@ class DashboardController extends Controller
         $date = date('Y-m-d');
         $docsToday = Documents::where('created_at',  $date)->count();
 
-        $receivedDocs = TrackingLogs::where('action', 1)->groupby('referenceNo')->count();
+        $receivedDocs = TrackingHistory::where('action', 1)->groupby('referenceNo')->count();
 
         return view('dashboard')->with(['totalDocs' => $totalDocs])->with('sentBack', $sentBack)->with('taggedDocs', $taggedDocs)->with('circulatingDocs', $circulatingDocs)->with('receivedDocs', $receivedDocs)->with('docsToday', $docsToday);
     }

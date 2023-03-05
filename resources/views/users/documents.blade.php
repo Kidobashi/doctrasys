@@ -29,7 +29,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     <p class="display-4">No documents found</p>
 @elseif (isset($all) != 0)
     <div id="All">
-        <div class="container mb-2">
+        <div class="container neomorphic-bg mb-2">
             <div class="bg-white">
                 <div class="card">
                     <div class="grid-container d-flex col-md">
@@ -54,9 +54,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             </div>
         </div>
 
-        <div class="container">
+        <div class="container neomorphic-bg">
             <div class="card bg-white">
-                <div class="mx-3 my-1">
+                <div class="mx-3 my-1 p-2">
                     <a href="add-document"><button class="btn btn-success float-end" data-toggle="modal"><i class="fas fa-plus"></i></i></button></a>
                     <div class="card-header bg-white">
                         <h4>List of Documents</h4>
@@ -88,7 +88,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         @if ($doc->status == 1)
                                         <td><span class="badge bg-info d-inline">Circulating</span></td>
                                     @endif
-                                    <td class="text-center"><a href="http://127.0.0.1:8000/qrinfo/{{ $doc->referenceNo }}" title="Click for more Information"><i class="fa fa-link" aria-hidden="true"></i></a></td>
+                                    <td class="text-center"><a href="{{ url('qrinfo/'.$doc->referenceNo) }}" title="Click for more Information"><i class="fa fa-link" aria-hidden="true"></i></a></td>
                                 </tr>
                             @endforeach
                         </tbody>

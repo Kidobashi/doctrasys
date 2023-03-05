@@ -62,13 +62,46 @@
 <body>
 
 <style>
-    html {
-  -webkit-tap-highlight-color: transparent;
+/* Import the Montserrat font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+/* Set the font family for the body element */
+body {
+  font-family: 'Montserrat', sans-serif;
 }
-*{
-    font-family: 'Biryani', sans-serif;
-    font-family: 'Raleway', sans-serif;
-    font-style: normal;
+
+/* Style the heading element with Montserrat font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+/* Style the paragraphs with Montserrat font */
+p {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.neomorphic-bg {
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0px 10px 20px #c2c2c2, 0px -10px 20px #ffffff;
+  padding: 1rem;
+  border:1px solid #d3d3d3;
+}
+
+*:not(input) {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+html, body{
+    background-color:#dbdde6;
 }
 .content {
     width: 100%;
@@ -114,138 +147,15 @@
 .fa-sharp, .side-navbar a:hover:not(.active) {
   box-shadow: inset 550px 0 0 0 #000000;
   color: white;
-
   border-radius: 10px;
 }
 
 div.content {
   margin-left: 200px;
   padding: 1px 16px;
-  height: 1000px;
+  height: 100%;
+  padding-bottom: 50px;
 }
-
-/* @media screen and (max-width: 700px) {
-    html, body {
-        max-width: 700px;
-        display: block;
-    }
-  .side-navbar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    display: block;
-  }
-  .side-navbar {
-      display: block;
-    }
-  div.content {
-      margin-left: 0;
-    }
-  .display-4{
-      font-size: 28px;
-  }
-  .content{
-      position: relative;
-      justify-content: center;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .side-navbar a {
-    text-align: center;
-    float: none;
-  }
-  html, body {
-        max-width: 400px;
-        display: block;
-    }
-
-}
-@media screen and (max-width: 950px) {
-
-    html, body {
-        max-width: 950px;
-        display: block;
-    }
-    .side-navbar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    display: block;
-    justify-content: center;
-  }
-  div.content {
-      margin-left: 0;
-    }
-  .content{
-      position: relative;
-      justify-content: center;
-  }
-
-  .display-4{
-      font-size: 28px;
-  }
-
-  .side-navbar a {
-    text-align: center;
-    float: none;
-  }
-}
-
-@media screen and (max-width: 600px) {
-    .side-navbar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    display: block;
-    justify-content: center;
-  }
-  div.content {margin-left: 0;}
-  .content{
-      position: relative;
-      justify-content: center;
-  }
-  .display-4{
-      font-size: 24px;
-  }
-
-  .side-navbar a {
-    text-align: center;
-    float: none;
-  }
-}
-
-@media screen and (max-width: 1500px) {
-
-    html, body {
-        max-width: 1500px;
-        display: block;
-    }
-    .side-navbar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    display: block;
-  }
-  .side-navbar {
-      text-align: center;
-    }
-div.content {
-    margin-left: 0;
-}
-  .content{
-      position: relative;
-      justify-content: center;
-  }
-  .display-4{
-      font-size: 24px;
-  }
-
-  .side-navbar a {
-    text-align: center;
-    float: none;
-  }
-} */
 </style>
 @include('layouts.navbars.auth.nav')
 

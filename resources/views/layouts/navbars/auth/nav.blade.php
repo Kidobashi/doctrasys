@@ -39,6 +39,7 @@ nav a{
 
 #loginMobile, #myLinks, .mobileDropDown, .mobile-menu-container, .mobile-menu-container a{
     display: none;
+    z-index: 1;
 }
 
 #myLinks li {
@@ -55,12 +56,14 @@ nav a{
     display: block;
   }
 .mobile-menu-container {
-  overflow:hidden;
-  border: 1px solid grey;
-  background-color: green;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  padding: 0;
+    position: fixed;
+    overflow:hidden;
+    border: 1px solid grey;
+    background-color: green;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 0;
+    z-index: 1;
 }
 
 .mobile-menu-container a{
@@ -180,7 +183,7 @@ nav a{
   </nav>
 
 @auth
-<nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom pb-0">
+<nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom bg-success pb-0">
     <a class="nav-item nav-link pb-0 mb-0 {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
         <i class="fa-solid fa-location-dot fa-lg mb-3"></i>
         <p class="pb-0 mb-0">Tracking</p>

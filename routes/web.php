@@ -160,6 +160,9 @@ Route::get('searchByDate', [SearchController::class, 'dateFilter']);
 Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);
 Route::post('/filters/search',[ DocumentsController::class, 'searchTest'])->name('document.search');
 
+Route::post('/qrinfo/rejected-return/{referenceNo}', [QrController::class, 'returnRejectedDocument'])->name('document.rejectedReturn');
+
+
 Route::get('/getLiveUpdate', [DocumentsController::class, 'getOfficeByUser']);
 // Route::get('/fetch-names	', [DocumentsController::class, 'fetchNames']);
 Route::get('/', [HomeController::class, 'index']);

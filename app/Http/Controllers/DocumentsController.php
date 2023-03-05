@@ -6,17 +6,17 @@ use App\Models\Documents;
 use App\Models\DocumentType;
 use Illuminate\Http\Request;
 use App\Models\Offices;
-use App\Models\TrackingLogs;
+use App\Models\TrackingHistory;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Barryvdh\DomPDF\PDF as DomPDFPDF;
-use Dompdf\Dompdf;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
-use League\CommonMark\Node\Block\Document;
+// use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\PDF as DomPDFPDF;
+// use Dompdf\Dompdf;
+// use Illuminate\Pagination\LengthAwarePaginator;
+// use Illuminate\Pagination\Paginator;
+// use League\CommonMark\Node\Block\Document;
 
 class DocumentsController extends Controller
 {
@@ -27,38 +27,11 @@ class DocumentsController extends Controller
      */
     public function index()
     {
+        // Retrieve all documents from Documents class
         $docs = Documents::all();
 
+        // Pass documents data to users.index view
         return view('users.index', compact(['docs']));
-    }
-
-    public function getOfficeByUser(Request $request)
-    {
-        $last = DB::table('documents')->latest('id')->first();
-
-        $identity = $last->id;
-        $number = sprintf('%04d', $identity);
-        $prefix = date('Ymd');
-        // $prefix = strval(strftime("%Y%m%d"));
-        $month = strval(strftime("%M"));
-        $day = strval(strftime("%D"));
-        $stringVal = strval($number);
-        // $refNo = "$prefix$stringVal";
-
-        $senderOffice = Auth::user()->assignedOffice;
-
-        if($senderOffice < 10)
-        {
-            $extraZero = '0';
-            $refNo = "$prefix$extraZero$senderOffice$stringVal";
-
-            return response()->json($refNo);
-        }
-        else{
-            $refNo = "$prefix$senderOffice$stringVal";
-
-            return response()->json($refNo);
-        }
     }
     /**
      * Show the form for creating a new resource.
@@ -73,7 +46,7 @@ class DocumentsController extends Controller
 
         $users = User::all();
 
-        $last = DB::table('documents')->latest('id')->first();
+        // $last = DB::table('documents')->latest('id')->first();
 
         $assignedOffice = Auth::user()->assignedOffice;
 
@@ -83,11 +56,9 @@ class DocumentsController extends Controller
 
         $document = new Documents();
 
-        $identity = $last->id + 1;
+        $identity = 1;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
-        // $month = strval(strftime("%M"));
-        // $day = strval(strftime("%D"));
         $stringVal = strval($number);
 
         if($senderOffice < 10)
@@ -114,93 +85,51 @@ class DocumentsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
-        //
-        $sender = Auth::user()->name;
-        $senderOffice = Auth::user()->assignedOffice;
+     public function store(Request $request)
+     {
+         //
+         $sender = Auth::user()->name;
+         $senderOffice = Auth::user()->assignedOffice;
 
-        $last = DB::table('documents')->latest('id')->first();
+         $validatedData = $request->validate([
+             'senderName' => 'required',
+             'referenceNo' => 'required',
+             'senderOffice_id' => 'required',
+             'receiverOffice_id' => 'required',
+             'docType' => 'required',
+             'email' => 'required',
+         ]);
 
-        $identity = $last->id;
-        $number = sprintf('%04d', $identity);
-        $prefix = date('Ymd');
-        $stringVal = strval($number);
+         Documents::create($validatedData);
 
-        if($senderOffice < 10)
-        {
-            $extraZero = '0';
-            $refNo = "$prefix$extraZero$senderOffice$stringVal";
+         TrackingHistory::create([
+             'senderName' => $validatedData['senderName'],
+             'senderOffice' => $validatedData['senderOffice_id'],
+             'receiverOffice' => $validatedData['receiverOffice_id'],
+             'referenceNo' => $validatedData['referenceNo'],
+             'status' => 1,
+             'action' => 1,
+         ]);
 
-        $validatedData = $request->validate([
-            'senderName' => 'required',
-            'referenceNo' => 'required',
-            'senderOffice' => 'required',
-            'receiverOffice' => 'required',
-            'docType' => 'required',
-            'email' => 'required',
-        ]);
+         $receiverOfficeName = Offices::findOrFail($validatedData['receiverOffice_id'])->officeName;
+         $senderOfficeName = Offices::findOrFail($validatedData['senderOffice_id'])->officeName;
+         $flashRefNo = $validatedData['referenceNo'];
+         $flashDocType = DocumentType::findOrFail($validatedData['docType'])->documentName;
 
-        Documents::create($validatedData);
+         $qrs = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$flashRefNo));
+         $filename = 'qr'.$flashRefNo.'.png';
+         $filePath = public_path('qrcodes/') . $filename;
+         file_put_contents($filePath, $qrs);
 
-        TrackingLogs::create([
-            'senderName' => $sender,
-            'senderOffice' => $senderOffice,
-            'receiverOffice' => request('receiverOffice'),
-            'referenceNo' => $refNo,
-        ]);
+         session()->flash('qrcode', asset('qrcodes/' . $filename));
 
-        $receiverOfficeName = Offices::findOrFail($validatedData['receiverOffice'])->officeName;
-        $senderOfficeName = Offices::findOrFail($validatedData['senderOffice'])->officeName;
-        $flashRefNo = $validatedData['referenceNo'];
-        $flashDocType = DocumentType::findOrFail($validatedData['docType'])->documentName;
-
-        $qrs = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$flashRefNo));
-        $filename = 'qr'.$flashRefNo.'.png';
-        $filePath = public_path('qrcodes/') . $filename;
-        file_put_contents($filePath, $qrs);
-
-        session()->flash('qrcode', asset('qrcodes/' . $filename));
-
-            return redirect()->back()->with('message', "Successfully Added!")->with('dctyp', $flashDocType)->with('recv', $receiverOfficeName)->with('sndr', $senderOfficeName)->with('flashRefNo', $flashRefNo); //
-        }
-        else{
-
-        $validatedData = $request->validate([
-            'senderName' => 'required',
-            'referenceNo' => 'required',
-            'senderOffice' => 'required',
-            'receiverOffice' => 'required',
-            'docType' => 'required',
-            'email' => 'required',
-        ]);
-
-        $refNo = "$prefix$senderOffice$stringVal";
-
-        Documents::create($validatedData);
-
-        TrackingLogs::create([
-            'senderName' => $sender,
-            'senderOffice' => $senderOffice,
-            'receiverOffice' => request('receiverOffice'),
-            'referenceNo' => $refNo,
-        ]);
-
-        $receiverOfficeName = Offices::findOrFail($validatedData['receiverOffice'])->officeName;
-        $senderOfficeName = Offices::findOrFail($validatedData['senderOffice'])->officeName;
-        $flashRefNo = $validatedData['referenceNo'];
-        $flashDocType = DocumentType::findOrFail($validatedData['docType'])->documentName;
-
-        $qrs = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$flashRefNo));
-        $filename = 'qr'.$flashRefNo.'.png';
-        $filePath = public_path('qrcodes/') . $filename;
-        file_put_contents($filePath, $qrs);
-
-        session()->flash('qrcode', asset('qrcodes/' . $filename));
-
-        return redirect('add-document')->with('message', 'Successfully Added!')->with('dctyp', $flashDocType)->with('recv', $receiverOfficeName)->with('sndr', $senderOfficeName)->with('flashRefNo', $flashRefNo);
-        }
+         return redirect()->back()->with('message', "Successfully Added!")
+                             ->with('dctyp', $flashDocType)
+                             ->with('recv', $receiverOfficeName)
+                             ->with('sndr', $senderOfficeName)
+                             ->with('flashRefNo', $flashRefNo);
     }
+
 
     /**
      * Display the specified resource.
@@ -210,14 +139,7 @@ class DocumentsController extends Controller
      */
     public function show($id)
     {
-        //
-        // $assignedOffice = Auth::user()->assignedOffice;
 
-        // $senderOffice = Offices::where('id', $assignedOffice)->pluck('officeName');
-
-        // dd($senderOffice);
-
-        // return view('users.add')->with('senderOffice', $senderOffice);
     }
 
     /**
@@ -254,62 +176,44 @@ class DocumentsController extends Controller
         //
     }
 
-    public function fileGenerator($token)
-    {
-        $last = DB::table('documents')->latest('id')->first();
-        $identity = $last->id + 1;
-        $number = sprintf('%04d', $identity);
-        $prefix = date('Ymd');
-        // $prefix = strval(strftime("%Y%m%d"));
-        $month = strval(strftime("%M"));
-        $day = strval(strftime("%D"));
-        $stringVal = strval($number);
-        $refNo = "$prefix$stringVal";
-
-        $pdf = PDF::loadView('users.testpdf')->setOptions(['defaultFont' => 'sans-serif']);
-
-        return $pdf->download('doc_qr_'.$refNo.'.pdf');
-    }
-
     public function userDocs()
     {
-        $userDocs = Auth::user()->email;
+        $userEmail = Auth::user()->email;
 
         $offices = Offices::all();
 
-        $all = Documents::where('email', $userDocs)
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->orderBy('created_at', 'DESC')->paginate(20);
+        $all = Documents::where('email', $userEmail)
+            ->join('offices', 'receiverOffice_id', 'offices.id')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(20);
 
         return view('users.documents')->with(['all' => $all])->with(['offices' => $offices]);
     }
 
     public function circulatingDocs()
     {
-        $userDocs = Auth::user()->email;
+        $userEmail = Auth::user()->email;
 
-        $offices = Offices::all();
+        $circulating = Documents::where('email', $userEmail)
+            ->join('offices', 'receiverOffice_id', 'offices.id')
+            ->where('status', 1)
+            ->orderBy('created_at', 'DESC')
+            ->paginate(20);
 
-        $circulating = Documents::where('email', $userDocs)
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('status', 1)
-        ->orderBy('created_at', 'DESC')->paginate(20);
-
-        return view('users.documentList.circulatingDocs')->with(['circulating' => $circulating])->with(['offices' => $offices]);
+        return view('users.documentList.circulatingDocs')->with(['circulating' => $circulating]);
     }
 
     public function completedDocs()
     {
-        $userDocs = Auth::user()->email;
+        $userEmail = Auth::user()->email;
 
-        $offices = Offices::all();
+        $completed = Documents::where('email', $userEmail)
+            ->join('offices', 'receiverOffice_id', 'offices.id')
+            ->where('status', 2)
+            ->orderBy('created_at', 'DESC')
+            ->paginate(20);
 
-        $completed = Documents::where('email', $userDocs)
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('status', 2)
-        ->orderBy('created_at', 'DESC')->paginate(20);
-
-        return view('users.documentList.completedDocs')->with(['completed' => $completed])->with(['offices' => $offices]);
+        return view('users.documentList.completedDocs')->with(['completed' => $completed]);
     }
 
     public function sentBackDocs()
@@ -319,25 +223,10 @@ class DocumentsController extends Controller
         $offices = Offices::all();
 
         $sentBack = Documents::where('email', $userDocs)
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('status', 3)
-        ->orderBy('created_at', 'DESC')->paginate(20);
+            ->join('offices', 'receiverOffice_id', 'offices.id')
+            ->where('status', 3)
+            ->orderBy('created_at', 'DESC')->paginate(20);
 
         return view('users.documentList.sentBackDocs')->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
     }
-
-    // public function fetchNames(Request $request)
-    // {
-    //     $officeFrom = $request->input('senderOfficeId');
-    //     $officeTo = $request->input('receiverOfficeOfficeId');
-    //     $docType = $request->input('docTypeId');
-
-    //     $senderOfficeName = Offices::where('id', $officeFrom)->pluck('officeName');
-    //     $receiverOfficeName = Offices::where('id', $officeTo)->pluck('officeName');
-    //     $docTypeName = DocumentType::where('id', $docType)->pluck('documentName');
-
-    //     return response()->json(['officeFrom' => $officeFrom, 'officeTo' => $officeTo, 'docType' => $docType]);
-
-    //     // return response()->json(['senderOfficeName' => $senderOfficeName, 'receiverOfficeName' => $receiverOfficeName, 'docTypeName' => $docTypeName]);
-    // }
 }

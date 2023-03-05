@@ -14,29 +14,21 @@ class QrComposer
     {
         $last = DB::table('documents')->latest('id')->first();
 
-        $identity = $last->id;
+        $identity = $last->id + 1;
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
         $stringVal = strval($number);
 
         $senderOffice = Auth::user()->assignedOffice;
 
-        if($senderOffice < 10)
-        {
+        if($senderOffice < 10) {
             $extraZero = '0';
             $refNo = "$prefix$extraZero$senderOffice$stringVal";
-            $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$refNo));
-            $qr = base64_encode($qr);
-
-            $view->with('qr', $qr)->with('refNo', $refNo);
-        }
-        else{
+        } else {
             $refNo = "$prefix$senderOffice$stringVal";
-
-            $qr = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$refNo));
-            $qr = base64_encode($qr);
-
-            $view->with('qr', $qr)->with('refNo', $refNo);
         }
+
+        $view->with('refNo', $refNo);
     }
+
 }
