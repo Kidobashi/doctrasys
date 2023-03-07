@@ -49,7 +49,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani&family=Raleway:wght@600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-
+    <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css">
 
@@ -200,7 +200,7 @@ div.content {
             toastr.warning("{{ session('warning') }}");
     @endif
   </script>
-
+    <script src="/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
   <script>
     // $('#post-modal').modal({
     //     keyboard: false

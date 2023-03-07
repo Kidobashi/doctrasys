@@ -4,7 +4,20 @@
     <title>Tracking Information</title>
 </head>
 <style>
+ .indicator {
 
+ }
+.circle {
+  position: absolute;
+  top: 0;
+  left: -3px;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(65deg, #89e981, #28a745);
+  box-shadow: -10px -10px 20px #d9d9d9, 10px 10px 20px #ffffff;
+}
 .neo-btn {
     padding-top: 10px;
     background-color: #ffffff;
@@ -299,7 +312,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     </select>
                                     @foreach ($lacking as $row)
                                         <div class="m-0 p-0">
-                                            <input type="checkbox" name="lacking_doc_id[]" value="{{ $row->id }}">
+                                            <input type="checkbox" name="lacking_doc_id[]" value="{{ $row->name }}">
                                             <label>{{ $row->name }}</label>
                                         </div>
                                     @endforeach
@@ -337,85 +350,126 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($status->status == 5)
                         {{-- Report = 5 --}}
                         <div class="neomorphic-bg text-center">
-                            @foreach ($boxArray as $item)
-                                @foreach ($item as $value)
-                                    <h1>{{ $value }}</h1>
-                                @endforeach
-                            @endforeach
+
                         </div>
                         @endif
             </div>
 
-            <div class="neomorphic-bg col-md-9 col-sm-7 tracking-margin">
+            <div class="col-md-9 col-sm-7">
                 <!-- 80% width on desktop, 50% width on mobile -->
-                    @if (isset($light->action))
-                        <h4>Tracking Information</h4>
-                        <div class="col-xxs-6 col-xs-4" id="latestTrack">
-                        <div>
-                        @if ($light->action == 3)
-                            <h5>In Circulation...</h5>
-                        @elseif( $light->action == 1)
-                        {{ $light->created_at->diffForHumans() }}
-                            <h5>&nbsp;Received by <i>{{ $light->receiverName }}&nbsp;-&nbsp;<i>{{ $light->officeName }}</i></h5>
-                                <li class="">Date Received: <i>{{ date_format($light->created_at,'M d Y h:i A')}}</i></li>
-                                @if($light->action == 2)
-                                <p><li class="">Status: <i>In Circulation</i></p>
-                                @endif
-                                @if($light->action == 1)
-                                    <p><li class="">Status: <i>Processing...</i></p>
-                                        <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
-                                @endif
-                            @elseif( $light->action == 2)
-                        {{ $light->created_at->diffForHumans() }}
-                            <h5>&nbsp;Forwarded to <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
-                                {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
-                                <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
-                                <li class="">Forwarded by: <b>{{ $light->prevReceiver }}</b> - <i>{{ $lightPrev->officeName }}</i></li>
-                                @if($light->action == 2)
-                                <p><li class="">Status: <i>In Circulation</i></p>
-                                @endif
-                                @if($light->action == 1)
-                                    <p><li class="">Status: <i>Processing...</i></p>
-                                @endif
-                                </li>
-                                <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
-                            @elseif( $light->action == 4)
-                            {{ $light->created_at->diffForHumans() }}
-                                <h5>Something is wrong...</h5>
-                                @if (isset($issue))
-                                    <p>Issue Details: {{ $issue->details }}</p>
-                                @endif
-                            <h5>&nbsp;Sent by <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
-                                {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
-                                <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
-                                @if($light->action == 2)
-                                <p><li class="">Status: <i>In Circulation</i></p>
-                                @endif
-                                @if($light->action == 1)
-                                    <p><li class="">Status: <i>Processing...</i></p>
-                                @endif
-                                </li>
-                                <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
-                                @elseif( $light->action == 5)
-                            {{ $light->created_at->diffForHumans() }}
-                                <h5>Issue was fixed</h5>
-                            <h5>&nbsp;Sent by <i>{{ $light->receiverName }} &nbsp;-&nbsp; <i>{{ $light->officeName }}</i></i></h5>
-                                {{-- <li class="">Forwarded to: <i>{{ $light->officeName }}</i></li> --}}
-                                <li class="">Date Forwarded: <i>{{ date_format($light->created_at,'M d Y h:i a')}}</i></li>
-                                @if($light->action == 2)
-                                <p><li class="">Status: <i>In Circulation</i></p>
-                                @endif
-                                @if($light->action == 1)
-                                    <p><li class="">Status: <i>Processing...</i></p>
-                                @endif
-                                </li>
-                                <button type="button" data-toggle="modal" data-target="#exampleModalLong" class="btn btn-primary" style="background:white; color:#1B3FAB;"><strong>Show Tracking</strong></button>
-                            @endif
-                        @elseif (isset($light->action) === false)
-                            <h1>Empty</h1>
+                <h2>History</h2>
+                    @if (isset($latestTracking->status))
+                        @if ( $latestTracking->status == 1 )
+                            <h1>Status 1</h1>
+                        @elseif( $latestTracking->status == 2 )
+                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
+                            <div class="m-auto text-center">
+                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="py-4 m-auto">
+                                <div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div style="border-radius: 20px; background-color: white;">
+                                            <i class="fas fa-check fa-4x p-2 text-primary"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-auto" style="width:40px;">
+                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #28a745; height: 8rem;">
+                                    <div class="circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg p-auto">
+                                <h5>Received</h5>
+                            </div>
+                        </div>
+                        @elseif( $latestTracking->status == 3 )
+                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
+                            <div class="m-auto text-center">
+                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="py-4 m-auto">
+                                <div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div style="border-radius: 20px; background-color: white;">
+                                            <i class="fas fa-spinner fa-spin fa-4x p-2 text-primary"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-auto" style="width:40px;">
+                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #28a745; height: 8rem;">
+                                    <div class="circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg p-auto">
+                                <h5>Processing</h5>
+                            </div>
+                        </div>
+                        @elseif( $latestTracking->status == 4 )
+                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
+                            <div class="m-auto text-center">
+                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="py-4 m-auto">
+                                <div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div style="border-radius: 20px; background-color: white;">
+                                            <i class="fas fa-envelope fa-4x p-2  text-success"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-auto" style="width:40px;">
+                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #28a745; height: 8rem;">
+                                    <div class="circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg p-auto">
+                                <h5>Forwarded</h5>
+                            </div>
+                        </div>
+                        @elseif( $latestTracking->status == 5 )
+                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
+                            <div class="m-auto text-center">
+                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="py-4 m-auto">
+                                <div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div style="border-radius: 20px; background-color: white;">
+                                            <i class="fas fa-exclamation-circle fa-4x p-2  text-danger"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-auto" style="width:40px;">
+                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #28a745; height: 8rem;">
+                                    <div class="circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg p-auto">
+                                <h5>Has Issue Status 5</h5>
+                                @foreach ($boxArray as $item)
+                                    @foreach ($item as $value)
+                                        <p class="m-0 p-0">{{ $value }}</p>
+                                    @endforeach
+                                @endforeach
+                            </div>
+                        </div>
                         @endif
-                    </div>
-                    </div>
+                    @elseif (isset($light->action) === false)
+                            <h1>Empty</h1>
+                    @endif
                 {{-- HISTORY DIV GOES HERE --}}
                 </div>
             </div>

@@ -56,7 +56,7 @@ class QrController extends Controller
                      ->first();
 
     // Fetch tracking log info from DB using reference no, sorted by newest to oldest.
-    $light = TrackingHistory::join('offices', 'receiverOffice', 'offices.id')
+    $latestTracking = TrackingHistory::join('offices', 'receiverOffice', 'offices.id')
                          ->where('referenceNo', 'LIKE', "%{$referenceNo}%")
                          ->latest()
                          ->first();
@@ -110,12 +110,12 @@ class QrController extends Controller
         ->with('docCategory', $docCategory)
         ->with('data', $data)
         ->with('lightPrev', $lightPrev)
-        ->with('light', $light)
+        ->with('getDocumentCreator', $getDocumentCreator)
+        ->with('latestTracking', $latestTracking)
         ->with(['altdata' => $altdata])
         ->with(['selectOffice' => $selectOffice])
         ->with(['lacking'=> $lacking])
         ->with(['primaryReason'=> $primaryReason])
-        ->with('getDocumentCreator', $getDocumentCreator)
         ->with(['boxArray' => $unserialized]);
     }
 
