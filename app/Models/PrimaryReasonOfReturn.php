@@ -10,4 +10,11 @@ class PrimaryReasonOfReturn extends Model
     use HasFactory;
 
     protected $table='primary_reason_of_returns';
+
+    
+
+    public function basisOfReturn()
+    {
+        return $this->belongsTo(BasisOfReturn::class);
+    }
 }

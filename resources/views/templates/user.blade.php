@@ -82,7 +82,7 @@ h1, h2, h3, h4, h5, h6 {
 p {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 1em;
   line-height: 1.5;
 }
 .neomorphic-bg {
@@ -202,17 +202,6 @@ div.content {
   </script>
     <script src="/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
   <script>
-    // $('#post-modal').modal({
-    //     keyboard: false
-    // })
-      var menu_btn = document.querySelector("#iconNavbarSidenav");
-      var sidebar = document.querySelector("#sidebar");
-      var container = document.querySelector(".my-container");
-      menu_btn.addEventListener("click", () => {
-      sidebar.classList.toggle("active-nav");
-      container.classList.toggle("active-cont");
-    });
-
     $(document).ready(function () {
 
     $('ul.nav-item > li')

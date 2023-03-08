@@ -14,8 +14,12 @@ class BasisOfReturn extends Model
     protected $fillable = [
         'lacking_doc_id',
         'others',
-        'primary_reason_of_return',
+        'primary_reason_of_return_id',
         'referenceNumbers',
     ];
 
+    public function primaryReason()
+    {
+        return $this->hasMany(PrimaryReasonOfReturn::class);
+    }
 }

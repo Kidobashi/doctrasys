@@ -137,7 +137,7 @@ Route::get('/documents/sentBack', [DocumentsController::class, 'sentBackDocs']);
 //Qr Controllers
 Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo']);
 Route::get('forward/{referenceNo}', [QrController::class, 'forward']);
-Route::post('qrinfo/forwarded/{referenceNo}', [QrController::class, 'update']);
+Route::post('qrinfo/forward/{referenceNo}', [QrController::class, 'forwardDoc']);
 Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
 Route::post('qrinfo/received/{referenceNo}', [QrController::class, 'receiveDoc']);
 Route::post('qrinfo/send-back/{referenceNo}', [QrController::class, 'sendBack']);
@@ -145,6 +145,9 @@ Route::post('qrinfo/fix-issue/{referenceNo}', [QrController::class, 'fixIssue'])
 Route::post('qrinfo/process/{referenceNo}' , [QrController::class, 'processDoc']);
 Route::get('/search', [QrController::class, 'search']);
 Route::get('/altSearch', [QrController::class, 'altSearch']);
+Route::post('/qrinfo/rejected/{referenceNo}', [QrController::class, 'rejectDocument'])->name('document.reject');
+Route::post('/qrinfo/return-to-sender/{referenceNo}', [QrController::class, 'returnToSender']);
+Route::post('/qrinfo/resubmit/{referenceNo}', [QrController::class, 'resubmitDoc']);
 
 
 
@@ -159,8 +162,6 @@ Route::delete('delDocType/{id}', [DashboardController::class, 'deleteDocType']);
 Route::get('searchByDate', [SearchController::class, 'dateFilter']);
 Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);
 Route::post('/filters/search',[ DocumentsController::class, 'searchTest'])->name('document.search');
-
-Route::post('/qrinfo/rejected-return/{referenceNo}', [QrController::class, 'returnRejectedDocument'])->name('document.rejectedReturn');
 
 
 Route::get('/getLiveUpdate', [DocumentsController::class, 'getOfficeByUser']);

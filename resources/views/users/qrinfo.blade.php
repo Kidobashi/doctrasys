@@ -4,10 +4,48 @@
     <title>Tracking Information</title>
 </head>
 <style>
- .indicator {
 
- }
-.circle {
+.fa-spin.spin-reverse{
+    -webkit-animation-direction:reverse;
+     -moz-animation-direction:reverse;
+    animation-direction:reverse;
+}
+
+.gray-circle {
+    position: absolute;
+    top: 0;
+    left: -3px;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(65deg, #98a3b3, #6c757d);
+    box-shadow: -10px -10px 20px #d9d9d9, 10px 10px 20px #ffffff;
+}
+.blue-circle {
+    position: absolute;
+    top: 0;
+    left: -3px;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(65deg, #0d6efd, #0d48a1);
+    box-shadow: -10px -10px 20px #d9d9d9, 10px 10px 20px #ffffff;
+}
+
+.red-circle {
+    position: absolute;
+    top: 0;
+    left: -3px;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(65deg, #d6402c, #dc3545);
+    box-shadow: -10px -10px 20px #d9d9d9, 10px 10px 20px #ffffff;
+}
+.green-circle {
   position: absolute;
   top: 0;
   left: -3px;
@@ -69,99 +107,6 @@
   outline: none;
 }
 
-#message {
-    position: fixed;
-    text-align: center;
-    margin: auto;
-    justify-content: center;
-    z-index: 2;
-}
-
-#message h5{
-    padding: 50px 0px;
-    color: white;
-}
-li .comments:nth-child(1){
-    display: none;
-}
-
-li .comments:nth-child(2){
-    display: none;
-}
-
-li .comments:nth-child(3){
-    display: none;
-}
-
-li .comments:nth-child(4){
-    display: none;
-}
-
-.top-arrow {
-    position: relative;
-    right: 65px;
-    border: 3px solid #22303c;
-    background-color: #adefd1ff;
-    border-radius: 100%;
-	display: inline-block;
-	width: 1.75rem;
-	height: 1.75rem;
-	color: #222;
-	transform: rotate(-135deg);
-    z-index: 10;
-}
-.card ul{
-  border-left: 2px solid green;
-  padding-left: 50px;
-}
-
-.card ul:last-child {
-    border-width: 0;
-}
-.section-header {
-  justify-content: space-between;
-}
-
-#latestTrack, #latestTrack h5{
-    color: white;
-    background: #04426E;
-    padding-bottom: 15px;
-    border-radius: 20px;
-    padding: 10px;
-    text-align: center;
-    list-style: none;
-}
-
-#tracking ul:first-child{
-    display: none;
-    z-index: 1;
-}
-ul:first-child h5{
-    color: white;
-    z-index: 1;
-}
-
-ul:not(first-child) li{
-    color: black;
-    list-style-type: none;
-    z-index: 1;
-}
-
-ul:not(first-child) ul{
-    color: black;
-    list-style-type: square;
-    z-index: 1;
-}
-
-#tracking {
-  z-index: 1;
-}
-
-#tracking:target{
-  display: block;
-  z-index: 1;
-}
-
 .docDetails {
     display: flex;
 }
@@ -176,61 +121,41 @@ ul:not(first-child) ul{
 }
 
 @media screen and (max-width: 700px) {
-
-.tracking-margin{
-    margin-top: 15px;
-}
-
-.vl{
-    display: none;
-}
-.highlights {
-    margin: 2px;
-}
-
-.docDetails h3{
-    font-size: 1rem;
-}
-.docDetails {
-    display:flex;
-    flex-direction: column;
-}
-
-.docDetails h2 {
-    font-size: 16px;
-}
-
-.docDetails h1{
-    font-size: 18px;
-    font-weight: 800;
-}
-
-.docDetails p{
-    font-size: 12px;
-}
-
-.vl {
-    border: 1px solid gray;
-    width: 100%;
-}
-h5{
-    font-size: 4.5vw;
-}
-  #latestTrack li{
-    font-size: 14px;
-  }
-  .section-header h5{
-      font-size: 20px;
-  }
-    #tracking li{
-      font-size: 14px;
-  }
-  .top-arrow {
-    /* position: relative; */
-    right: 63px;
-	width: 1.45rem;
-	height: 1.45rem;
+    .vl{
+        display: none;
     }
+    .highlights {
+        margin: 2px;
+    }
+
+    .docDetails h3{
+        font-size: 1rem;
+    }
+    .docDetails {
+        display:flex;
+        flex-direction: column;
+    }
+
+    .docDetails h2 {
+        font-size: 16px;
+    }
+
+    .docDetails h1{
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .docDetails p{
+        font-size: 12px;
+    }
+
+    .vl {
+        border: 1px solid gray;
+        width: 100%;
+    }
+    h5{
+        font-size: 4.5vw;
+}
 }
 </style>
 This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
@@ -276,7 +201,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     <div class="col-md-8 mx-auto p-3" style="border-radius: 20px;">
         <div class="row" style="justify-content: space-between;">
             <div class="col-md-3 col-sm-5">
-                @if ($status->status == 1)
+                <h2>Action</h2>
+                @if ($status->status == 1 || $status->status == 4)
                 <div class="neomorphic-bg d-flex justify-content-center">
                 {{-- Received Status --}}
                     <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
@@ -284,23 +210,26 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                         <input class="form-control "type="text" style="display: none;" name='status' value="2">
                         <input class="form-control "type="text" style="display: none;" name='action' value="2">
-                        <button class="neo-btn btn" type="submit"><h2>Receive</h2></button>
+                        <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
                     </form>
                 </div>
                 @elseif ($status->status == 2)
                 {{-- Process Status --}}
+                <div class="neomorphic-bg d-flex justify-content-center">
                     <form action="process/{{ $data->referenceNo }}" method="post">
                         @csrf
+                        <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                         <input type="text" style="display: none;" value="3" name="status">
                         <input type="text" style="display: none;" value="3" name="action">
-                        <button type="submit" class="neo-btn btn" onclick=""><h1>Process</h1></button>
+                        <button type="submit" class="neo-btn btn" onclick=""><h3>Process</h3></button>
                     </form>
+                </div>
                     @elseif ($status->status == 3)
                 {{-- Return/Forward --}}
                     <div class="text-center justify-content-center">
                         <div class="">
                             <div class="neomorphic-bg text-center">
-                                <form action="rejected-return/{{ $data->referenceNo }}" method="post">
+                                <form action="rejected/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                     <h6>Is something wrong with the document?</h6>
                                     <select class="form-control text-center" id="assignedOffice" name="primary_reason_of_return_id">
@@ -317,7 +246,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         </div>
                                     @endforeach
                                     <textarea name="others" id="" cols="30" rows="10" placeholder="others"></textarea>
-                                    <input class="form-control "type="text" style="display: none;" name='receiverOffice_id' value="{{ $getDocumentCreator }}">
+                                    <input class="form-control "type="text" style="display: none;" name='receiverOffice_id' value="{{ $getDocumentCreator->senderOffice_id }}">
                                     <input class="form-control "type="text" style="display: none;" name='status' value="5">
                                     <input class="form-control "type="text" style="display: none;" name='action' value="5">
                                     <button class="red-neo-btn btn mt-2 text-white" type="submit"><h6>Submit</h6></button>
@@ -327,7 +256,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
 
                         <div class="mt-2">
                             <div class="neomorphic-bg text-center">
-                                <form class="" action="forwarded/{{ $data->referenceNo }}" method="post">
+                                <form class="" action="forward/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <h6>Forward Document to next the Office</h6>
                                         <select class="form-control text-center" id="assignedOffice" name="receiverOffice">
@@ -337,30 +266,80 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                             </option>
                                         @endforeach
                                         </select>
+                                        <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                                         <input class="form-control "type="text" style="display: none;" name='action' value="4">
                                         <input class="form-control "type="text" style="display: none;" name='status' value="4">
-                                        <button class="neo-btn px-4 mt-2" type="submit"><h2>Submit</h2></button>
+                                        <button class="neo-btn btn mt-2" type="submit"><h3>Submit</h3></button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                         @elseif ($status->status == 4)
                         {{-- Forward Form Status = 4 --}}
+                        <div class="neomorphic-bg text-center">
 
+                        </div>
                         @elseif ($status->status == 5)
-                        {{-- Report = 5 --}}
+                        <div class="neomorphic-bg text-center">
+                            <form class="receive" action="return-to-sender/{{ $data->referenceNo }}" method="post">
+                                @csrf
+                                <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="6">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="6">
+                                <button class="neo-btn btn p-auto" type="submit"><h5>Return to Sender</h5></button>
+                            </form>
+                        </div>
+                        @elseif ($status->status == 6)
+                        {{-- Report = 6 --}}
+                        <div class="neomorphic-bg text-center">
+                            <form class="receive" action="resubmit/{{ $data->referenceNo }}" method="post">
+                                @csrf
+                                <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="1">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="1">
+                                <button class="neo-btn btn p-auto" type="submit"><h3>Resubmit</h3></button>
+                            </form>
+                        </div>
+                        @elseif ($status->status == 7)
+                        {{-- Report = 7 --}}
+                        <div class="neomorphic-bg text-center">
+
+                        </div>
+                        @elseif ($status->status == 8)
+                        {{-- Report = 8 --}}
+                        <div class="neomorphic-bg text-center">
+
+                        </div>
+                        @elseif ($status->status == 9)
+                        {{-- Report = 9 --}}
                         <div class="neomorphic-bg text-center">
 
                         </div>
                         @endif
             </div>
 
+            {{-- Tracking Portion --}}
             <div class="col-md-9 col-sm-7">
                 <!-- 80% width on desktop, 50% width on mobile -->
                 <h2>History</h2>
                     @if (isset($latestTracking->status))
                         @if ( $latestTracking->status == 1 )
-                            <h1>Status 1</h1>
+                        <div class="d-flex neomorphic-bg justify-content-between">
+                            <div class="py-4 m-auto">
+                                <div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div style="border-radius: 20px;">
+                                            <i class="fas fa-flag fa-4x p-2  text-info"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-10 neomorphic-bg text-center p-auto">
+                                <h2>Created</h2>
+                                <p class="p-0 m-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="p-0 m-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                        </div>
                         @elseif( $latestTracking->status == 2 )
                         <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
                             <div class="m-auto text-center">
@@ -377,8 +356,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                             </div>
                             <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #28a745; height: 8rem;">
-                                    <div class="circle">
+                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #0d6efd; height: 8rem;">
+                                    <div class="blue-circle">
                                     </div>
                                 </div>
                             </div>
@@ -396,14 +375,14 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <div style="border-radius: 20px; background-color: white;">
-                                            <i class="fas fa-spinner fa-spin fa-4x p-2 text-primary"></i>
+                                            <i class="fas fa-spinner fa-spin fa-4x p-2 text-secondary"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #28a745; height: 8rem;">
-                                    <div class="circle">
+                                <div class="col-md-12 my-4 ml-3" style="position: relative; border-left: 5px solid #6c757d; height: 8rem;">
+                                    <div class="gray-circle">
                                     </div>
                                 </div>
                             </div>
@@ -421,14 +400,14 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <div style="border-radius: 20px; background-color: white;">
-                                            <i class="fas fa-envelope fa-4x p-2  text-success"></i>
+                                            <i class="fas fa-envelope fa-4x p-2" style="color: #28a745;"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="m-auto" style="width:40px;">
                                 <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #28a745; height: 8rem;">
-                                    <div class="circle">
+                                    <div class="green-circle">
                                     </div>
                                 </div>
                             </div>
@@ -452,23 +431,81 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                             </div>
                             <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #28a745; height: 8rem;">
-                                    <div class="circle">
+                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #dc3545; height: 8rem;">
+                                    <div class="red-circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg bg-danger">
+                                <div class="col-md-3 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-danger text-center"><strong>REJECTED</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white">Primary Reason of Return: <strong>{{ $primaryIssue->reason }}</strong></p>
+                                    </div>
+                                </div>
+                                @if (isset($boxArray))
+                                <div class="row">
+                                    <div class="d-flex flex-wrap mb-0">
+                                    <p class="text-white">Missing Documents: </p>
+                                    @foreach ($boxArray as $item)
+                                        @foreach ($item as $value)
+                                            <p class="m-0 p-0 text-white"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
+                                        @endforeach
+                                    @endforeach
+                                    </div>
+                                </div>
+                                @endif
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white">More Details: <strong>{{ $documentWithIssue->others }}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @elseif( $latestTracking->status == 6 )<div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
+                            <div class="m-auto text-center">
+                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="py-4 m-auto">
+                                <div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div style="border-radius: 20px; background-color: white;">
+                                            <i class="fas fa-undo fa-spin spin-reverse fa-4x p-2 text-secondary"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-auto" style="width:40px;">
+                                <div class="col-md-12 my-4 ml-3" style="position: relative; border-left: 5px solid #6c757d; height: 8rem;">
+                                    <div class="gray-circle">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-8 neomorphic-bg p-auto">
-                                <h5>Has Issue Status 5</h5>
-                                @foreach ($boxArray as $item)
-                                    @foreach ($item as $value)
-                                        <p class="m-0 p-0">{{ $value }}</p>
-                                    @endforeach
-                                @endforeach
+                                <h5>Returned to Sender</h5>
                             </div>
                         </div>
                         @endif
-                    @elseif (isset($light->action) === false)
-                            <h1>Empty</h1>
+                    @elseif (isset($latestTracking->status) === false)
+                        <div class="d-flex neomorphic-bg justify-content-between">
+                            <div class="py-4 m-auto">
+                                <div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div style="border-radius: 20px;">
+                                            <i class="fas fa-flag fa-4x p-2  text-info"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-10 neomorphic-bg text-center p-auto">
+                                <h2>Created</h2>
+                                <p class="p-0 m-0"><strong>{{ $getDocumentCreator->created_at->format('F j, Y') }}</strong></p>
+                                <p class="p-0 m-0">{{ $getDocumentCreator->created_at->format('g:i A') }}</p>
+                            </div>
+                        </div>
                     @endif
                 {{-- HISTORY DIV GOES HERE --}}
                 </div>
@@ -476,25 +513,6 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         </div>
     </div>
     @endauth
-
-    <div class="container col-lg-6">
-        <div class="row">
-            <div class="col-xxs-6 col-xs-4">
-            @if(session()->has('success'))
-                <div id="message" class="col-lg-5 bg-success rounded right-3 text-sm py-2 px-4">
-                    <h5 class="m-0">{{ session('success')}}</h5>
-                </div>
-            @endif
-            @if(session()->has('danger'))
-            <div id="message" class="col-lg-5 bg-danger rounded right-3 text-sm py-2 px-4">
-                <h5 class="m-0">{{ session('danger')}}</h5>
-            </div>
-            @endif
-    </div>
-
-
-
-
 
   <!-- Modal -->
   <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
