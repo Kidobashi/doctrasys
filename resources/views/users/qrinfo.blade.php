@@ -11,6 +11,12 @@
     animation-direction:reverse;
 }
 
+.dashed-line{
+    height: 70px;
+    border-left: 8px dashed black;
+    margin-left:9px;
+    margin-top:16.5px;
+}
 .gray-circle {
     position: absolute;
     top: 0;
@@ -507,7 +513,94 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         </div>
                     @endif
-                {{-- HISTORY DIV GOES HERE --}}
+
+                    @foreach ($trackingHistory as $row)
+                        @if ($row->status == 1)
+                        <div class="d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-4 m-1 neomorphic-bg">
+                                    <i class="fas fa-flag fa-2x text-info"></i>
+                                </div>
+                                <div class="col-md-7">
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                </div>
+                            </div>
+                            <div class="dashed-line">
+
+                            </div>
+                        </div>
+                        @elseif ($row->status == 2)
+                        <div class="d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-4 m-1 neomorphic-bg">
+                                    <i class="fas fa-check fa-2x text-primary"></i>
+                                </div>
+                                <div class="col-md-7">
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                </div>
+                            </div>
+                            <div class="dashed-line">
+
+                            </div>
+                        </div>
+                        @elseif ($row->status == 3)
+                        <div class="d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-4 m-1 neomorphic-bg">
+                                    <i class="fas fa-spinner fa-spin fa-2x text-secondary"></i>
+                                </div>
+                                <div class="col-md-7">
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                </div>
+                            </div>
+                            <div class="dashed-line">
+
+                            </div>
+                        </div>
+                        @elseif ($row->status == 4)
+                        <div class="d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-4 m-1 neomorphic-bg">
+                                    <i class="fas fa-flag fa-2x text-info"></i>
+                                </div>
+                                <div class="col-md-7">
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                </div>
+                            </div>
+                            <div class="dashed-line">
+
+                            </div>
+                        </div>
+                        @elseif ($row->status == 5)
+                        <div class="d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-4 m-1 neomorphic-bg">
+                                        <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
+                                </div>
+                                <div class="col-md-7">
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                </div>
+                            </div>
+                            <div class="dashed-line">
+
+                            </div>
+                        </div>
+                        @elseif ($row->status == 6)
+                        <div class="d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-4 m-1 neomorphic-bg">
+                                    <i class="fas fa-undo fa-spin spin-reverse fa-2x text-secondary"></i>
+                                </div>
+                                <div class="col-md-7">
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                </div>
+                            </div>
+                            <div class="dashed-line">
+
+                            </div>
+                        </div>
+                        @endif
+                    @endforeach
                 </div>
             </div>
         </div>

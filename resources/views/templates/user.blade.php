@@ -89,7 +89,7 @@ p {
   background-color: #f5f5f5;
   border-radius: 10px;
   box-shadow: 0px 10px 20px #c2c2c2, 0px -10px 20px #ffffff;
-  padding: 1rem;
+  padding: .7rem;
   border:1px solid #d3d3d3;
 }
 

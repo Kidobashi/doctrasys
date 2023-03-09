@@ -79,6 +79,11 @@ class QrController extends Controller
 
     $lacking         = LackingDocuments::all();
 
+    //Query Tracking history of a Document
+    $trackingHistory = TrackingHistory::where('referenceNo', $referenceNo)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
     // Fetch status info from DB using reference number.
     $status = Documents::where('referenceNo', $referenceNo)->first();
 
@@ -110,7 +115,8 @@ class QrController extends Controller
         ->with(['selectOffice' => $selectOffice])
         ->with(['lacking'=> $lacking])
         ->with(['primaryReason'=> $primaryReason])
-        ->with(['boxArray' => $unserialized]);
+        ->with(['boxArray' => $unserialized])
+        ->with(['trackingHistory'=> $trackingHistory]);
     }
 
 
@@ -200,17 +206,17 @@ class QrController extends Controller
         ->where('senderOffice', '=', Auth::user()->assignedOffice)
         ->exists();
 
-        if($checkIfExist == true)
+        $document = Documents::where('referenceNo', $referenceNo)->first();
+
+        if(Auth::user()->assignedOffice == $document->senderOffice_id)
         {
-            return redirect('qrinfo/'.$referenceNo)->with('error', 'As you have a history of modifying this document, You cannot modify the status of this document!');
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
         }
         else
         {
-            $document = Documents::where('referenceNo', $referenceNo)->first();
-
-            if(Auth::user()->assignedOffice == $document->senderOffice_id)
+            if($checkIfExist == true)
             {
-                return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
+                return redirect('qrinfo/'.$referenceNo)->with('error', 'As you have a history of modifying this document, You cannot modify the status of this document!');
             }
             else
             {
