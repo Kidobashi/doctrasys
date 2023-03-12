@@ -9,15 +9,8 @@ use App\Models\TrackingHistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Arr;
-use App\Models\Comments;
-// use App\Models\Issues;
 use App\Models\LackingDocuments;
 use App\Models\PrimaryReasonOfReturn;
-use App\Models\User;
-
-use function GuzzleHttp\json_encode;
 
 class QrController extends Controller
 {
@@ -80,43 +73,67 @@ class QrController extends Controller
     $lacking         = LackingDocuments::all();
 
     //Query Tracking history of a Document
-    $trackingHistory = TrackingHistory::where('referenceNo', $referenceNo)
+    $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->max('created_at');
+                        // dd($latestResult);
+    $latestResultRow = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
+                    ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
+                    ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
+                    ->where('referenceNo', $referenceNo)
+                    ->where('created_at', $latestResult)
+                    ->latest()
+                    ->first();
+
+    $trackingHistory = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
+                        ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
+                        ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
+                        ->where('referenceNo', $referenceNo)
+                        ->where('created_at', '<', $latestResult)
                         ->orderBy('created_at', 'desc')
                         ->get();
+
+        // dd($trackingHistory);
 
     // Fetch status info from DB using reference number.
     $status = Documents::where('referenceNo', $referenceNo)->first();
 
     // Merge both arrays together.
-    $altdata = array_merge(['prev' => $prev], ['trackings' => $trackings]);
 
     $selectOffice = Offices::all();
 
     $getDocumentCreator = Documents::where('referenceNo', $referenceNo)->first();
-    $documentWithIssue = BasisOfReturn::where('referenceNumber', $referenceNo)->first();
-    $primaryIssue = PrimaryReasonOfReturn::where('id', $documentWithIssue->primary_reason_of_return_id)->first();
+    $documentWithIssue = BasisOfReturn::join('primary_reason_of_returns as reason', 'reason.id', '=', 'basis_of_returns.primary_reason_of_return_id')
+                        ->select('basis_of_returns.*', 'reason.reason as primary')
+                        ->where('referenceNumber', $referenceNo)->first();
+    // if($documentWithIssue != null) {
+    // if ($documentWithIssue != null) {
+    //     $primaryIssue = PrimaryReasonOfReturn::where('id', $documentWithIssue->primary_reason_of_return_id)->first();
+    //     if ($primaryIssue != null) {
+    //         // do something with $primaryIssue
+    //         return with('primaryIssue', $primaryIssue);
+    //     }
+    // }
+
     $serializedData = BasisOfReturn::where('referenceNumber', $referenceNo)->pluck('lacking_doc_id');
     $unserialized = $serializedData->map(function($item)
     {
         return unserialize($item);
     });
 
-    return view('users.qrinfo')
+    return view('users.qrinfo', ['trackingHistory'=> $trackingHistory])
+        ->with('latestResultRow', $latestResultRow)
         ->with('status', $status)
         ->with('offices', $offices)
         ->with('officeN', $officeN)
         ->with('docCategory', $docCategory)
         ->with('data', $data)
         ->with('getDocumentCreator', $getDocumentCreator)
-        ->with('primaryIssue', $primaryIssue)
         ->with('documentWithIssue', $documentWithIssue)
         ->with('latestTracking', $latestTracking)
-        ->with(['altdata' => $altdata])
         ->with(['selectOffice' => $selectOffice])
         ->with(['lacking'=> $lacking])
         ->with(['primaryReason'=> $primaryReason])
-        ->with(['boxArray' => $unserialized])
-        ->with(['trackingHistory'=> $trackingHistory]);
+        ->with(['boxArray' => $unserialized]);
     }
 
 
@@ -251,22 +268,38 @@ class QrController extends Controller
         }
         else
         {
-            $validatedData = $request->validate([
-                'status' => 'required',
-                'action' => 'required',
-                'senderOffice' => 'required',
-            ]);
+            $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->max('created_at');
 
-            Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+            $latestResultRow = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->where('created_at', $latestResult)
+                    ->latest()
+                    ->first();
 
-            TrackingHistory::create([
-                'referenceNo' => $referenceNo,
-                'receiverOffice' => $document->receiverOffice_id,
-                'senderOffice' => $validatedData['senderOffice'],
-                'action' => $validatedData['action'],
-                'status' => $validatedData['status'],
-            ]);
-            return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now being processed by You');
+            if($latestResultRow->senderOffice == Auth::user()->assignedOffice && $latestResultRow->status == 2)
+            {
+                $validatedData = $request->validate([
+                    'status' => 'required',
+                    'action' => 'required',
+                    'senderOffice' => 'required',
+                ]);
+    
+                Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+    
+                TrackingHistory::create([
+                    'referenceNo' => $referenceNo,
+                    'receiverOffice' => $document->receiverOffice_id,
+                    'senderOffice' => $validatedData['senderOffice'],
+                    'action' => $validatedData['action'],
+                    'status' => $validatedData['status'],
+                ]);
+
+                return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now being processed by You');
+            }
+            else
+            {
+                return redirect('qrinfo/'.$referenceNo)->with('error', "This document is currently received by another office.");
+            }
         }
     }
 
@@ -279,25 +312,39 @@ class QrController extends Controller
             return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
         }
         else
-        {
-            $validatedData = $request->validate([
-                'status' => 'required',
-                'action' => 'required',
-                'senderOffice' => 'required',
-                'receiverOffice' => 'required',
-            ]);
+        {   
+            $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->max('created_at');
 
-            Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+            $latestResultRow = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->where('created_at', $latestResult)
+                    ->latest()
+                    ->first();
+                    
+            if($latestResultRow->senderOffice == Auth::user()->assignedOffice && $latestResultRow->status == 3)
+            {
+                $validatedData = $request->validate([
+                    'status' => 'required',
+                    'action' => 'required',
+                    'senderOffice' => 'required',
+                    'receiverOffice' => 'required',
+                ]);
 
-            TrackingHistory::create([
-                'referenceNo' => $referenceNo,
-                'receiverOffice' => $validatedData['receiverOffice'],
-                'senderOffice' => $validatedData['senderOffice'],
-                'action' => $validatedData['action'],
-                'status' => $validatedData['status'],
-            ]);
+                Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
-            return redirect('qrinfo/'.$referenceNo)->with('message', 'You have forwarded this Document');
+                TrackingHistory::create([
+                    'referenceNo' => $referenceNo,
+                    'receiverOffice' => $validatedData['receiverOffice'],
+                    'senderOffice' => $validatedData['senderOffice'],
+                    'action' => $validatedData['action'],
+                    'status' => $validatedData['status'],
+                ]);
+
+                return redirect('qrinfo/'.$referenceNo)->with('message', 'You have forwarded this Document');
+            }
+            else{
+                return redirect('qrinfo/'.$referenceNo)->with('error', "This document is being processed by another office.");
+            }
         }
     }
 
@@ -311,34 +358,69 @@ class QrController extends Controller
         }
         else
         {
-            $validatedData = $request->validate([
-                'status' => 'required',
-                'action' => 'required',
-                'others' => 'required',
-                'receiverOffice_id' => 'required',
-                'primary_reason_of_return_id' => 'required',
-            ]);
+            $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->max('created_at');
 
-            Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+            $latestResultRow = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->where('created_at', $latestResult)
+                    ->latest()
+                    ->first();
+                    
+            if($latestResultRow->senderOffice == Auth::user()->assignedOffice && $latestResultRow->status == 3)
+            {
+                $rules = [
+                    'primary_reason_of_return_id' => 'required | max:1',
+                    'status' => 'required',
+                    'action' => 'required',
+                    'senderOffice_id' => 'required',
+                    'receiverOffice_id' => 'required',
+                    'others' => 'nullable',
+                    'lacking_doc_id' => 'nullable',
+                ];
+               
+                $messages = [
+                    'primary_reason_of_return_id.required' => 'Choose a primary reason of rejection',
+                ];
 
-            TrackingHistory::create([
-                'referenceNo' => $referenceNo,
-                'receiverOffice' => $validatedData['receiverOffice_id'],
-                'senderOffice' => $document->senderOffice_id,
-                'action' => $validatedData['action'],
-                'status' => $validatedData['status'],
-            ]);
+                $validatedData = $request->validate($rules, $messages);
 
-            $data = serialize($request->input('lacking_doc_id'));
+                // $validatedData = $request->validate([
+                //     'status' => 'required',
+                //     'action' => 'required',
+                //     'receiverOffice_id' => 'required',
+                //     'senderOffice_id' => 'required',
+                //     'primary_reason_of_return_id' => 'required',
+                //     'lacking_doc_id' => 'nullalbe',
+                //     'others' => 'nullable',
+                // ]);
 
-            $basis = new BasisOfReturn();
-            $basis->referenceNumber = $referenceNo;
-            $basis->primary_reason_of_return_id = $validatedData['primary_reason_of_return_id'];
-            $basis->lacking_doc_id = $data;
-            $basis->others = $validatedData['others'];
-            $basis->save();
+                Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
-            return redirect('qrinfo/'.$referenceNo)->with('message', 'This Document has been rejected by You');
+                TrackingHistory::create([
+                    'referenceNo' => $referenceNo,
+                    'receiverOffice' => $validatedData['receiverOffice_id'],
+                    'senderOffice' => $latestResultRow->senderOffice,
+                    'action' => $validatedData['action'],
+                    'status' => $validatedData['status'],
+                ]);
+
+                $basis = new BasisOfReturn();
+            
+                $basis->referenceNumber = $referenceNo;
+                $basis->primary_reason_of_return_id = $validatedData['primary_reason_of_return_id'];
+                if(isset($request->validate['lacking_doc_id']))
+                {
+                    $data = serialize($request->validate['lacking_doc_id']);
+                    $basis->lacking_doc_id = $data;
+                }
+                $basis->others = $validatedData['others'];
+                $basis->save();
+
+                return redirect('qrinfo/'.$referenceNo)->with('message', 'This Document has been rejected by You');
+            }
+            else {
+                return redirect('qrinfo/'.$referenceNo)->with('error', 'This Document is being processed by another office.');
+            }
         }
     }
 
@@ -372,13 +454,13 @@ class QrController extends Controller
         }
     }
 
-    public function resubmitDoc($referenceNo, Request $request)
+    public function resolveDoc($referenceNo, Request $request)
     {
         $document = Documents::where('referenceNo', $referenceNo)->first();
 
         if(Auth::user()->assignedOffice != $document->senderOffice_id)
         {
-            return redirect('qrinfo/'.$referenceNo)->with('error', 'You do not have the permission to resubmit this document.');
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'Only the creator can resolve this document.');
         }
         else
         {
@@ -396,6 +478,36 @@ class QrController extends Controller
                 'senderOffice' => $validatedData['senderOffice'],
                 'action' => $validatedData['action'],
                 'status' => $validatedData['status'],
+            ]);
+
+            return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being resolved');
+        }
+    }
+
+    public function resubmitDoc($referenceNo, Request $request)
+    {
+        $document = Documents::where('referenceNo', $referenceNo)->first();
+
+        if(Auth::user()->assignedOffice != $document->senderOffice_id)
+        {
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'Only the creator can resubmit this document.');
+        }
+        else
+        {
+            $validatedData = $request->validate([
+                'status' => 'required',
+                'action' => 'required',
+                'senderOffice' => 'required',
+            ]);
+
+            Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+
+            TrackingHistory::create([
+                'referenceNo' => $referenceNo,
+                'receiverOffice' => $document->receiverOffice_id,
+                'senderOffice' => $validatedData['senderOffice'],
+                'action' => $validatedData['action'],
+                'status' => $validatedData['action'],
             ]);
 
             return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being resubmitted');

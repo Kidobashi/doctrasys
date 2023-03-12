@@ -18,9 +18,18 @@ class TrackingHistory extends Model
         'receiverOffice',
         'status',
         'actions',
-        'prev_receiver',
-        'prev_Sender',
+        'officeName',
         'updated_at',
         'createad_at',
     ];
+
+    public function senderOffice()
+    {
+        return $this->belongsTo(Offices::class, 'senderOffice');
+    }
+
+    public function receiverOffice()
+    {
+        return $this->belongsTo(Offices::class, 'receiverOffice');
+    }
 }

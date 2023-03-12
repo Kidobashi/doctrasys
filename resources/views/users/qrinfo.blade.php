@@ -11,15 +11,46 @@
     animation-direction:reverse;
 }
 
+.latest-tracking-details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: auto;
+}
+
+.instruction{
+    min-width: 430px;
+}
+
+.tracking-details{
+    margin-left: 16.5px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
 .dashed-line{
     height: 70px;
     border-left: 8px dashed black;
     margin-left:9px;
-    margin-top:16.5px;
+    margin-top:20px;
+}
+
+.yellow-circle {
+    position: absolute;
+    top: 0;
+    left: -3px;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(65deg, #e2e06b, #f0ad4e);
+    box-shadow: -10px -10px 20px #d9d9d9, 10px 10px 20px #ffffff;
 }
 .gray-circle {
     position: absolute;
-    top: 0;
+    top: 13px;
     left: -3px;
     transform: translate(-50%, -50%);
     width: 30px;
@@ -30,7 +61,7 @@
 }
 .blue-circle {
     position: absolute;
-    top: 0;
+    top: 13px;
     left: -3px;
     transform: translate(-50%, -50%);
     width: 30px;
@@ -42,7 +73,7 @@
 
 .red-circle {
     position: absolute;
-    top: 0;
+    top: 13px;
     left: -3px;
     transform: translate(-50%, -50%);
     width: 30px;
@@ -53,7 +84,7 @@
 }
 .green-circle {
   position: absolute;
-  top: 0;
+  top: 13px;
   left: -3px;
   transform: translate(-50%, -50%);
   width: 30px;
@@ -204,7 +235,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
 @endguest
 </div>
     @auth
-    <div class="col-md-8 mx-auto p-3" style="border-radius: 20px;">
+    <div class="col-md-8 mx-auto p-2" style="border-radius: 20px;">
         <div class="row" style="justify-content: space-between;">
             <div class="col-md-3 col-sm-5">
                 <h2>Action</h2>
@@ -230,7 +261,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         <button type="submit" class="neo-btn btn" onclick=""><h3>Process</h3></button>
                     </form>
                 </div>
-                    @elseif ($status->status == 3)
+                @elseif ($status->status == 3)
                 {{-- Return/Forward --}}
                     <div class="text-center justify-content-center">
                         <div class="">
@@ -238,21 +269,26 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <form action="rejected/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                     <h6>Is something wrong with the document?</h6>
-                                    <select class="form-control text-center" id="assignedOffice" name="primary_reason_of_return_id">
+                                    <select class="form-control text-center" id="select-reason-reject" name="primary_reason_of_return_id">
                                     <option value="" selected disabled>Select
                                     @foreach ($primaryReason as $row)
                                         <option value="{{ $row->id }}">{{ $row->reason }}</option>
                                         </option>
                                     @endforeach
                                     </select>
+                                    @if ($errors->has('primary_reason_of_return_id'))
+                                        <span class="text-danger">{{ $errors->first('primary_reason_of_return_id') }}</span>
+                                    @endif
+                                    
                                     @foreach ($lacking as $row)
                                         <div class="m-0 p-0">
-                                            <input type="checkbox" name="lacking_doc_id[]" value="{{ $row->name }}">
+                                            <input type="checkbox" id="lacking-checkbox" name="lacking_doc_id[]" value="{{ $row->name }}"  data-value="{{ $row->name }}">
                                             <label>{{ $row->name }}</label>
                                         </div>
                                     @endforeach
                                     <textarea name="others" id="" cols="30" rows="10" placeholder="others"></textarea>
                                     <input class="form-control "type="text" style="display: none;" name='receiverOffice_id' value="{{ $getDocumentCreator->senderOffice_id }}">
+                                    <input class="form-control "type="text" style="display: none;" name='senderOffice_id' value="{{ Auth::user()->assignedOffice }}">                                 
                                     <input class="form-control "type="text" style="display: none;" name='status' value="5">
                                     <input class="form-control "type="text" style="display: none;" name='action' value="5">
                                     <button class="red-neo-btn btn mt-2 text-white" type="submit"><h6>Submit</h6></button>
@@ -265,7 +301,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <form class="" action="forward/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <h6>Forward Document to next the Office</h6>
-                                        <select class="form-control text-center" id="assignedOffice" name="receiverOffice">
+                                        <select class="form-control text-center" id="assignedOffice" name="receiverOffice" required>
                                         <option value="" selected disabled>Select Office
                                         @foreach ($selectOffice as $row)
                                             <option value="{{ $row->id }}">{{ $row->officeName }}</option>
@@ -296,26 +332,39 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </form>
                         </div>
                         @elseif ($status->status == 6)
+                        {{-- Report = 7 --}}
+                        <div class="neomorphic-bg text-center">
+                                <form class="receive" action="resolve/{{ $data->referenceNo }}" method="post">
+                                    @csrf
+                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                    <input class="form-control "type="text" style="display: none;" name='status' value="7">
+                                    <input class="form-control "type="text" style="display: none;" name='action' value="7">
+                                    <button class="neo-btn btn p-auto" type="submit"><h3>Resolve Issue</h3></button>
+                                </form>
+                        </div>
+                        @elseif ($status->status == 7)
                         {{-- Report = 6 --}}
                         <div class="neomorphic-bg text-center">
                             <form class="receive" action="resubmit/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                 <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                                 <input class="form-control "type="text" style="display: none;" name='status' value="1">
-                                <input class="form-control "type="text" style="display: none;" name='action' value="1">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="8">
                                 <button class="neo-btn btn p-auto" type="submit"><h3>Resubmit</h3></button>
                             </form>
                         </div>
-                        @elseif ($status->status == 7)
-                        {{-- Report = 7 --}}
-                        <div class="neomorphic-bg text-center">
-
-                        </div>
                         @elseif ($status->status == 8)
                         {{-- Report = 8 --}}
-                        <div class="neomorphic-bg text-center">
-
-                        </div>
+                        {{-- <div class="neomorphic-bg text-center"> --}}
+                                {{-- Received Status --}}
+                            {{-- <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
+                                @csrf
+                                <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
+                            </form>
+                        </div> --}}
                         @elseif ($status->status == 9)
                         {{-- Report = 9 --}}
                         <div class="neomorphic-bg text-center">
@@ -330,7 +379,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                 <h2>History</h2>
                     @if (isset($latestTracking->status))
                         @if ( $latestTracking->status == 1 )
-                        <div class="d-flex neomorphic-bg justify-content-between">
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1">
                             <div class="py-4 m-auto">
                                 <div>
                                     <div class="d-flex justify-content-center align-items-center">
@@ -347,97 +396,110 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 2 )
-                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
-                            <div class="m-auto text-center">
-                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                            <div class="col-md-2 latest-tracking-details my-auto text-center">
+                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="py-4 m-auto">
-                                <div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <div style="border-radius: 20px; background-color: white;">
-                                            <i class="fas fa-check fa-4x p-2 text-primary"></i>
-                                        </div>
+                            <div class="col-md-1">
+                                <div class="justify-content-center align-items-center">
+                                    <div style="border-radius: 20px; background-color: white;">
+                                        <i class="fas fa-check fa-4x p-2 text-primary"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #0d6efd; height: 8rem;">
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid #0d6efd; height: 95%;">
                                     <div class="blue-circle">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8 neomorphic-bg p-auto">
-                                <h5>Received</h5>
-                            </div>
-                        </div>
-                        @elseif( $latestTracking->status == 3 )
-                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
-                            <div class="m-auto text-center">
-                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
-                            </div>
-                            <div class="py-4 m-auto">
-                                <div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <div style="border-radius: 20px; background-color: white;">
-                                            <i class="fas fa-spinner fa-spin fa-4x p-2 text-secondary"></i>
-                                        </div>
+                            <div class="col-md-8 neomorphic-bg bg-primary">
+                                <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-primary text-center"><strong>RECEIVED</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white">This document is currently at the <strong>{{ $latestResultRow->senderOfficeName }}</strong></p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4 ml-3" style="position: relative; border-left: 5px solid #6c757d; height: 8rem;">
+                        </div>
+                        @elseif( $latestTracking->status == 3 )
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                            <div class="col-md-2 latest-tracking-details my-auto text-center">
+                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="justify-content-center align-items-center">
+                                    <div style="border-radius: 20px; background-color: white; height:100%;">
+                                        <i class="fas fa-spinner fa-spin fa-4x p-2 text-secondary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid #6c757d; height: 95%;">
                                     <div class="gray-circle">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8 neomorphic-bg p-auto">
-                                <h5>Processing</h5>
-                            </div>
-                        </div>
-                        @elseif( $latestTracking->status == 4 )
-                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
-                            <div class="m-auto text-center">
-                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
-                            </div>
-                            <div class="py-4 m-auto">
-                                <div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <div style="border-radius: 20px; background-color: white;">
-                                            <i class="fas fa-envelope fa-4x p-2" style="color: #28a745;"></i>
-                                        </div>
+                            <div class="col-md-8 neomorphic-bg bg-secondary">
+                                <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-dark text-center"><strong>Processing</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white">This document is currently being processed at <strong>{{ $latestResultRow->senderOfficeName }}</strong></p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #28a745; height: 8rem;">
+                        </div>
+                        @elseif( $latestTracking->status == 4 )
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                            <div class="col-md-2 latest-tracking-details my-auto text-center">
+                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="justify-content-center align-items-center">
+                                    <div style="border-radius: 20px; background-color: white; height:100%;">
+                                        <i class="fas fa-envelope fa-4x p-2" style="color: #28a745;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid #28a745; height: 95%;">
                                     <div class="green-circle">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8 neomorphic-bg p-auto">
-                                <h5>Forwarded</h5>
-                            </div>
-                        </div>
-                        @elseif( $latestTracking->status == 5 )
-                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
-                            <div class="m-auto text-center">
-                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
-                            </div>
-                            <div class="py-4 m-auto">
-                                <div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <div style="border-radius: 20px; background-color: white;">
-                                            <i class="fas fa-exclamation-circle fa-4x p-2  text-danger"></i>
-                                        </div>
+                            <div class="col-md-8 neomorphic-bg bg-success p-auto">
+                                <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-success text-center"><strong>Forwarded</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white">This document was forwarded by the <strong>{{ $latestResultRow->senderOfficeName }}</strong> to the <strong>{{ $latestResultRow->receiverOfficeName }}</strong></p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4  ml-3" style="position: relative; border-left: 5px solid #dc3545; height: 8rem;">
+                        </div>
+                        @elseif( $latestTracking->status == 5 )
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                            <div class="col-md-2 latest-tracking-details my-auto text-center">
+                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="justify-content-center align-items-center">
+                                    <div style="border-radius: 20px; background-color: white; height:100%;">
+                                        <i class="fas fa-exclamation-circle fa-4x p-2  text-danger"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid #dc3545; height: 95%;">
                                     <div class="red-circle">
                                     </div>
                                 </div>
@@ -448,29 +510,34 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">Primary Reason of Return: <strong>{{ $primaryIssue->reason }}</strong></p>
+                                        @if (isset($documentWithIssue))
+                                            <p class="m-0 p-0 text-white">Primary Reason of Return: <strong>{{ $documentWithIssue->primary }}</strong></p>     
+                                        @endif
                                     </div>
                                 </div>
-                                @if (isset($boxArray))
+                                @if (isset($boxArray) && isset($item))
                                 <div class="row">
                                     <div class="d-flex flex-wrap mb-0">
                                     <p class="text-white">Missing Documents: </p>
-                                    @foreach ($boxArray as $item)
-                                        @foreach ($item as $value)
-                                            <p class="m-0 p-0 text-white"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
-                                        @endforeach
-                                    @endforeach
+                                        @foreach ($boxArray as $item)
+                                            @foreach ($item as $value)
+                                                <p class="m-0 p-0 text-white"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
+                                            @endforeach
+                                        @endforeach  
                                     </div>
                                 </div>
                                 @endif
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">More Details: <strong>{{ $documentWithIssue->others }}</strong></p>
+                                        @if (isset($documentWithIssue->others))
+                                            <p class="m-0 p-0 text-white">More Details: <strong>{{ $documentWithIssue->others }}</strong></p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @elseif( $latestTracking->status == 6 )<div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
+                        @elseif( $latestTracking->status == 6 )
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="m-auto text-center">
                                 <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
                                 <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -485,13 +552,106 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                             </div>
                             <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4 ml-3" style="position: relative; border-left: 5px solid #6c757d; height: 8rem;">
+                                <div class="col-md-12 my-4 ml-3" style="position: relative; border-left: 7px solid #6c757d; height: 5.5rem;">
                                     <div class="gray-circle">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-8 neomorphic-bg p-auto">
                                 <h5>Returned to Sender</h5>
+                            </div>
+                        </div>
+                        @elseif( $latestTracking->status == 7 )
+                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
+                            <div class="m-auto text-center">
+                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="py-4 m-auto">
+                                <div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div style="border-radius: 20px; background-color: white;">
+                                            <i class="fas fa-tasks fa-4x p-2 text-warning"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-auto" style="width:40px;">
+                                <div class="col-md-12 my-3 ml-3" style="position: relative; border-left: 7px solid #f0ad4e; height: 5.5rem;">
+                                    <div class="yellow-circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg bg-warning">
+                                <div class="row d-flex justify-content-between">
+                                    <div class="col-md-5 bg-white mb-2" style="border-radius: 8px; margin-left: 10px;">
+                                        <h5 class="text-warning text-center mb-0"><strong>RESOLVING ISSUE</strong></h5>
+                                    </div>
+                                    <div class="col-md-2 btn-group dropleft">
+                                        <button type="button" class="btn btn-dark badge" data-toggle="dropdown">
+                                            <strong>Instruction</strong>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                              <!-- Dropdown menu links -->
+                                            <div class="d-flex flex-wrap bg-white p-3 instruction" style="border-radius: 10px; font-size: 12px;">
+                                                <p>To properly resubmit the document, follow these steps:</p>
+                                                <p>1. <strong>Complete the missing requirements</strong>.</p>
+                                                <p>2. <strong>Reevaluate and recompile</strong> if necessary.<p>
+                                                <p>3. Conduct a <strong>double check.</strong></p>
+                                                <p class="mb-3">4. Proceed to <strong>resubmit</strong> the document.</p>
+                                                <p><em><strong>Note that only the creator (office) of the document has the authority to resolve any issues and resubmit the document.</strong></em></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 p-1 mt-2 px-auto bg-white" style="border-radius: 8px;">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-black">Primary Reason of Return: <strong>{{ $primaryIssue->reason }}</strong></p>
+                                    </div>
+                                    @if (isset($boxArray))
+                                    <div class="d-flex flex-wrap">
+                                        <p class="text-black">Missing Documents: </p>
+                                        @foreach ($boxArray as $item)
+                                            @foreach ($item as $value)
+                                                <p class="m-0 p-0 text-black"><strong>&nbsp;&nbsp;  {{ $value }}</strong></p>
+                                            @endforeach
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                     <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-black" style="font-size: 1em;">More Details: <strong>{{ $documentWithIssue->others }}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @elseif( $latestTracking->status == 8 )
+                        <div class="d-flex neomorphic-bg justify-content-between p-auto" style="background-color: #dbdde6; border: 1px solid black; ">
+                            <div class="col-md-2 d-flex flex-column align-items-center text-center" style="border: 1px solid black;">
+                                <p class="m-auto"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="mt-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="m-auto">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <div class="bg-white" style="border-radius: 20px;">
+                                        <i class="fas fa-check-double fa-4x p-2 text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-auto" style="width:40px;">
+                                <div class="col-md-12 my-4 ml-4" style="position: relative; left:3.5px; border-left: 7px solid #0275d8; height: 4.5rem;">
+                                    <div class="blue-circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg bg-primary">
+                                <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-black text-center"><strong>RESUBMITTED</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white">{{ $latestResultRow->senderOfficeName }}</strong></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         @endif
@@ -516,89 +676,130 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
 
                     @foreach ($trackingHistory as $row)
                         @if ($row->status == 1)
-                        <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                <div class="col-md-4 m-1 neomorphic-bg">
-                                    <i class="fas fa-flag fa-2x text-info"></i>
-                                </div>
-                                <div class="col-md-7">
-                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
-                                </div>
-                            </div>
-                            <div class="dashed-line">
-
-                            </div>
-                        </div>
-                        @elseif ($row->status == 2)
-                        <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                <div class="col-md-4 m-1 neomorphic-bg">
-                                    <i class="fas fa-check fa-2x text-primary"></i>
-                                </div>
-                                <div class="col-md-7">
-                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
-                                </div>
-                            </div>
-                            <div class="dashed-line">
-
-                            </div>
-                        </div>
-                        @elseif ($row->status == 3)
-                        <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                <div class="col-md-4 m-1 neomorphic-bg">
-                                    <i class="fas fa-spinner fa-spin fa-2x text-secondary"></i>
-                                </div>
-                                <div class="col-md-7">
-                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
-                                </div>
-                            </div>
-                            <div class="dashed-line">
-
-                            </div>
-                        </div>
-                        @elseif ($row->status == 4)
-                        <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                <div class="col-md-4 m-1 neomorphic-bg">
-                                    <i class="fas fa-flag fa-2x text-info"></i>
-                                </div>
-                                <div class="col-md-7">
-                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
-                                </div>
-                            </div>
-                            <div class="dashed-line">
-
-                            </div>
-                        </div>
-                        @elseif ($row->status == 5)
-                        <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                <div class="col-md-4 m-1 neomorphic-bg">
-                                        <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                                </div>
-                                <div class="col-md-7">
+                            <div class="d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                    <div class="col-md-4 m-1 neomorphic-bg bg-info">
+                                        <i class="fas fa-flag fa-2x p-2 text-white"></i>
+                                    </div>
+                                    <div class="col-md-7">
                                         <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    </div>
+                                </div>
+                                <div class="dashed-line">
+                                </div>
+                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                    <p>Circulating</p>
                                 </div>
                             </div>
-                            <div class="dashed-line">
-
+                        @elseif ($row->status == 2)
+                            <div class="d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                    <div class="col-md-4 m-1 neomorphic-bg bg-primary">
+                                        <i class="fas fa-check fa-2x p-2 text-white"></i>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    </div>
+                                </div>
+                                <div class="dashed-line">
+                                </div>
+                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                    <p>Received by <strong>{{ $row->senderOfficeName }}</strong></p>
+                                </div>
                             </div>
-                        </div>
+                        @elseif ($row->status == 3)
+                            <div class="d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                    <div class="col-md-4 m-1 neomorphic-bg bg-secondary">
+                                        <i class="fas fa-spinner fa-spin fa-2x p-2 text-white"></i>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    </div>
+                                </div>
+                                <div class="dashed-line">
+                                </div>
+                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                    <p>Processed by <strong>{{ $row->senderOfficeName }}</strong></p>
+                                </div>
+                            </div>
+                        @elseif ($row->status == 4)
+                            <div class="d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                    <div class="col-md-4 m-1 neomorphic-bg bg-success">
+                                        <i class="fas fa-envelope fa-2x p-2 text-white"></i>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    </div>
+                                </div>
+                                <div class="dashed-line">
+                                </div>
+                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                    <p>Forwarded by <strong>{{ $row->receiverOfficeName }}</strong></p>
+                                </div>
+                            </div>
+                        @elseif ($row->status == 5)
+                            <div class="d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                    <div class="col-md-4 m-1 neomorphic-bg bg-danger">
+                                        <i class="fas fa-exclamation-circle fa-2x p-2 text-white"></i>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    </div>
+                                </div>
+                                <div class="dashed-line">
+                                </div>
+                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                    <p class="m-0">Reported by <strong>{{ $row->receiverOfficeName }}</strong></p>
+                                    @if (isset($boxArray))
+                                    <div class="row">
+                                        <div class="d-flex flex-wrap mb-0">
+                                        <p class="text-black m-0">Missing Documents: </p>
+                                        @foreach ($boxArray as $item)
+                                            @foreach ($item as $value)
+                                                <p class="m-0 p-0 text-black"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
+                                            @endforeach
+                                        @endforeach
+                                        </div>
+                                    </div>
+                                     @endif
+                                </div>
+                            </div>
                         @elseif ($row->status == 6)
+                            <div class="d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                    <div class="col-md-4 m-1 neomorphic-bg">
+                                        <i class="fas fa-undo fa-spin spin-reverse fa-2x p-2 text-secondary"></i>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    </div>
+                                </div>
+                                <div class="dashed-line">
+                                </div>
+                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                    <p class="p-auto m-0">Sent back by <strong>{{ $row->receiverOfficeName }}</strong></p>
+                                </div>
+                            </div>
+                        @elseif ($row->status == 7)
                         <div class="d-flex">
                             <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                <div class="col-md-4 m-1 neomorphic-bg">
-                                    <i class="fas fa-undo fa-spin spin-reverse fa-2x text-secondary"></i>
+                                <div class="col-md-4 m-1 neomorphic-bg bg-warning">
+                                    <i class="fas fa-tasks fa-2x p-2 text-white"></i>
                                 </div>
                                 <div class="col-md-7">
                                     <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
                                 </div>
                             </div>
                             <div class="dashed-line">
-
+                            </div>
+                            <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
+                                <p class="p-auto m-0">Reviewed and Rerecompiled by <strong>{{ $row->senderOfficeName }}</strong></p>
                             </div>
                         </div>
+                        @elseif ($row->status == 8)
                         @endif
                     @endforeach
                 </div>
@@ -607,92 +808,6 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     </div>
     @endauth
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Tracking Information</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            {{-- {{ dd($altdata['prev']) }} --}}
-            <div class="card col-lg-12" id="tracking">
-                @foreach($altdata['prev'] as $key => $prev)
-                @if (isset($altdata['trackings'][$key]->action))
-                <ul class="unor list-group list-group-flush">
-                <div class="section-header">
-                    <li>
-                    @if( $altdata['trackings'][$key]->action == 1)
-                    <h5><div class="top-arrow center">
-                    </div>Received by <i>{{ $altdata['trackings'][$key]->senderName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
-                        {{-- <li class="">Office: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
-                        <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
-                        @if($altdata['trackings'][$key]->action == 2)
-                        <p><li class="">Status: <i>In Circulation</i></p>
-                        @endif
-                        @if($altdata['trackings'][$key]->action == 1)
-                            <p><li class="">Status: <i>Processing...</i></p>
-                        @endif
-                    @endif
-                    @if (($altdata['prev'][$key])->prevOffice == null)
-                    <p>sample</p>
-                    @endif
-                    @if( $altdata['trackings'][$key]->action == 2)
-                    <h5><div class="top-arrow center">
-                    </div>Forwarded to <i>{{ $altdata['trackings'][$key]->senderName}} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
-                        {{-- <li class="">Forwarded to: <i>{{ $altdata['trackings'][$key]->officeName }}</i></li> --}}
-                        <li class="">Date Forwarded: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i a')}}</i></li>
-                        <li class="">Forwarded by: <b>{{ $altdata['trackings'][$key]->prevReceiver }}</b> - <i>{{ $altdata['prev'][$key]->officeName }}</i></li>
-                        @if($altdata['trackings'][$key]->action == 2)
-                        <p><li class="">Status: <i>In Circulation</i></p>
-                        @endif
-                        @if($altdata['trackings'][$key]->action == 1)
-                            <p><li class="">Status: <i>Processing...</i></p>
-                        @endif
-                        </li>
-                    @endif
-                    @if( $altdata['trackings'][$key]->action == 4)
-                    <h5><div class="top-arrow center">
-                    </div>
-                        @if (isset($issue))
-                            <p style="color:red;">Issue Details: {{ $issue->details }}</p>
-                            Issue was reported by <i>{{ $issue->email }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
-                        @endif
-                        <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
-                        <p><li class="">Status: <i>Has Issue</i></p>
-                    @endif
-                    @if( $altdata['trackings'][$key]->action == 5)
-                    <h5><div class="top-arrow center">
-                    </div>
-                        @if (isset($issue))
-                            <p style="color:green;">Issue Details: {{ $issue->details }}</p>
-                            Issue was fixed by <i>{{ $status->email }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
-                        @endif
-                        Issue fixed by <i>{{ $altdata['trackings'][$key]->receiverName }} - {{ $altdata['trackings'][$key]->officeName }} <p>{{ $altdata['trackings'][$key]->created_at->diffForHumans() }}</p></i></h5>
-                        <li class="">Date Received: <i>{{ date_format($altdata['trackings'][$key]->created_at,'M d Y h:i A')}}</i></li>
-                        @if($altdata['trackings'][$key]->action == 2)
-                        <p><li class="">Status: <i>In Circulation</i></p>
-                        @endif
-                        @if($altdata['trackings'][$key]->action == 1)
-                            <p><li class="">Status: <i>Processing...</i></p>
-                        @endif
-                    @endif
-                        </li>
-                    </div>
-                </ul>
-                @endif
-                @endforeach
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
   <script>
     function showSendBack() {
     if (document.getElementById('sendBack')) {
@@ -739,6 +854,32 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             }
         }
     }
+
+    // const select = document.getElementById('select-reason-reject');
+    // const checkbox = document.getElementById('lacking-checkbox');
+
+    // select.addEventListener('change', function() {
+    //     console.log(select.value);
+    //     if (select.value === 'Lacking in Document/s') {
+    //         checkbox.disabled = false;
+    //     } else {
+    //         checkbox.disabled = true;
+    //     }
+    // });
+
+    $(document).ready(function() {
+    $('#select-reason-reject').on('change', function() {
+      var select_value = $(this).val();
+      var checkboxes = $('input[name="lacking_doc_id[]"]');
+      
+      if (select_value === '1') {
+        checkboxes.prop('disabled', false);
+      } else {
+        checkboxes.prop('checked', false);
+        checkboxes.prop('disabled', true);
+      }
+    });
+  });
 
   </script>
   {{-- <script type="text/javascript">

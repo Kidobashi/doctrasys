@@ -147,6 +147,7 @@ Route::get('/search', [QrController::class, 'search']);
 Route::get('/altSearch', [QrController::class, 'altSearch']);
 Route::post('/qrinfo/rejected/{referenceNo}', [QrController::class, 'rejectDocument'])->name('document.reject');
 Route::post('/qrinfo/return-to-sender/{referenceNo}', [QrController::class, 'returnToSender']);
+Route::post('/qrinfo/resolve/{referenceNo}', [QrController::class, 'resolveDoc']);
 Route::post('/qrinfo/resubmit/{referenceNo}', [QrController::class, 'resubmitDoc']);
 
 

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('basis_of_returns', function (Blueprint $table) {
             $table->id();
-            $table->string('referenceNumber');
+            $table->string('referenceNumber')->nullable();
             $table->unsignedBigInteger('primary_reason_of_return_id')->references('id')->on('reasons_for_return')->onDelete('cascade')->nullable();
             $table->string('lacking_doc_id')->nullable();
             $table->text('others')->nullable();
