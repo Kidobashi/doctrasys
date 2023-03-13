@@ -279,7 +279,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     @if ($errors->has('primary_reason_of_return_id'))
                                         <span class="text-danger">{{ $errors->first('primary_reason_of_return_id') }}</span>
                                     @endif
-                                    
+
                                     @foreach ($lacking as $row)
                                         <div class="m-0 p-0">
                                             <input type="checkbox" id="lacking-checkbox" name="lacking_doc_id[]" value="{{ $row->name }}"  data-value="{{ $row->name }}">
@@ -288,10 +288,10 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     @endforeach
                                     <textarea name="others" id="" cols="30" rows="10" placeholder="others"></textarea>
                                     <input class="form-control "type="text" style="display: none;" name='receiverOffice_id' value="{{ $getDocumentCreator->senderOffice_id }}">
-                                    <input class="form-control "type="text" style="display: none;" name='senderOffice_id' value="{{ Auth::user()->assignedOffice }}">                                 
+                                    <input class="form-control "type="text" style="display: none;" name='senderOffice_id' value="{{ Auth::user()->assignedOffice }}">
                                     <input class="form-control "type="text" style="display: none;" name='status' value="5">
                                     <input class="form-control "type="text" style="display: none;" name='action' value="5">
-                                    <button class="red-neo-btn btn mt-2 text-white" type="submit"><h6>Submit</h6></button>
+                                    <button class="red-neo-btn btn mt-2 text-white" id="report-btn" type="submit"><h6>Submit</h6></button>
                                 </form>
                             </div>
                         </div>
@@ -301,7 +301,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <form class="" action="forward/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <h6>Forward Document to next the Office</h6>
-                                        <select class="form-control text-center" id="assignedOffice" name="receiverOffice" required>
+                                        <select class="form-control text-center" id="forward-select" name="receiverOffice" required>
                                         <option value="" selected disabled>Select Office
                                         @foreach ($selectOffice as $row)
                                             <option value="{{ $row->id }}">{{ $row->officeName }}</option>
@@ -311,7 +311,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                                         <input class="form-control "type="text" style="display: none;" name='action' value="4">
                                         <input class="form-control "type="text" style="display: none;" name='status' value="4">
-                                        <button class="neo-btn btn mt-2" type="submit"><h3>Submit</h3></button>
+                                        <button class="neo-btn btn mt-2" id="forward-btn" type="submit"><h3>Submit</h3></button>
                                     </form>
                                 </div>
                             </div>
@@ -334,9 +334,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($status->status == 6)
                         {{-- Report = 7 --}}
                         <div class="neomorphic-bg text-center">
-                                <form class="receive" action="resolve/{{ $data->referenceNo }}" method="post">
+                                <form id="resolve-form" action="resolve/{{ $data->referenceNo }}" method="post">
                                     @csrf
-                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                                     <input class="form-control "type="text" style="display: none;" name='status' value="7">
                                     <input class="form-control "type="text" style="display: none;" name='action' value="7">
                                     <button class="neo-btn btn p-auto" type="submit"><h3>Resolve Issue</h3></button>
@@ -345,12 +344,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($status->status == 7)
                         {{-- Report = 6 --}}
                         <div class="neomorphic-bg text-center">
-                            <form class="receive" action="resubmit/{{ $data->referenceNo }}" method="post">
+                            <form id="resubmit-form" action="resubmit/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                 <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                                 <input class="form-control "type="text" style="display: none;" name='status' value="1">
                                 <input class="form-control "type="text" style="display: none;" name='action' value="8">
-                                <button class="neo-btn btn p-auto" type="submit"><h3>Resubmit</h3></button>
+                                <button class="neo-btn btn p-auto" id="resubmit-btn" type="submit" ><h3>Resubmit</h3></button>
                             </form>
                         </div>
                         @elseif ($status->status == 8)
@@ -420,7 +419,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">This document is currently at the <strong>{{ $latestResultRow->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">This document is currently at the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
                                     </div>
                                 </div>
                             </div>
@@ -450,7 +449,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">This document is currently being processed at <strong>{{ $latestResultRow->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">This document is currently being processed at <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
                                     </div>
                                 </div>
                             </div>
@@ -480,7 +479,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">This document was forwarded by the <strong>{{ $latestResultRow->senderOfficeName }}</strong> to the <strong>{{ $latestResultRow->receiverOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">This document was forwarded by the <strong>{{ $latestTracking->senderOfficeName }}</strong> to the <strong>{{ $latestResultRow->receiverOfficeName }}</strong></p>
                                     </div>
                                 </div>
                             </div>
@@ -510,23 +509,30 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white">Rejected by the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
+                                    </div>
+                                    <div class="d-flex flex-wrap">
                                         @if (isset($documentWithIssue))
-                                            <p class="m-0 p-0 text-white">Primary Reason of Return: <strong>{{ $documentWithIssue->primary }}</strong></p>     
+                                            <p class="m-0 p-0 text-white">Primary Reason of Return: <strong>{{ $documentWithIssue->primary }}</strong></p>
                                         @endif
                                     </div>
                                 </div>
-                                @if (isset($boxArray) && isset($item))
+
                                 <div class="row">
                                     <div class="d-flex flex-wrap mb-0">
-                                    <p class="text-white">Missing Documents: </p>
-                                        @foreach ($boxArray as $item)
-                                            @foreach ($item as $value)
-                                                <p class="m-0 p-0 text-white"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
+                                @if(isset($boxArray))
+                                    @foreach ($boxArray as $item)
+                                        @if (!empty($item))
+                                        <p class="text-white m-0 p-0">Missing Documents: </p>
+                                            @foreach ($item  as $value)
+                                            <p class="m-0 p-0 text-white"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
                                             @endforeach
-                                        @endforeach  
+                                        @endif
+                                    @endforeach
                                     </div>
-                                </div>
                                 @endif
+                                </div>
+
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
                                         @if (isset($documentWithIssue->others))
@@ -538,27 +544,32 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif( $latestTracking->status == 6 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
-                            <div class="m-auto text-center">
-                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="col-md-2 latest-tracking-details my-auto text-center">
+                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="py-4 m-auto">
-                                <div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <div style="border-radius: 20px; background-color: white;">
-                                            <i class="fas fa-undo fa-spin spin-reverse fa-4x p-2 text-secondary"></i>
-                                        </div>
+                            <div class="col-md-1">
+                                <div class="justify-content-center align-items-center">
+                                    <div style="border-radius: 20px; background-color: white; height:100%;">
+                                        <i class="fas fa-undo fa-spin spin-reverse fa-4x p-2 text-secondary"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4 ml-3" style="position: relative; border-left: 7px solid #6c757d; height: 5.5rem;">
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 7px solid #6c757d; height: 95%;">
                                     <div class="gray-circle">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8 neomorphic-bg p-auto">
-                                <h5>Returned to Sender</h5>
+                            <div class="col-md-8 neomorphic-bg bg-secondary p-auto">
+                                <div class="col-md-5 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="px-2 text-secondary text-center"><strong>RETURNED TO SENDER</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white">This document is being returned to the <strong>{{ $latestResultRow->receiverOfficeName }}</strong></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 7 )
@@ -606,7 +617,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="col-md-12 p-1 mt-2 px-auto bg-white" style="border-radius: 8px;">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-black">Primary Reason of Return: <strong>{{ $primaryIssue->reason }}</strong></p>
+                                        <p class="m-0 p-0 text-black">Primary Reason of Return: <strong>{{ $documentWithIssue->reason }}</strong></p>
                                     </div>
                                     @if (isset($boxArray))
                                     <div class="d-flex flex-wrap">
@@ -736,7 +747,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="dashed-line">
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
-                                    <p>Forwarded by <strong>{{ $row->receiverOfficeName }}</strong></p>
+                                    <p>Forwarded by the <strong>{{ $row->senderOfficeName }}</strong></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 5)
@@ -765,6 +776,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         </div>
                                     </div>
                                      @endif
+                                     <p class="m-0">More Details: <em><strong>{{ $documentWithIssue->others }}</strong></em></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 6)
@@ -809,133 +821,151 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     @endauth
 
   <script>
-    function showSendBack() {
-    if (document.getElementById('sendBack')) {
-        if (document.getElementById('sendBack').style.display == 'none') {
-            document.getElementById('sendBack').style.display = 'block';
-            document.getElementById('receive').style.display = 'none';
-        }
-        else {
-            document.getElementById('sendBack').style.display = 'none';
-            }
-        }
-    }
-
-    function showForward() {
-    if (document.getElementById('forward')) {
-        if (document.getElementById('forward').style.display == 'none') {
-            document.getElementById('forward').style.display = 'block';
-        }
-        else {
-            document.getElementById('forward').style.display = 'none';
-            }
-        }
-    }
-
-    function fixIssue() {
-    if (document.getElementById('fixIssue')) {
-        if (document.getElementById('fixIssue').style.display == 'none') {
-            document.getElementById('fixIssue').style.display = 'block';
-        }
-        else {
-            document.getElementById('fixIssue').style.display = 'none';
-            }
-        }
-    }
-
-    function showReceive() {
-    if (document.getElementById('receive')) {
-        if (document.getElementById('receive').style.display == 'none') {
-            document.getElementById('receive').style.display = 'block';
-            document.getElementById('sendBack').style.display = 'none';
-        }
-        else {
-            document.getElementById('receive').style.display = 'none';
-            }
-        }
-    }
-
-    // const select = document.getElementById('select-reason-reject');
-    // const checkbox = document.getElementById('lacking-checkbox');
-
-    // select.addEventListener('change', function() {
-    //     console.log(select.value);
-    //     if (select.value === 'Lacking in Document/s') {
-    //         checkbox.disabled = false;
-    //     } else {
-    //         checkbox.disabled = true;
-    //     }
-    // });
 
     $(document).ready(function() {
     $('#select-reason-reject').on('change', function() {
       var select_value = $(this).val();
       var checkboxes = $('input[name="lacking_doc_id[]"]');
-      
-      if (select_value === '1') {
+
+      if (select_value === '1')
+      {
         checkboxes.prop('disabled', false);
-      } else {
+      }
+      elseif(select_value === "")
+      {
+        checkboxes.prop('disabled', true)
+      }
+      else {
         checkboxes.prop('checked', false);
         checkboxes.prop('disabled', true);
       }
+        });
     });
-  });
+
+    $(document).ready(function() {
+    $('#select-reason-reject, #lacking-checkbox').change(function() {
+        if ($('#select-reason-reject').val() === '1' && (!$('#lacking-checkbox').is(':checked')))
+        {
+            $('#report-btn').prop('disabled', true);
+        }
+        else
+        {
+            $('#report-btn').prop('disabled', false);
+        }
+        });
+    });
+
+  forward-select_value
+  forward-btn
+    // select-reason-reject
+    // lacking-checkbox
+    // report-btn
 
   </script>
-  {{-- <script type="text/javascript">
-    (function(){
-    $('.receive').on('submit', function(){
-        $('.receive').attr('disabled','true');
-        $('.spinner').show();
+   <script>
+    document.getElementById("resubmit-form").addEventListener("submit", function(event) {
+
+    // Prevent the form from submitting and the page from refreshing
+    event.preventDefault();
+
+    // Call the swal() function inside the event listener
+    Swal.fire({
+    title: "Are you sure?",
+    text: "This action cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Proceed",
+    cancelButtonText: "Cancel",
+    dangerMode: true,
     })
-    })();
-    </script>
-    <script type="text/javascript">
-        (function(){
-        $('.forward').on('submit', function(){
-            $('.forward').attr('disabled','true');
-            $('.forward').show();
-        })
-        })();
-        </script>
-
-        <script type="text/javascript">
-        (function(){
-        $('.fixIssue').on('submit', function(){
-            $('.fixIssue').attr('disabled','true');
-            $('.fixIssue').show();
-        })
-        })();
-        </script>
-
-        <script type="text/javascript">
-        (function(){
-        $('.sendBack').on('submit', function(){
-            $('.sendBack').attr('disabled','true');
-            $('.sendBack').show();
-        })
-        })();
-        </script> --}}
-    <script>
-        $("document").ready(function(){
-            setTimeout(function(){
-                $("#message").remove();
-            }, 4500 );
+    .then((willProceed) => {
+    if (willProceed.isConfirmed) {
+        // The user clicked the "Proceed" button
+        // Submit the form
+        document.getElementById("resubmit-form").submit();
+    } else {
+        // The user clicked the "Cancel" button or closed the modal
+        Swal.fire({
+            text: "No changes made.",
+            icon: "success",
         });
-    </script>
-    <script type="text/javascript">
-        $('#search').on('keyup',function(){
-                    $value=$(this).val();
-                    $.ajax({
-                    type : 'get',
-                    url : '{{URL::to('search')}}',
-                    data:{'search':$value},
-                    success:function(data){
-                    console.log(data);
-                    $('tbody').html(data);
-                }
-            });
-        });
+    }
+    });
+    });
+        // const submitBtn = document.getElementById("resubmit-btn");
+
+        // submitBtn.addEventListener("click", function() {
+        //     event.preventDefault();
+        //     Swal.fire({
+        //     title: "Are you sure?",
+        //     text: "Make sure to double-check. You won't be able to revert this!",
+        //     icon: "warning",
+        //     buttons:
+        //     {
+        //         cancel: "Cancel",
+        //         proceed:
+        //         {
+        //             text: "Proceed",
+        //             value: true,
+        //             visible: true,
+        //             className: "",
+        //             closeModal: true,
+        //         },
+        //     },
+        //     dangerMode: true,
+        //     })
+        //     .then((willProceed) => {
+        //     if (willProceed) {
+        //     $.ajax({
+        //     url: "resubmit/{{ $data->referenceNo }}",
+        //     type: "POST",
+        //     data: $("#resubmit-form").serialize(), // Serialize the form data
+        //     success: function(response) {
+        //     swal("You have resubmitted the document!", {
+        //     icon: "success",
+        //         });
+        //     },
+        // error: function() {
+        //     swal("Oops!", "Something went wrong. Please try again later.", "error");
+        // }
+        // });
+        //     } else {
+        //         swal("Okay, you can resubmit anytime!");
+        //         }
+        //     });
+        // });
+
+        // const resolveBtn = document.getElementById("resolve-btn");
+
+        // resolveBtn.addEventListener("click", function() {
+        //     Swal.fire({
+        //     title: "Are you sure?",
+        //     text: "Make sure to double-check. You won't be able to revert this!",
+        //     icon: "warning",
+        //     buttons: true,
+        //     dangerMode: true,
+        //     })
+        //     .then((willDelete) => {
+        //     if (willDelete) {
+        //     $.ajax({
+        //     url: "resolve/{{ $data->referenceNo }}",
+        //     type: "POST",
+        //     data: $("#resolve-form").serialize(), // Serialize the form data
+        //     success: function(response) {
+        //     swal("You have resolved the document!", {
+        //     icon: "success",
+        //         });
+        //     },
+        // error: function() {
+        //     swal("Oops!", "Something went wrong. Please try again later.", "error");
+        // }
+        // });
+        //     } else {
+        //         swal("No changes made!");
+        //         }
+        //     });
+        // });
+
     </script>
     <script type="text/javascript">
         $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });

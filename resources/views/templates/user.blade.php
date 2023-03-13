@@ -57,6 +57,11 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.0/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.0/dist/sweetalert2.min.js"></script>
+
+
 </head>
 
 <body>
@@ -200,7 +205,8 @@ div.content {
             toastr.warning("{{ session('warning') }}");
     @endif
   </script>
-    <script src="/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
+<script src="/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
+
   <script>
     $(document).ready(function () {
 
@@ -219,9 +225,8 @@ div.content {
                 "progressBar": true,
             }
         });
-
   </script>
+
   {{-- @include('layouts.footers.auth.footer') --}}
 </body>
-
 </html>

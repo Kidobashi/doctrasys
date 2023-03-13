@@ -32,4 +32,9 @@ class TrackingHistory extends Model
     {
         return $this->belongsTo(Offices::class, 'receiverOffice');
     }
+
+    public function document()
+    {
+        return $this->belongsTo('App\Models\Documents');
+    }
 }
