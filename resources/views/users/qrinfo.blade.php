@@ -636,31 +636,31 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 8 )
-                        <div class="d-flex neomorphic-bg justify-content-between p-auto" style="background-color: #dbdde6; border: 1px solid black; ">
-                            <div class="col-md-2 d-flex flex-column align-items-center text-center" style="border: 1px solid black;">
-                                <p class="m-auto"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p class="mt-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                        <div class="d-flex neomorphic-bg justify-content-between p-auto" style="background-color: #dbdde6; ">
+                            <div class="col-md-2 latest-tracking-details my-auto text-center">
+                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="m-auto">
-                                <div class="d-flex justify-content-center align-items-center">
-                                    <div class="bg-white" style="border-radius: 20px;">
+                            <div class="col-md-1">
+                                <div class="justify-content-center align-items-center">
+                                    <div style="border-radius: 20px; background-color: white;">
                                         <i class="fas fa-check-double fa-4x p-2 text-primary"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-4 ml-4" style="position: relative; left:3.5px; border-left: 7px solid #0275d8; height: 4.5rem;">
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid #0d6efd; height: 95%;">
                                     <div class="blue-circle">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8 neomorphic-bg bg-primary">
-                                <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
+                            <div class="col-md-8 neomorphic-bg bg-primary p-auto">
+                                <div class="col-md-5 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-black text-center"><strong>RESUBMITTED</strong></h5>
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">{{ $latestResultRow->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">Resubmitted by <strong>{{ $latestResultRow->senderOfficeName }}</strong></p>
                                     </div>
                                 </div>
                             </div>
