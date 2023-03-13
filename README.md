@@ -1,4 +1,4 @@
-# [CMU Document Tracking System] [Capstone Project]
+# [CMU Document Tracking System]
 
 ## Functions
 
