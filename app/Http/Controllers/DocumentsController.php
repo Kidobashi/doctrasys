@@ -91,7 +91,7 @@ class DocumentsController extends Controller
          $sender = Auth::user()->name;
          $senderOffice = Auth::user()->assignedOffice;
 
-         $validatedData = $request->validate([
+        $validatedData = $request->validate([
              'senderName' => 'required',
              'referenceNo' => 'required',
              'senderOffice_id' => 'required',
@@ -100,34 +100,40 @@ class DocumentsController extends Controller
              'email' => 'required',
          ]);
 
-         Documents::create($validatedData);
+         if($senderOffice == $validatedData['receiverOffice_id'])
+         {
+            return redirect()->back()->with('error', "You can't send document to yourself");
+         }
+         else {
+            Documents::create($validatedData);
 
-         TrackingHistory::create([
-             'senderName' => $validatedData['senderName'],
-             'senderOffice' => $validatedData['senderOffice_id'],
-             'receiverOffice' => $validatedData['receiverOffice_id'],
-             'referenceNo' => $validatedData['referenceNo'],
-             'status' => 1,
-             'action' => 1,
-         ]);
+            TrackingHistory::create([
+                'senderName' => $validatedData['senderName'],
+                'senderOffice' => $validatedData['senderOffice_id'],
+                'receiverOffice' => $validatedData['receiverOffice_id'],
+                'referenceNo' => $validatedData['referenceNo'],
+                'status' => 1,
+                'action' => 1,
+            ]);
 
-         $receiverOfficeName = Offices::findOrFail($validatedData['receiverOffice_id'])->officeName;
-         $senderOfficeName = Offices::findOrFail($validatedData['senderOffice_id'])->officeName;
-         $flashRefNo = $validatedData['referenceNo'];
-         $flashDocType = DocumentType::findOrFail($validatedData['docType'])->documentName;
+            $receiverOfficeName = Offices::findOrFail($validatedData['receiverOffice_id'])->officeName;
+            $senderOfficeName = Offices::findOrFail($validatedData['senderOffice_id'])->officeName;
+            $flashRefNo = $validatedData['referenceNo'];
+            $flashDocType = DocumentType::findOrFail($validatedData['docType'])->documentName;
 
-         $qrs = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$flashRefNo));
-         $filename = 'qr'.$flashRefNo.'.png';
-         $filePath = public_path('qrcodes/') . $filename;
-         file_put_contents($filePath, $qrs);
+            $qrs = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$flashRefNo));
+            $filename = 'qr'.$flashRefNo.'.png';
+            $filePath = public_path('qrcodes/') . $filename;
+            file_put_contents($filePath, $qrs);
 
-         session()->flash('qrcode', asset('qrcodes/' . $filename));
+            session()->flash('qrcode', asset('qrcodes/' . $filename));
 
-         return redirect()->back()->with('message', "Successfully Added!")
+            return redirect()->back()->with('message', "Successfully Added!")
                              ->with('dctyp', $flashDocType)
                              ->with('recv', $receiverOfficeName)
                              ->with('sndr', $senderOfficeName)
                              ->with('flashRefNo', $flashRefNo);
+         }
     }
 
 

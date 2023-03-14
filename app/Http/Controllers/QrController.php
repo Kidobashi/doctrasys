@@ -192,19 +192,6 @@ class QrController extends Controller
         return response($results);
     }
 
-    public function forward($referenceNo){
-
-        $doc = Documents::where('referenceNo', $referenceNo)->first();
-        $offices = Offices::all();
-
-        $officeN = DB::table('documents')
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('documents.referenceNo', $referenceNo)
-        ->first();
-
-        return view('partials.forward')->with('officeN', $officeN)->with('offices', $offices)->with('doc', $doc)->with('success', 'Forwarded Successfully!');
-    }
-
     public function receive($referenceNo){
 
         $doc = Documents::where('referenceNo', $referenceNo)->first();
@@ -220,9 +207,9 @@ class QrController extends Controller
 
     public function receiveDoc($referenceNo, Request $request)
     {
-        $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
-        ->where('senderOffice', '=', Auth::user()->assignedOffice)
-        ->exists();
+        // $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
+        // ->where('senderOffice', '=', Auth::user()->assignedOffice)
+        // ->exists();
 
         $document = Documents::where('referenceNo', $referenceNo)->first();
 
@@ -232,12 +219,12 @@ class QrController extends Controller
         }
         else
         {
-            if($checkIfExist == true)
-            {
-                return redirect('qrinfo/'.$referenceNo)->with('error', 'As you have a history of modifying this document, You cannot modify the status of this document!');
-            }
-            else
-            {
+            // if($checkIfExist == true)
+            // {
+            //     return redirect('qrinfo/'.$referenceNo)->with('error', 'As you have a history of modifying this document, You cannot modify the status of this document!');
+            // }
+            // else
+            // {
                 $validatedData = $request->validate([
                     'status' => 'required',
                     'action' => 'required',
@@ -255,7 +242,7 @@ class QrController extends Controller
                 ]);
 
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now received by You');
-            }
+            // }
         }
     }
 
@@ -330,7 +317,11 @@ class QrController extends Controller
                     'senderOffice' => 'required',
                     'receiverOffice' => 'required',
                 ]);
-
+                if(Auth::user()->assignedOffice == $validatedData['receiverOffice'])
+                {
+                    return redirect('qrinfo/'.$referenceNo)->with('error', "You can't forward this Document to yourself");
+                }
+                else{
                 Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
                 TrackingHistory::create([
@@ -340,8 +331,8 @@ class QrController extends Controller
                     'action' => $validatedData['action'],
                     'status' => $validatedData['status'],
                 ]);
-
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'You have forwarded this Document');
+                }
             }
             else{
                 return redirect('qrinfo/'.$referenceNo)->with('error', "This document is being processed by another office.");

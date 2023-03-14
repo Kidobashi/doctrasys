@@ -4,7 +4,26 @@
     <title>Tracking Information</title>
 </head>
 <style>
+.icon-sz{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:80px;
+    width:80px;
+}
 
+.alt-icon-sz
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:70px;
+    width:70px;
+}
+/* .icon-sz i{
+    position:relative;
+
+} */
 .fa-spin.spin-reverse{
     -webkit-animation-direction:reverse;
      -moz-animation-direction:reverse;
@@ -32,9 +51,10 @@
 
 .dashed-line{
     height: 70px;
+    /* width: 0px; */
     border-left: 8px dashed black;
     margin-left:9px;
-    margin-top:20px;
+    margin-top:17.5px;
 }
 
 .yellow-circle {
@@ -269,8 +289,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <form action="rejected/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                     <h6>Is something wrong with the document?</h6>
-                                    <select class="form-control text-center" id="select-reason-reject" name="primary_reason_of_return_id">
-                                    <option value="" selected disabled>Select
+                                    <label for="primary_reason_of_return_id">Choose primary reason of return<span class="required text-danger" style="font-size: 20px;">*</span></label>
+                                    <select class="form-control text-center" id="select-reason-reject" name="primary_reason_of_return_id" required>
+                                    <option value="" selected disabled>Choose
                                     @foreach ($primaryReason as $row)
                                         <option value="{{ $row->id }}">{{ $row->reason }}</option>
                                         </option>
@@ -279,14 +300,13 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     @if ($errors->has('primary_reason_of_return_id'))
                                         <span class="text-danger">{{ $errors->first('primary_reason_of_return_id') }}</span>
                                     @endif
-
                                     @foreach ($lacking as $row)
                                         <div class="m-0 p-0">
-                                            <input type="checkbox" id="lacking-checkbox" name="lacking_doc_id[]" value="{{ $row->name }}"  data-value="{{ $row->name }}">
+                                            <input class="form-check-input"  type="checkbox" id="lacking-checkbox" name="lacking_doc_id[]" value="{{ $row->name }}"  data-value="{{ $row->name }}">
                                             <label>{{ $row->name }}</label>
                                         </div>
                                     @endforeach
-                                    <textarea name="others" id="" cols="30" rows="10" placeholder="others"></textarea>
+                                    <textarea class="form-control" name="others" id="" cols="30" rows="10" placeholder="others"></textarea>
                                     <input class="form-control "type="text" style="display: none;" name='receiverOffice_id' value="{{ $getDocumentCreator->senderOffice_id }}">
                                     <input class="form-control "type="text" style="display: none;" name='senderOffice_id' value="{{ Auth::user()->assignedOffice }}">
                                     <input class="form-control "type="text" style="display: none;" name='status' value="5">
@@ -301,6 +321,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <form class="" action="forward/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <h6>Forward Document to next the Office</h6>
+                                    <label for="receiverOffice">Select the office to forward<span class="required text-danger" style="font-size: 20px;">*</span></label>
                                         <select class="form-control text-center" id="forward-select" name="receiverOffice" required>
                                         <option value="" selected disabled>Select Office
                                         @foreach ($selectOffice as $row)
@@ -379,33 +400,25 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                     @if (isset($latestTracking->status))
                         @if ( $latestTracking->status == 1 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1">
-                            <div class="py-4 m-auto">
-                                <div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <div style="border-radius: 20px;">
-                                            <i class="fas fa-flag fa-4x p-2  text-info"></i>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-1 bg-light icon-sz text-center" style="border-radius: 20px;">
+                                <i class="fas fa-flag fa-4x text-info"></i>
                             </div>
-                            <div class="col-md-10 neomorphic-bg text-center p-auto">
-                                <h2>Created</h2>
-                                <p class="p-0 m-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p class="p-0 m-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="col-md-10 neomorphic-bg">
+                                <div class="col-md-2 p-auto bg-info" style="border-radius: 10px;">
+                                    <h5 class="text-dark text-center"><strong>Created</strong></h5>
+                                </div>
+                                <p class="p-0 m-0">Date Created: <strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                                <p class="p-0 m-0">Created by the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 2 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
-                            <div class="col-md-2 latest-tracking-details my-auto text-center">
-                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="col-md-1">
-                                <div class="justify-content-center align-items-center">
-                                    <div style="border-radius: 20px; background-color: white;">
-                                        <i class="fas fa-check fa-4x p-2 text-primary"></i>
-                                    </div>
-                                </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-check fa-4x text-primary"></i>
                             </div>
                             <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #0d6efd; height: 95%;">
@@ -426,16 +439,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif( $latestTracking->status == 3 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
-                            <div class="col-md-2 latest-tracking-details my-auto text-center">
-                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="col-md-1">
-                                <div class="justify-content-center align-items-center">
-                                    <div style="border-radius: 20px; background-color: white; height:100%;">
-                                        <i class="fas fa-spinner fa-spin fa-4x p-2 text-secondary"></i>
-                                    </div>
-                                </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-spinner fa-spin fa-4x text-secondary"></i>
                             </div>
                             <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #6c757d; height: 95%;">
@@ -456,16 +465,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif( $latestTracking->status == 4 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
-                            <div class="col-md-2 latest-tracking-details my-auto text-center">
-                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="col-md-1">
-                                <div class="justify-content-center align-items-center">
-                                    <div style="border-radius: 20px; background-color: white; height:100%;">
-                                        <i class="fas fa-envelope fa-4x p-2" style="color: #28a745;"></i>
-                                    </div>
-                                </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-envelope fa-4x" style="color: #28a745;"></i>
                             </div>
                             <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #28a745; height: 95%;">
@@ -486,16 +491,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif( $latestTracking->status == 5 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
-                            <div class="col-md-2 latest-tracking-details my-auto text-center">
-                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="col-md-1">
-                                <div class="justify-content-center align-items-center">
-                                    <div style="border-radius: 20px; background-color: white; height:100%;">
-                                        <i class="fas fa-exclamation-circle fa-4x p-2  text-danger"></i>
-                                    </div>
-                                </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-exclamation-circle fa-4x text-danger"></i>
                             </div>
                             <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #dc3545; height: 95%;">
@@ -517,7 +518,6 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         @endif
                                     </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="d-flex flex-wrap mb-0">
                                 @if(isset($boxArray))
@@ -532,7 +532,6 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     </div>
                                 @endif
                                 </div>
-
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
                                         @if (isset($documentWithIssue->others))
@@ -544,19 +543,15 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif( $latestTracking->status == 6 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
-                            <div class="col-md-2 latest-tracking-details my-auto text-center">
-                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="col-md-1">
-                                <div class="justify-content-center align-items-center">
-                                    <div style="border-radius: 20px; background-color: white; height:100%;">
-                                        <i class="fas fa-undo fa-spin spin-reverse fa-4x p-2 text-secondary"></i>
-                                    </div>
-                                </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-undo fa-spin spin-reverse fa-4x text-secondary"></i>
                             </div>
                             <div class="col-md-1" style="width:10px;">
-                                <div class="col-md-12" style="position: relative; border-left: 7px solid #6c757d; height: 95%;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid #6c757d; height: 95%;">
                                     <div class="gray-circle">
                                     </div>
                                 </div>
@@ -574,21 +569,15 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif( $latestTracking->status == 7 )
                         <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
-                            <div class="m-auto text-center">
-                                <p><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p>{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="py-4 m-auto">
-                                <div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <div style="border-radius: 20px; background-color: white;">
-                                            <i class="fas fa-tasks fa-4x p-2 text-warning"></i>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-tasks fa-4x text-warning"></i>
                             </div>
-                            <div class="m-auto" style="width:40px;">
-                                <div class="col-md-12 my-3 ml-3" style="position: relative; border-left: 7px solid #f0ad4e; height: 5.5rem;">
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid #f0ad4e; height: 95%;">
                                     <div class="yellow-circle">
                                     </div>
                                 </div>
@@ -637,16 +626,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif( $latestTracking->status == 8 )
                         <div class="d-flex neomorphic-bg justify-content-between p-auto" style="background-color: #dbdde6; ">
-                            <div class="col-md-2 latest-tracking-details my-auto text-center">
-                                <p style="margin-top:0; margin-bottom: 0;"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
-                            <div class="col-md-1">
-                                <div class="justify-content-center align-items-center">
-                                    <div style="border-radius: 20px; background-color: white;">
-                                        <i class="fas fa-check-double fa-4x p-2 text-primary"></i>
-                                    </div>
-                                </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-check-double fa-4x text-primary"></i>
                             </div>
                             <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #0d6efd; height: 95%;">
@@ -689,8 +674,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @if ($row->status == 1)
                             <div class="d-flex">
                                 <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                    <div class="col-md-4 m-1 neomorphic-bg bg-info">
-                                        <i class="fas fa-flag fa-2x p-2 text-white"></i>
+                                    <div class="col-md-4 neomorphic-bg bg-info alt-icon-sz">
+                                        <i class="fas fa-flag fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
                                         <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
@@ -705,8 +690,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($row->status == 2)
                             <div class="d-flex">
                                 <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                    <div class="col-md-4 m-1 neomorphic-bg bg-primary">
-                                        <i class="fas fa-check fa-2x p-2 text-white"></i>
+                                    <div class="col-md-4 neomorphic-bg alt-icon-sz bg-primary">
+                                        <i class="fas fa-check fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
                                         <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
@@ -721,8 +706,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($row->status == 3)
                             <div class="d-flex">
                                 <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                    <div class="col-md-4 m-1 neomorphic-bg bg-secondary">
-                                        <i class="fas fa-spinner fa-spin fa-2x p-2 text-white"></i>
+                                    <div class="col-md-4 neomorphic-bg bg-secondary alt-icon-sz">
+                                        <i class="fas fa-spinner fa-spin fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
                                         <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
@@ -737,8 +722,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($row->status == 4)
                             <div class="d-flex">
                                 <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                    <div class="col-md-4 m-1 neomorphic-bg bg-success">
-                                        <i class="fas fa-envelope fa-2x p-2 text-white"></i>
+                                    <div class="col-md-4 neomorphic-bg bg-success alt-icon-sz">
+                                        <i class="fas fa-envelope fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
                                         <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
@@ -753,8 +738,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($row->status == 5)
                             <div class="d-flex">
                                 <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                    <div class="col-md-4 m-1 neomorphic-bg bg-danger">
-                                        <i class="fas fa-exclamation-circle fa-2x p-2 text-white"></i>
+                                    <div class="col-md-4 neomorphic-bg bg-danger alt-icon-sz">
+                                        <i class="fas fa-exclamation-circle fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
                                         <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
@@ -782,8 +767,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($row->status == 6)
                             <div class="d-flex">
                                 <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                    <div class="col-md-4 m-1 neomorphic-bg">
-                                        <i class="fas fa-undo fa-spin spin-reverse fa-2x p-2 text-secondary"></i>
+                                    <div class="col-md-4 neomorphic-bg alt-icon-sz">
+                                        <i class="fas fa-undo fa-spin spin-reverse fa-2x text-secondary"></i>
                                     </div>
                                     <div class="col-md-7">
                                         <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
@@ -798,8 +783,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($row->status == 7)
                         <div class="d-flex">
                             <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
-                                <div class="col-md-4 m-1 neomorphic-bg bg-warning">
-                                    <i class="fas fa-tasks fa-2x p-2 text-white"></i>
+                                <div class="col-md-4 neomorphic-bg bg-warning alt-icon-sz">
+                                    <i class="fas fa-tasks fa-2x text-white"></i>
                                 </div>
                                 <div class="col-md-7">
                                     <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
@@ -812,6 +797,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         </div>
                         @elseif ($row->status == 8)
+
                         @endif
                     @endforeach
                 </div>
@@ -821,6 +807,16 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     @endauth
 
   <script>
+    const select = document.getElementById("forward-select");
+    const button = document.getElementById("forward-btn");
+
+    select.addEventListener("change", function() {
+    if (select.value === "none") {
+        button.disabled = true;
+    } else {
+        button.disabled = false;
+    }
+    });
 
     $(document).ready(function() {
     $('#select-reason-reject').on('change', function() {
@@ -831,35 +827,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
       {
         checkboxes.prop('disabled', false);
       }
-      elseif(select_value === "")
-      {
-        checkboxes.prop('disabled', true)
-      }
       else {
         checkboxes.prop('checked', false);
         checkboxes.prop('disabled', true);
       }
         });
     });
-
-    $(document).ready(function() {
-    $('#select-reason-reject, #lacking-checkbox').change(function() {
-        if ($('#select-reason-reject').val() === '1' && (!$('#lacking-checkbox').is(':checked')))
-        {
-            $('#report-btn').prop('disabled', true);
-        }
-        else
-        {
-            $('#report-btn').prop('disabled', false);
-        }
-        });
-    });
-
-  forward-select_value
-  forward-btn
-    // select-reason-reject
-    // lacking-checkbox
-    // report-btn
 
   </script>
    <script>
