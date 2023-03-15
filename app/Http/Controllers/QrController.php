@@ -207,24 +207,31 @@ class QrController extends Controller
 
     public function receiveDoc($referenceNo, Request $request)
     {
-        // $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
-        // ->where('senderOffice', '=', Auth::user()->assignedOffice)
-        // ->exists();
+        $getRecentReceiver = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->where('status', 2)
+                    ->latest()
+                    ->first();
 
-        $document = Documents::where('referenceNo', $referenceNo)->first();
+        $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
+                        ->where('status', 2)
+                        ->where('senderOffice', $getRecentReceiver->senderOffice)
+                        ->latest()
+                        ->first();
 
-        if(Auth::user()->assignedOffice == $document->senderOffice_id)
+        if($checkIfExist->senderOffice == Auth::user()->assignedOffice)
         {
-            return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'As the previous receiver of this document, you cannot receive the same document consecutively.');
         }
         else
         {
-            // if($checkIfExist == true)
-            // {
-            //     return redirect('qrinfo/'.$referenceNo)->with('error', 'As you have a history of modifying this document, You cannot modify the status of this document!');
-            // }
-            // else
-            // {
+            $document = Documents::where('referenceNo', $referenceNo)->first();
+
+            if(Auth::user()->assignedOffice == $document->senderOffice_id)
+            {
+                return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
+            }
+            else
+            {
                 $validatedData = $request->validate([
                     'status' => 'required',
                     'action' => 'required',
@@ -242,7 +249,7 @@ class QrController extends Controller
                 ]);
 
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now received by You');
-            // }
+            }
         }
     }
 
@@ -373,6 +380,19 @@ class QrController extends Controller
                     'primary_reason_of_return_id.required' => 'Choose a primary reason of rejection',
                 ];
 
+                $getRecentSender = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->where('status', 4)
+                    ->latest()
+                    ->first();
+
+                $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
+                        ->where('status', 4)
+                        ->where('senderOffice', $getRecentSender->senderOffice)
+                        ->latest()
+                        ->first();
+
+                        // dd($checkIfExist->senderOffice);
+
                 $validatedData = $request->validate($rules, $messages);
 
                 $data = serialize($request->input('lacking_doc_id'));
@@ -386,7 +406,7 @@ class QrController extends Controller
 
                     TrackingHistory::create([
                         'referenceNo' => $referenceNo,
-                        'receiverOffice' => $validatedData['receiverOffice_id'],
+                        'receiverOffice' => $checkIfExist->senderOffice,
                         'senderOffice' => $latestResultRow->senderOffice,
                         'action' => $validatedData['action'],
                         'status' => $validatedData['status'],
@@ -403,7 +423,7 @@ class QrController extends Controller
 
                     TrackingHistory::create([
                         'referenceNo' => $referenceNo,
-                        'receiverOffice' => $validatedData['receiverOffice_id'],
+                        'receiverOffice' => $checkIfExist->senderOffice,
                         'senderOffice' => $latestResultRow->senderOffice,
                         'action' => $validatedData['action'],
                         'status' => $validatedData['status'],
