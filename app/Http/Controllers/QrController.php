@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\LackingDocuments;
 use App\Models\PrimaryReasonOfReturn;
+use App\Models\User;
 
 class QrController extends Controller
 {
@@ -21,105 +22,96 @@ class QrController extends Controller
 
     public function qrInfo($referenceNo)
     {
-    $documents_query = Documents::where('referenceNo', $referenceNo);
-    $document_id = $documents_query->pluck('id')->first();
+        //Display Office on the Actions Area
+        $assignedOffice = User::join('offices', 'assignedOffice', '=', 'offices.id')
+        ->where('assignedOffice', Auth::user()->assignedOffice)
+        ->first();
 
-    // Fetch all offices that should appear as a dropdown selection.
-    $selectOffice = Offices::all();
+        $documents_query = Documents::where('referenceNo', $referenceNo);
+        $document_id = $documents_query->pluck('id')->first();
 
-    // Fetch office data where documents were offered.
-    $officeN = DB::table('documents')
+        // Fetch all offices that should appear as a dropdown selection.
+        $selectOffice = Offices::all();
+
+        // Fetch office data where documents were offered.
+        $officeN = DB::table('documents')
                 ->join('offices', 'receiverOffice_id', 'offices.id')
                 ->where('documents.referenceNo', $referenceNo)
                 ->first();
 
-    // Fetch all offices from DB.
-    $offices = Offices::all();
+        // Fetch all offices from DB.
+        $offices = Offices::all();
 
-    // Fetch document data from DB suing reference no.
-    $data = DB::table('documents')
+        // Fetch document data from DB suing reference no.
+        $data = DB::table('documents')
               ->join('offices', 'senderOffice_id', 'offices.id')
               ->where('referenceNo','LIKE', "%{$referenceNo}%")
               ->first();
 
-    // Fetch document type data from DB using reference no.
-    $docCategory = DB::table('documents')
+        // Fetch document type data from DB using reference no.
+        $docCategory = DB::table('documents')
                      ->join('document_type', 'docType', 'document_type.id')
                      ->where('referenceNo','LIKE', "%{$referenceNo}%")
                      ->first();
 
-    // // Fetch tracking log info from DB using reference no, sorted by newest to oldest.
-    // $trackings       = TrackingHistory::join('offices', 'receiverOffice', 'offices.id')
-    //                                ->where('referenceNo', $referenceNo)
-    //                                ->orderBy('created_at', 'DESC')
-    //                                ->get();
+        // Fetch tracking log info from DB using reference no, sorted by newest to oldest.
+        $latestTracking = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
+        ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
+        ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
+        ->where('referenceNo', 'LIKE', "%{$referenceNo}%")
+        ->latest()
+        ->first();
 
-    // // Fetch tracking log info of the previous office from DB using reference no, sorted by newest to oldest.
-    // $prev            = TrackingHistory::join('offices', 'prevOffice', 'offices.id')
-    //                      ->where('referenceNo','LIKE', "%{$referenceNo}%")
-    //                      ->orderBy('created_at', 'DESC')
-    //                      ->get();
+        $primaryReason = PrimaryReasonOfReturn::all();
 
-    // Fetch issue info from DB using reference number.
-    // $issue           = Issues::where('docRefNo','LIKE', "%{$referenceNo}%")->first();
+        $lacking         = LackingDocuments::all();
 
-// Fetch tracking log info from DB using reference no, sorted by newest to oldest.
-    $latestTracking = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
-    ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
-    ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
-    ->where('referenceNo', 'LIKE', "%{$referenceNo}%")
-    ->latest()
-    ->first();
-
-    $primaryReason = PrimaryReasonOfReturn::all();
-
-    $lacking         = LackingDocuments::all();
-
-    //Query Tracking history of a Document
-    $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
-                    ->max('created_at');
-                        // dd($latestResult);
-    $latestResultRow = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
-                    ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
-                    ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
-                    ->where('referenceNo', $referenceNo)
-                    ->where('created_at', $latestResult)
-                    ->latest()
-                    ->first();
-
-    $trackingHistory = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
+        //Query Tracking history of a Document
+        $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
+                        ->max('created_at');
+                            // dd($latestResult);
+        $latestResultRow = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
                         ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
                         ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
                         ->where('referenceNo', $referenceNo)
-                        ->where('created_at', '<', $latestResult)
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+                        ->where('created_at', $latestResult)
+                        ->latest()
+                        ->first();
 
-        // dd($trackingHistory);
+        $trackingHistory = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
+                            ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
+                            ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
+                            ->where('referenceNo', $referenceNo)
+                            ->where('created_at', '<', $latestResult)
+                            ->orderBy('created_at', 'desc')
+                            ->get();
 
-    // Fetch status info from DB using reference number.
-    $status = Documents::where('referenceNo', $referenceNo)->first();
+            // dd($trackingHistory);
 
-    // Merge both arrays together.
+        // Fetch status info from DB using reference number.
+        $status = Documents::where('referenceNo', $referenceNo)->first();
 
-    $selectOffice = Offices::all();
+        // Merge both arrays together.
 
-    $getDocumentCreator = Documents::where('referenceNo', $referenceNo)->first();
-    $documentWithIssue = BasisOfReturn::join('primary_reason_of_returns as reason', 'reason.id', '=', 'basis_of_returns.primary_reason_of_return_id')
-                        ->select('basis_of_returns.*', 'reason.reason as primary')
-                        ->where('referenceNumber', $referenceNo)->first();
+        $selectOffice = Offices::all();
 
-    $serializedData = BasisOfReturn::where('referenceNumber', $referenceNo)
-                    ->where('primary_reason_of_return_id', 1)
-                    ->pluck('lacking_doc_id');
+        $getDocumentCreator = Documents::where('referenceNo', $referenceNo)->first();
+        $documentWithIssue = BasisOfReturn::join('primary_reason_of_returns as reason', 'reason.id', '=', 'basis_of_returns.primary_reason_of_return_id')
+                            ->select('basis_of_returns.*', 'reason.reason as primary')
+                            ->where('referenceNumber', $referenceNo)->first();
 
-    // dd($serializedData);
-    $unserialized = $serializedData->map(function($item)
-    {
-        return unserialize($item);
-    });
 
-    // dd($serializedData);
+        $serializedData = BasisOfReturn::where('referenceNumber', $referenceNo)
+                        ->where('primary_reason_of_return_id', 1)
+                        ->pluck('lacking_doc_id');
+
+        // dd($serializedData);
+        $unserialized = $serializedData->map(function($item)
+        {
+            return unserialize($item);
+        });
+
+        // dd($serializedData);
 
     return view('users.qrinfo', ['trackingHistory'=> $trackingHistory])
         ->with('latestResultRow', $latestResultRow)
@@ -212,13 +204,16 @@ class QrController extends Controller
                     ->latest()
                     ->first();
 
-        $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
+         if(isset($getRecentReceiver))
+         {
+            $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
                         ->where('status', 2)
                         ->where('senderOffice', $getRecentReceiver->senderOffice)
                         ->latest()
                         ->first();
+        }
 
-        if($checkIfExist->senderOffice == Auth::user()->assignedOffice)
+        if(isset($checkIfExist->senderOffice) && $checkIfExist->senderOffice == Auth::user()->assignedOffice)
         {
             return redirect('qrinfo/'.$referenceNo)->with('error', 'As the previous receiver of this document, you cannot receive the same document consecutively.');
         }
@@ -349,6 +344,18 @@ class QrController extends Controller
 
     public function rejectDocument($referenceNo, Request $request)
     {
+        $previousOffice = DB::table('tracking_histories')
+        ->select('senderOffice',
+            DB::raw('MAX(created_at) as latest_date'),
+            DB::raw('COUNT(*) as num_results'))
+        ->where('referenceNo', '=', $referenceNo)
+        ->groupBy('senderOffice')
+        ->orderByDesc('latest_date')
+        ->pluck('senderOffice')
+        ->skip(1)
+        ->take(1)
+        ->first();
+
         $document = Documents::where('referenceNo', $referenceNo)->first();
 
         if(Auth::user()->assignedOffice == $document->senderOffice_id)
@@ -357,11 +364,7 @@ class QrController extends Controller
         }
         else
         {
-            $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
-                    ->max('created_at');
-
             $latestResultRow = TrackingHistory::where('referenceNo', $referenceNo)
-                    ->where('created_at', $latestResult)
                     ->latest()
                     ->first();
 
@@ -380,19 +383,6 @@ class QrController extends Controller
                     'primary_reason_of_return_id.required' => 'Choose a primary reason of rejection',
                 ];
 
-                $getRecentSender = TrackingHistory::where('referenceNo', $referenceNo)
-                    ->where('status', 4)
-                    ->latest()
-                    ->first();
-
-                $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
-                        ->where('status', 4)
-                        ->where('senderOffice', $getRecentSender->senderOffice)
-                        ->latest()
-                        ->first();
-
-                        // dd($checkIfExist->senderOffice);
-
                 $validatedData = $request->validate($rules, $messages);
 
                 $data = serialize($request->input('lacking_doc_id'));
@@ -406,7 +396,7 @@ class QrController extends Controller
 
                     TrackingHistory::create([
                         'referenceNo' => $referenceNo,
-                        'receiverOffice' => $checkIfExist->senderOffice,
+                        'receiverOffice' => $previousOffice,
                         'senderOffice' => $latestResultRow->senderOffice,
                         'action' => $validatedData['action'],
                         'status' => $validatedData['status'],
@@ -423,7 +413,7 @@ class QrController extends Controller
 
                     TrackingHistory::create([
                         'referenceNo' => $referenceNo,
-                        'receiverOffice' => $checkIfExist->senderOffice,
+                        'receiverOffice' => $previousOffice,
                         'senderOffice' => $latestResultRow->senderOffice,
                         'action' => $validatedData['action'],
                         'status' => $validatedData['status'],
@@ -447,6 +437,29 @@ class QrController extends Controller
 
     public function returnToSender($referenceNo, Request $request)
     {
+        $previousOffice = DB::table('tracking_histories')
+        ->select('senderOffice',
+            DB::raw('MAX(created_at) as latest_date'),
+            DB::raw('COUNT(*) as num_results'))
+        ->where('referenceNo', '=', $referenceNo)
+        ->groupBy('senderOffice')
+        ->orderByDesc('latest_date')
+        ->pluck('senderOffice')
+        ->skip(1)
+        ->take(1)
+        ->first();
+
+        $getRecentSender = TrackingHistory::where('referenceNo', $referenceNo)
+        ->where('status', 5)
+        ->latest()
+        ->first();
+
+        $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
+            ->where('status', 5)
+            ->where('senderOffice', $getRecentSender->senderOffice)
+            ->latest()
+            ->first();
+
         $document = Documents::where('referenceNo', $referenceNo)->first();
 
         if(Auth::user()->assignedOffice == $document->senderOffice_id)
@@ -475,7 +488,7 @@ class QrController extends Controller
 
                 TrackingHistory::create([
                     'referenceNo' => $referenceNo,
-                    'receiverOffice' => $document->senderOffice_id,
+                    'receiverOffice' => $previousOffice,
                     'senderOffice' => $validatedData['senderOffice'],
                     'action' => $validatedData['action'],
                     'status' => $validatedData['status'],
@@ -491,26 +504,17 @@ class QrController extends Controller
 
     public function resolveDoc($referenceNo, Request $request)
     {
-        $document = Documents::where('referenceNo', $referenceNo)->first();
-
         $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
-                    ->max('created_at');
+                    ->where('status', 6)
+                    ->latest()
+                    ->first();
 
-        $latestResultRow = TrackingHistory::where('referenceNo', $referenceNo)
-                ->where('created_at', $latestResult)
-                ->latest()
-                ->first();
-
-        if(Auth::user()->assignedOffice != $document->senderOffice_id || Auth::user()->assignedOffice != $latestResultRow->receiverOffice)
+        if(Auth::user()->assignedOffice !=  $latestResult->receiverOffice)
         {
-            return redirect('qrinfo/'.$referenceNo)->with('error', 'Only the creator can resolve this document.');
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'Only the previous receiver can resolve this document.');
         }
         else
         {
-            $latestResultRow = TrackingHistory::where('referenceNo', $referenceNo)
-                ->where('created_at', $latestResult)
-                ->latest()
-                ->first();
 
             $validatedData = $request->validate([
                 'status' => 'required',
@@ -522,7 +526,7 @@ class QrController extends Controller
             TrackingHistory::create([
                 'referenceNo' => $referenceNo,
                 'receiverOffice' => Auth::user()->assignedOffice,
-                'senderOffice' => $latestResultRow->senderOffice,
+                'senderOffice' => $latestResult->senderOffice,
                 'action' => $validatedData['action'],
                 'status' => $validatedData['status'],
             ]);

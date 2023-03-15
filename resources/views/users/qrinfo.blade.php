@@ -511,6 +511,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
                                         <p class="m-0 p-0 text-white">Rejected by the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">Sent back to the <strong>{{ $latestTracking->receiverOfficeName }}</strong></p>
                                     </div>
                                     <div class="d-flex flex-wrap">
                                         @if (isset($documentWithIssue))
@@ -557,8 +558,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                             </div>
                             <div class="col-md-8 neomorphic-bg bg-secondary p-auto">
-                                <div class="col-md-5 p-auto bg-white" style="border-radius: 10px;">
-                                    <h5 class="px-2 text-secondary text-center"><strong>RETURNED TO SENDER</strong></h5>
+                                <div class="col-md-8 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="px-2 text-secondary text-center"><strong>RETURNED TO PREVIOUS OFFICE</strong></h5>
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
@@ -606,20 +607,26 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="col-md-12 p-1 mt-2 px-auto bg-white" style="border-radius: 8px;">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-black">Primary Reason of Return: <strong>{{ $documentWithIssue->reason }}</strong></p>
+                                        <p class="m-0 p-0 text-black">Primary Reason of Return: <strong>{{ $documentWithIssue->primary }}</strong></p>
                                     </div>
-                                    @if (isset($boxArray))
-                                    <div class="d-flex flex-wrap">
-                                        <p class="text-black">Missing Documents: </p>
+                                    <div class="row">
+                                        <div class="d-flex flex-wrap mb-0">
+                                    @if(isset($boxArray))
                                         @foreach ($boxArray as $item)
-                                            @foreach ($item as $value)
-                                                <p class="m-0 p-0 text-black"><strong>&nbsp;&nbsp;  {{ $value }}</strong></p>
-                                            @endforeach
+                                            @if (!empty($item))
+                                            <p class="m-0 p-0">Missing Documents: </p>
+                                                @foreach ($item  as $value)
+                                                <p class="m-0 p-0"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
+                                                @endforeach
+                                            @endif
                                         @endforeach
+                                        </div>
+                                        @endif
                                     </div>
-                                    @endif
                                      <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-black" style="font-size: 1em;">More Details: <strong>{{ $documentWithIssue->others }}</strong></p>
+                                        @if (isset($documentWithIssue->others))
+                                            <p class="m-0 p-0 text-black" style="font-size: 1em;">More Details: <strong>{{ $documentWithIssue->others }}</strong></p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -684,7 +691,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="dashed-line">
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
-                                    <p>Circulating</p>
+                                    <p class="m-0 p-0">Initiated by <strong>{{ $row->senderOfficeName }}</strong></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 2)
@@ -761,7 +768,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         </div>
                                     </div>
                                      @endif
+                                     @if(isset($documentWithIssue->others))
                                      <p class="m-0">More Details: <em><strong>{{ $documentWithIssue->others }}</strong></em></p>
+                                     @endif
                                 </div>
                             </div>
                         @elseif ($row->status == 6)

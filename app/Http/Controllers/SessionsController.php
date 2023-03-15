@@ -23,7 +23,7 @@ class SessionsController extends Controller
         if(Auth::attempt($attributes))
         {
             session()->regenerate();
-            return redirect('index')->with(['success'=>'You are logged in.']);
+            return back()->with(['success'=>'You are logged in.']);
         }
         else{
 
