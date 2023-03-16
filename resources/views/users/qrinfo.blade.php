@@ -755,7 +755,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="dashed-line">
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
-                                    <p class="m-0">Reported by <strong>{{ $row->receiverOfficeName }}</strong></p>
+                                    <p class="m-0">Reported by <strong>{{ $row->senderOfficeName }}</strong></p>
                                     @if (isset($boxArray))
                                     <div class="row">
                                         <div class="d-flex flex-wrap mb-0">
@@ -786,7 +786,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="dashed-line">
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
-                                    <p class="p-auto m-0">Sent back by <strong>{{ $row->receiverOfficeName }}</strong></p>
+                                    <p class="p-auto m-0">Sent back by <strong>{{ $row->senderOfficeName }}</strong></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 7)
@@ -802,7 +802,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="dashed-line">
                             </div>
                             <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
-                                <p class="p-auto m-0">Reviewed and Rerecompiled by <strong>{{ $row->senderOfficeName }}</strong></p>
+                                <p class="p-auto m-0">Reviewed and Rerecompiled by <strong>{{ $row->receiverOfficeName }}</strong></p>
                             </div>
                         </div>
                         @elseif ($row->status == 8)
