@@ -271,17 +271,26 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                     </form>
                 </div>
                 @elseif ($status->status == 2)
-                {{-- Process Status --}}
-                <div class="neomorphic-bg d-flex justify-content-center">
-                    <form action="process/{{ $data->referenceNo }}" method="post">
-                        @csrf
-                        <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                        <input type="text" style="display: none;" value="3" name="status">
-                        <input type="text" style="display: none;" value="3" name="action">
-                        <button type="submit" class="neo-btn btn" onclick=""><h3>Process</h3></button>
-                    </form>
-                </div>
+                    @if($latestTracking->senderOffice == Auth::user()->assignedOffice)
+                    {{-- Process Status --}}
+                    <div class="neomorphic-bg d-flex justify-content-center">
+                        <form action="process/{{ $data->referenceNo }}" method="post">
+                            @csrf
+                            <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                            <input type="text" style="display: none;" value="3" name="status">
+                            <input type="text" style="display: none;" value="3" name="action">
+                            <button type="submit" class="neo-btn btn" onclick=""><h3>Process</h3></button>
+                        </form>
+                    </div>
+                    @else
+                    <div class="neomorphic-bg d-flex justify-content-center">
+                        <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is was received by another department.
+                            Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
+                        </p>
+                    </div>
+                    @endif
                 @elseif ($status->status == 3)
+                    @if($latestTracking->senderOffice == Auth::user()->assignedOffice)
                 {{-- Return/Forward --}}
                     <div class="text-center justify-content-center">
                         <div class="">
@@ -337,6 +346,13 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                             </div>
                         </div>
+                        @else
+                        <div class="neomorphic-bg d-flex justify-content-center">
+                            <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is being processed in another department.
+                                Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
+                            </p>
+                        </div>
+                        @endif
                         @elseif ($status->status == 4)
                         {{-- Forward Form Status = 4 --}}
                         <div class="neomorphic-bg text-center">

@@ -26,8 +26,10 @@ class QrController extends Controller
         if (auth()->check())
         {
             $assignedOffice = User::join('offices', 'assignedOffice', '=', 'offices.id')
-        ->where('assignedOffice', Auth::user()->assignedOffice)
-        ->first();
+            ->where('assignedOffice', Auth::user()->assignedOffice)
+            ->first();
+
+
 
         $documents_query = Documents::where('referenceNo', $referenceNo);
         $document_id = $documents_query->pluck('id')->first();
@@ -117,6 +119,7 @@ class QrController extends Controller
 
     return view('users.qrinfo', ['trackingHistory'=> $trackingHistory])
         ->with('latestResultRow', $latestResultRow)
+        ->with('assignedOffice', $assignedOffice)
         ->with('status', $status)
         ->with('offices', $offices)
         ->with('officeN', $officeN)
@@ -208,6 +211,7 @@ class QrController extends Controller
     {
         $getRecentReceiver = TrackingHistory::where('referenceNo', $referenceNo)
                     ->where('status', 2)
+                    ->orWhere('status', 8)
                     ->latest()
                     ->first();
 
@@ -215,6 +219,7 @@ class QrController extends Controller
          {
             $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
                         ->where('status', 2)
+                        ->orWhere('status', 8)
                         ->where('senderOffice', $getRecentReceiver->senderOffice)
                         ->latest()
                         ->first();
