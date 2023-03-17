@@ -149,8 +149,10 @@ Route::post('/qrinfo/rejected/{referenceNo}', [QrController::class, 'rejectDocum
 Route::post('/qrinfo/return-to-sender/{referenceNo}', [QrController::class, 'returnToSender']);
 Route::post('/qrinfo/resolve/{referenceNo}', [QrController::class, 'resolveDoc']);
 Route::post('/qrinfo/resubmit/{referenceNo}', [QrController::class, 'resubmitDoc']);
-
-
+Route::post('/qrinfo/approved-and-kept/{referenceNo}', [QrController::class, 'approveAndKeep']);
+Route::post('/qrinfo/approved-and-return/{referenceNo}', [QrController::class, 'approveAndReturn']);
+Route::post('/qrinfo/reject-return-to-previous/{referenceNo}', [QrController::class, 'rejectedReturnToPrevious']);
+Route::post('/qrinfo/reject-return-to-sender/{referenceNo}', [QrController::class, 'rejectedReturnToSender']);
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('offices', [DashboardController::class, 'adminOffice']);

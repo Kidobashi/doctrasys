@@ -488,7 +488,7 @@ class QrController extends Controller
                     ->latest()
                     ->first();
 
-            if($latestResultRow->receiverOffice == Auth::user()->assignedOffice && $latestResultRow->status == 5)
+            if($latestResultRow->senderOffice == Auth::user()->assignedOffice && $latestResultRow->status == 5)
             {
                 $validatedData = $request->validate([
                     'status' => 'required',
@@ -531,6 +531,7 @@ class QrController extends Controller
             $validatedData = $request->validate([
                 'status' => 'required',
                 'action' => 'required',
+                'senderOffice' => 'required',
             ]);
 
             Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
@@ -538,7 +539,7 @@ class QrController extends Controller
             TrackingHistory::create([
                 'referenceNo' => $referenceNo,
                 'receiverOffice' => $latestResult->senderOffice,
-                'senderOffice' => Auth::user()->assignedOffice,
+                'senderOffice' => $validatedData['senderOffice'],
                 'action' => $validatedData['action'],
                 'status' => $validatedData['status'],
             ]);
@@ -566,7 +567,7 @@ class QrController extends Controller
                     ->latest()
                     ->first();
 
-        if(Auth::user()->assignedOffice != $latestResult->receiverOffice)
+        if(Auth::user()->assignedOffice != $latestResult->senderOffice)
         {
             return redirect('qrinfo/'.$referenceNo)->with('error', 'Only the creator can resubmit this document.');
         }
@@ -591,5 +592,51 @@ class QrController extends Controller
             return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being resubmitted');
         }
     }
+    public function approveAndKeep($referenceNo, Request $request)
+    {
+        $document = Documents::where('referenceNo', $referenceNo)->first();
 
+        $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
+            ->where('status', 2)
+            ->latest()
+            ->first();
+        if($document->receiverOffice_id && Auth::user()->assignedOffice)
+        {
+            $validatedData = $request->validate([
+                'status' => 'required',
+                'action' => 'required',
+                'senderOffice' => 'required',
+            ]);
+
+            Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+
+            TrackingHistory::create([
+                'referenceNo' => $referenceNo,
+                'receiverOffice' => $document->receiverOffice_id,
+                'senderOffice' => $validatedData['senderOffice'],
+                'action' => $validatedData['action'],
+                'status' => $validatedData['action'],
+            ]);
+
+            return redirect('qrinfo/'.$referenceNo)->with('message', "This document is now approved and will be kept in this office. This is the end of the document's life cycle.");
+        }
+        else {
+            return redirect('qrinfo/'.$referenceNo)->with('message', "Hmmm, something is wrong. You can't modify this document.");
+        }
+    }
+
+    public function approveAndReturn()
+    {
+        dd('Ha! Approved and Returned');
+    }
+
+    public function rejectedReturnToPrevious()
+    {
+        dd('Rejected Return To Previous');
+    }
+
+    public function rejectedReturnToSender()
+    {
+        dd('Huhu! Rejected Return To Sender');
+    }
 }

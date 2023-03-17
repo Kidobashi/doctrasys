@@ -52,9 +52,9 @@
                         </div>
                     </div>
 
-                    <h4 class="mt-3"><strong>Subscription History</strong></h4>
+                    {{-- <h4 class="mt-3"><strong>Subscription History</strong></h4> --}}
 
-                    <div class="card mt-3">
+                    {{-- <div class="card mt-3">
                         <div class="p-2 mr-2">
                             <table class="table">
                                 <thead>
@@ -95,9 +95,9 @@
                                  </table>
                              </div>
                          </div>
-                     </div>
+                     </div> --}}
 
-                <div class="col-md-10">
+                {{-- <div class="col-md-10">
                     <h4>List of Tourist Spots</h4>
                     <div class="card">
                         <table class="table text-center">
@@ -120,7 +120,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> --}}
             {{-- @endif --}}
         </div>
         <div class="row justify-content-center">

@@ -259,19 +259,20 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         <div class="row" style="justify-content: space-between;">
             <div class="col-md-3 col-sm-5">
                 <h2>Action</h2>
-                @if ($status->status == 1 || $status->status == 4)
+                @if ($status->status == 1)
                 <div class="neomorphic-bg d-flex justify-content-center">
                 {{-- Received Status --}}
-                    <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
-                        @csrf
-                        <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                        <input class="form-control "type="text" style="display: none;" name='status' value="2">
-                        <input class="form-control "type="text" style="display: none;" name='action' value="2">
-                        <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
-                    </form>
+                        Normal Receive
+                        <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
+                            @csrf
+                            <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                            <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                            <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                            <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
+                        </form>
                 </div>
                 @elseif ($status->status == 2)
-                    @if($latestTracking->senderOffice == Auth::user()->assignedOffice)
+                    @if($latestResultRow->senderOffice == Auth::user()->assignedOffice && Auth::user()->assignedOffice != $status->receiverOffice_id)
                     {{-- Process Status --}}
                     <div class="neomorphic-bg d-flex justify-content-center">
                         <form action="process/{{ $data->referenceNo }}" method="post">
@@ -281,6 +282,53 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <input type="text" style="display: none;" value="3" name="action">
                             <button type="submit" class="neo-btn btn" onclick=""><h3>Process</h3></button>
                         </form>
+                    </div>
+                    @elseif ($latestResultRow->senderOffice == Auth::user()->assignedOffice && $status->receiverOffice_id == Auth::user()->assignedOffice)
+                    <div class="neomorphic-bg">
+                    <p class="text-secondary  text-center p-3 pb-0"><em>As the intended receiving office,
+                        you have the option to Approve/Reject
+                        and/or Return to Sender/Previous Office.</em>
+                    </p>
+                    <div class="d-flex justify-content-center">
+                        {{-- Aprrove/Return to Sender --}}
+                                <form id="approved-and-keep-form" action="approved-and-kept/{{ $data->referenceNo }}" method="post">
+                                    @csrf
+                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                    <input class="form-control "type="text" style="display: none;" name='status' value="9">
+                                    <input class="form-control "type="text" style="display: none;" name='action' value="9">
+                                    <button class="neo-btn btn" id="approve-and-keep-btn" type="submit"><h5>Approve and Keep</h5></button>
+                                </form>
+                            </div>
+                    <div class="mt-3 d-flex justify-content-center">
+                    {{-- Aprrove/Return to Sender --}}
+                            <form id="approved-and-return-form" action="approved-and-return/{{ $data->referenceNo }}" method="post">
+                                @csrf
+                                <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                <button class="neo-btn btn" id="received-by-intended-btn" type="submit"><h5>Approve/Return to Sender</h5></button>
+                            </form>
+                        </div>
+                        <div class="mt-3 d-flex justify-content-center">
+                    {{-- Reject/Return to Previous Office --}}
+                            <form id="reject-return-to-previous-form" action="reject-return-to-previous/{{ $data->referenceNo }}" method="post">
+                                @csrf
+                                <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                <button class="neo-btn btn" id="reject-return-to-previous-btn" type="submit"><h5>Reject/Return to Previous Office</h5></button>
+                            </form>
+                        </div>
+                        <div class="mt-3 d-flex justify-content-center">
+                        {{-- Reject/Return to Sender --}}
+                            <form id="reject-return-to-sender-form" action="reject-return-to-sender/{{ $data->referenceNo }}" method="post">
+                                @csrf
+                                <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                <button class="neo-btn btn" id="reject-return-to-sender-btn" type="submit"><h5>Reject/Return to Sender</h5></button>
+                            </form>
+                        </div>
                     </div>
                     @else
                     <div class="neomorphic-bg d-flex justify-content-center">
@@ -353,34 +401,95 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </p>
                         </div>
                         @endif
-                        @elseif ($status->status == 4)
+                    @elseif ($status->status == 4)
                         {{-- Forward Form Status = 4 --}}
                         <div class="neomorphic-bg text-center">
-
+                            @if ($latestResultRow->receiverOffice == Auth::user()->assignedOffice && $status->receiverOffice_id == $latestResultRow->receiverOffice)
+                            <p class="text-secondary  text-center p-3 pb-0"><em>As the intended receiving office,
+                                 you have the option to Approve/Reject
+                                 and/or Return to Sender/Previous Office.</em>
+                            </p>
+                            <div class="d-flex justify-content-center">
+                                {{-- Aprrove/Return to Sender --}}
+                                <form id="received-by-intended-form" action="received-by-intended/{{ $data->referenceNo }}" method="post">
+                                    @csrf
+                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                    <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                                    <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                    <button class="neo-btn btn" id="received-by-intended-btn" type="submit"><h5>Aprrove/Return to Sender</h5></button>
+                                </form>
+                            </div>
+                            <div class="mt-3 d-flex justify-content-center">
+                                {{-- Reject/Return to Previous Office --}}
+                                <form id="reject-return-to-previous-form" action="reject-return-to-previous/{{ $data->referenceNo }}" method="post">
+                                    @csrf
+                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                    <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                                    <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                    <button class="neo-btn btn" id="reject-return-to-previous-btn" type="submit"><h5>Reject/Return to Previous Office</h5></button>
+                                </form>
+                            </div>
+                            <div class="mt-3 d-flex justify-content-center">
+                                {{-- Reject/Return to Sender --}}
+                                    <form id="reject-return-to-sender-form" action="reject-return-to-sender/{{ $data->referenceNo }}" method="post">
+                                        @csrf
+                                        <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                        <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                                        <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                        <button class="neo-btn btn" id="reject-return-to-sender-btn" type="submit"><h5>Reject/Return to Sender</h5></button>
+                                    </form>
+                                </div>
+                            @else
+                            <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
+                                @csrf
+                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                    <input class="form-control "type="text" style="display: none;" name='status' value="2">
+                                    <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                    <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
+                                </form>
+                            @endif
                         </div>
                         @elseif ($status->status == 5)
-                        <div class="neomorphic-bg text-center">
-                            <form class="receive" action="return-to-sender/{{ $data->referenceNo }}" method="post">
-                                @csrf
-                                <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                                <input class="form-control "type="text" style="display: none;" name='status' value="6">
-                                <input class="form-control "type="text" style="display: none;" name='action' value="6">
-                                <button class="neo-btn btn p-auto" type="submit"><h5>Return to Sender</h5></button>
-                            </form>
-                        </div>
+                            @if($latestTracking->senderOffice == Auth::user()->assignedOffice)
+                                <div class="neomorphic-bg text-center">
+                                    <form class="receive" action="return-to-sender/{{ $data->referenceNo }}" method="post">
+                                        @csrf
+                                        <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                        <input class="form-control "type="text" style="display: none;" name='status' value="6">
+                                        <input class="form-control "type="text" style="display: none;" name='action' value="6">
+                                        <button class="neo-btn btn p-auto" type="submit"><h5>Return to Sender</h5></button>
+                                    </form>
+                                </div>
+                            @else
+                            <div class="neomorphic-bg d-flex justify-content-center">
+                                <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is being processed in another department.
+                                    Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
+                                </p>
+                            </div>
+                            @endif
                         @elseif ($status->status == 6)
                         {{-- Report = 7 --}}
+                        @if($latestTracking->receiverOffice == Auth::user()->assignedOffice)
                         <div class="neomorphic-bg text-center">
                                 <form id="resolve-form" action="resolve/{{ $data->referenceNo }}" method="post">
                                     @csrf
+                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                                     <input class="form-control "type="text" style="display: none;" name='status' value="7">
                                     <input class="form-control "type="text" style="display: none;" name='action' value="7">
                                     <button class="neo-btn btn p-auto" type="submit"><h3>Resolve Issue</h3></button>
                                 </form>
                         </div>
+                        @else
+                            <div class="neomorphic-bg d-flex justify-content-center">
+                                <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is being resolved by another department.
+                                    Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
+                                </p>
+                            </div>
+                            @endif
                         @elseif ($status->status == 7)
                         {{-- Report = 6 --}}
-                        <div class="neomorphic-bg text-center">
+                        @if ($latestTracking->senderOffice == Auth::user()->assignedOffice)
+                            <div class="neomorphic-bg text-center">
                             <form id="resubmit-form" action="resubmit/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                 <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
@@ -389,6 +498,13 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <button class="neo-btn btn p-auto" id="resubmit-btn" type="submit" ><h3>Resubmit</h3></button>
                             </form>
                         </div>
+                        @else
+                            <div class="neomorphic-bg d-flex justify-content-center">
+                                <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document being requested is currerntly being reviewd and recompiled to be resubmitted by another department.
+                                    Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
+                                </p>
+                            </div>
+                            @endif
                         @elseif ($status->status == 8)
                         {{-- Report = 8 --}}
                         {{-- <div class="neomorphic-bg text-center"> --}}
@@ -404,15 +520,15 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif ($status->status == 9)
                         {{-- Report = 9 --}}
                         <div class="neomorphic-bg text-center">
-
+                            <p class="text-secondary  text-center p-3 pb-0"><em>No further modifications will be made.</em>
+                            </p>
                         </div>
                         @endif
             </div>
-
             {{-- Tracking Portion --}}
             <div class="col-md-9 col-sm-7">
                 <!-- 80% width on desktop, 50% width on mobile -->
-                <h2>History</h2>
+                <h3>Current Status</h3>
                     @if (isset($latestTracking->status))
                         @if ( $latestTracking->status == 1 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1">
@@ -623,6 +739,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="col-md-12 p-1 mt-2 px-auto bg-white" style="border-radius: 8px;">
                                     <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0">Being Resolved by the<strong>{{ $latestTracking->senderOfficeName }}</strong></p>
                                         <p class="m-0 p-0 text-black">Primary Reason of Return: <strong>{{ $documentWithIssue->primary }}</strong></p>
                                     </div>
                                     <div class="row">
@@ -673,6 +790,36 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                             </div>
                         </div>
+                        @elseif($latestTracking->status == 9)
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-lock fa-4x text-success"></i>
+                            </div>
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid #28a745; height: 95%;">
+                                    <div class="green-circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg bg-success">
+                                <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-success text-center"><strong>RECEIVED</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white"><em>"The document has been received and tagged by the intended office
+                                            <strong>({{ $latestTracking->senderOfficeName }})</strong>, indicating that it has reached its
+                                            final state in the life cycle and is now permanently stored.
+                                            No further modifications can be made to the document."
+                                        </em></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         @endif
                     @elseif (isset($latestTracking->status) === false)
                         <div class="d-flex neomorphic-bg justify-content-between">
@@ -692,7 +839,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         </div>
                     @endif
-
+                    <h3 class="m-2">History</h3>
                     @foreach ($trackingHistory as $row)
                         @if ($row->status == 1)
                             <div class="d-flex">
@@ -802,7 +949,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="dashed-line">
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
-                                    <p class="p-auto m-0">Sent back by <strong>{{ $row->senderOfficeName }}</strong></p>
+                                    <p class="p-auto m-0">Sent back by <strong>{{ $row->senderOfficeName }}</strong> to the <strong>{{ $row->receiverOfficeName }}</strong></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 7)
@@ -818,11 +965,25 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="dashed-line">
                             </div>
                             <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
-                                <p class="p-auto m-0">Reviewed and Rerecompiled by <strong>{{ $row->receiverOfficeName }}</strong></p>
+                                <p class="p-auto m-0">Reviewed and Rerecompiled by thee <strong>{{ $row->senderOfficeName }}</strong></p>
                             </div>
                         </div>
                         @elseif ($row->status == 8)
-
+                        <div class="d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-4 neomorphic-bg bg-primary alt-icon-sz">
+                                    <i class="fas fa-check-double fa-2x text-white"></i>
+                                </div>
+                                <div class="col-md-7">
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                </div>
+                            </div>
+                            <div class="dashed-line">
+                            </div>
+                            <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
+                                <p class="p-auto m-0">Resubmitted by <strong>{{ $row->senderOfficeName }}</strong></p>
+                            </div>
+                        </div>
                         @endif
                     @endforeach
                 </div>
@@ -860,6 +1021,43 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     });
 
   </script>
+  <script>
+    const forms = document.querySelectorAll('form');
+
+    // Loop through each form and add a submit event listener
+    forms.forEach(form => {
+        form.addEventListener('submit', event => {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Get the action or link from the form element
+        const action = form.action;
+
+        // Show the SweetAlert pop-up
+        Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to submit this form.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Proceed'
+        }).then((result) => {
+      // If the user confirms the submission, submit the form
+        if (result.isConfirmed)
+            {
+                window.location.href = action;
+                text: "Status Changed Successfully.",
+                icon: "success",
+            }
+            else{
+                text: "No Changes made.",
+                icon: "error",
+            }
+            });
+        });
+    });
+  </script>
    <script>
     document.getElementById("resubmit-form").addEventListener("submit", function(event) {
 
@@ -885,11 +1083,186 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         // The user clicked the "Cancel" button or closed the modal
         Swal.fire({
             text: "No changes made.",
-            icon: "success",
+            icon: "error",
         });
     }
     });
     });
+    </script>
+    <script>
+        document.getElementById("approved-and-return-form").addEventListener("submit", function(event) {
+
+        // Prevent the form from submitting and the page from refreshing
+        event.preventDefault();
+
+        // Call the swal() function inside the event listener
+        Swal.fire({
+        title: "Are you sure?",
+        text: "This will serve as the final status of the document. This document will be tagged as done and returned to the sender.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Proceed",
+        cancelButtonText: "Cancel",
+        dangerMode: true,
+        })
+        .then((willProceed) => {
+        if (willProceed.isConfirmed) {
+            // The user clicked the "Proceed" button
+            // Submit the form
+            document.getElementById("approve-and-return-form").submit();
+            Swal.fire({
+                text: "Status Changed Successfully",
+                icon: "success",
+            });
+        } else {
+            // The user clicked the "Cancel" button or closed the modal
+            Swal.fire({
+                text: "No changes made.",
+                icon: "error",
+            });
+        }
+            });
+        });
+    </script>
+    <script>
+        document.getElementById("reject-return-to-previous-form").addEventListener("submit", function(event) {
+
+        // Prevent the form from submitting and the page from refreshing
+        event.preventDefault();
+
+        // Call the swal() function inside the event listener
+        Swal.fire({
+        title: "Are you sure?",
+        text: "Reject and return to the previous office to be resolved.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Proceed",
+        cancelButtonText: "Cancel",
+        dangerMode: true,
+        })
+        .then((willProceed) => {
+        if (willProceed.isConfirmed) {
+            // The user clicked the "Proceed" button
+            // Submit the form
+            document.getElementById("reject-return-to-previous-form").submit();
+            Swal.fire({
+                text: "Status Changed Successfully",
+                icon: "success",
+            });
+        } else {
+            // The user clicked the "Cancel" button or closed the modal
+            Swal.fire({
+                text: "No changes made.",
+                icon: "error",
+            });
+        }
+            });
+        });
+    </script>
+    <script>
+        document.getElementById("reject-return-to-sender-form").addEventListener("submit", function(event) {
+
+        // Prevent the form from submitting and the page from refreshing
+        event.preventDefault();
+
+        // Call the swal() function inside the event listener
+        Swal.fire({
+        title: "Are you sure?",
+        text: "This will serve as the final status of the document and irredeemable.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Proceed",
+        cancelButtonText: "Cancel",
+        dangerMode: true,
+        })
+        .then((willProceed) => {
+        if (willProceed.isConfirmed) {
+            // The user clicked the "Proceed" button
+            // Submit the form
+            document.getElementById("reject-return-to-sender-form").submit();
+            Swal.fire({
+                text: "Status Changed Successfully",
+                icon: "success",
+            });
+        } else {
+            // The user clicked the "Cancel" button or closed the modal
+            Swal.fire({
+                text: "No changes made.",
+                icon: "error",
+            });
+        }
+            });
+        });
+    </script>
+    <script>
+        document.getElementById("resolve-form").addEventListener("submit", function(event) {
+
+        // Prevent the form from submitting and the page from refreshing
+        event.preventDefault();
+
+        // Call the swal() function inside the event listener
+        Swal.fire({
+        title: "Are you sure?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Proceed",
+        cancelButtonText: "Cancel",
+        dangerMode: true,
+        })
+        .then((willProceed) => {
+        if (willProceed.isConfirmed) {
+            // The user clicked the "Proceed" button
+            // Submit the form
+            document.getElementById("resolve-form").submit();
+            Swal.fire({
+                text: "Status Changed Successfully",
+                icon: "success",
+            });
+        } else {
+            // The user clicked the "Cancel" button or closed the modal
+            Swal.fire({
+                text: "No changes made.",
+                icon: "error",
+            });
+        }
+            });
+        });
+    </script>
+    <script>
+        document.getElementById("approved-and-keep-form").addEventListener("submit", function(event) {
+
+        // Prevent the form from submitting and the page from refreshing
+        event.preventDefault();
+
+        // Call the swal() function inside the event listener
+        Swal.fire({
+        title: "Are you sure?",
+        text: "This will serve as the final status of the document and will be tagged to be kept in this office.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Proceed",
+        cancelButtonText: "Cancel",
+        dangerMode: true,
+        })
+        .then((willProceed) => {
+        if (willProceed.isConfirmed) {
+            // The user clicked the "Proceed" button
+            // Submit the form
+            document.getElementById("approved-and-keep-form").submit();
+            Swal.fire({
+                text: "Status Changed Successfully",
+                icon: "success",
+            });
+        } else {
+            // The user clicked the "Cancel" button or closed the modal
+            Swal.fire({
+                text: "No changes made.",
+                icon: "error",
+            });
+        }
+            });
+        });
     </script>
     <script type="text/javascript">
         $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
