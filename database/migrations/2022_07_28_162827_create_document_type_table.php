@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('document_type', function (Blueprint $table) {
             $table->id();
             $table->string('docType');
+            $table->bigInteger('status')->default(1);
             $table->timestamps();
         });
     }

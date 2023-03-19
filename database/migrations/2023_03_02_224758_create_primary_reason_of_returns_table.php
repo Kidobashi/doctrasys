@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('primary_reason_of_returns', function (Blueprint $table) {
             $table->id();
             $table->string('reason');
+            $table->bigInteger('status')->default(1);
             $table->timestamps();
         });
     }

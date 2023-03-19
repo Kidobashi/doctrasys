@@ -173,3 +173,16 @@ Route::get('/', [HomeController::class, 'index']);
 // Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
+
+
+
+// Route::middleware(['auth', 'role:Admin'])->get('/admin', function () {
+//     // This route can only be accessed by users with the 'admin' role
+// });
+
+// public function index()
+// {
+//     $this->middleware('role:admin');
+
+//     // This action can only be accessed by users with the 'admin' role
+// }

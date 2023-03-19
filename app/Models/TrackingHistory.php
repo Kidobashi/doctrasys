@@ -13,6 +13,7 @@ class TrackingHistory extends Model
 
     protected $fillable = [
         'id',
+        'user_id',
         'referenceNo',
         'senderOffice',
         'receiverOffice',

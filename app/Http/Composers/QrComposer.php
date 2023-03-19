@@ -12,23 +12,23 @@ class QrComposer
 {
     public function compose(View $view)
     {
-        $last = DB::table('documents')->latest('id')->first();
+        // $last = DB::table('documents')->latest('id')->first();
 
-        $identity = $last->id + 1;
-        $number = sprintf('%04d', $identity);
-        $prefix = date('Ymd');
-        $stringVal = strval($number);
+        // $identity = $last->id + 1;
+        // $number = sprintf('%04d', $identity);
+        // $prefix = date('Ymd');
+        // $stringVal = strval($number);
 
-        $senderOffice = Auth::user()->assignedOffice;
+        // $senderOffice = Auth::user()->assignedOffice;
 
-        if($senderOffice < 10) {
-            $extraZero = '0';
-            $refNo = "$prefix$extraZero$senderOffice$stringVal";
-        } else {
-            $refNo = "$prefix$senderOffice$stringVal";
-        }
+        // if($senderOffice < 10) {
+        //     $extraZero = '0';
+        //     $refNo = "$prefix$extraZero$senderOffice$stringVal";
+        // } else {
+        //     $refNo = "$prefix$senderOffice$stringVal";
+        // }
 
-        $view->with('refNo', $refNo);
+        // $view->with('refNo', $refNo);
     }
 
 }

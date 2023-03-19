@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Offices;
+use App\Models\Role;
 
 class RegisterController extends Controller
 {
@@ -19,7 +20,6 @@ class RegisterController extends Controller
 
     public function store()
     {
-
         $attributes = request()->validate([
             'assignedOffice' => ['required'],
             'name' => ['required', 'max:50'],
@@ -27,14 +27,19 @@ class RegisterController extends Controller
             'password' => ['required', 'min:5', 'max:20'],
             'agreement' => ['accepted']
         ]);
-        $attributes['password'] = bcrypt($attributes['password'] );
-        // $attributes['assignedOffice'] = request('assignedOffice');
 
-        // dd($attributes);
+        $attributes['password'] = bcrypt($attributes['password']);
 
-        session()->flash('success', 'Your account has been created.');
+        // Create the user
         $user = User::create($attributes);
+
+        // Assign a role to the user
+        $role = Role::where ('name', 'User')->first(); // Replace "admin" with the actual name of the role you want to assign
+        $user->roles()->sync([$role->id]);
+
+        // Log in the user and redirect to the dashboard
         Auth::login($user);
-        return redirect('/dashboard');
+
+        return redirect('/index')->with('message', 'Your account has been created.');
     }
 }

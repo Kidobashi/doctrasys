@@ -1,6 +1,25 @@
 @extends('templates.user')
 @section('content')
 <style>
+.instruction{
+    min-width: 350px;;
+}
+
+select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    border: 1px solid #ccc;
+    padding: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  select option {
+    padding: 10px;
+    font-size: 16px;
+  }
     @media print {
   /* Hide everything except the specified div */
 
@@ -101,18 +120,17 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                     @csrf
 
                     <div id="invis-input" class="mb-3" style="display: none;">
-                        <input type="text" class="form-control" name="senderName" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->name }}" readonly>
-                        <input type="text" class="form-control" name="email" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->email }}" readonly>
+                        <input type="text" class="form-control" name="user_id" id="name" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->id }}" readonly>
                         <input type="text" class="form-control" name="referenceNo" id="name" aria-label="Name" aria-describedby="name" value="{{ $refNo }}" readonly>
                         <input type="text" class="form-control" name="senderOffice_id" aria-label="Name" aria-describedby="name" value="{{ Auth::user()->assignedOffice }}" readonly>
                     </div>
-
+                    {{-- {{ dd($refNo) }} --}}
                     <div class="input-group my-3 ml-1 col-md-12">
-                        <span class="input-group-text" id="basic-addon1">Receiver Office</span>
+                        <span class="input-group-text" id="basic-addon1">Recipient Office</span>
                             <select class="form-control" id="assignedOffice" name="receiverOffice_id" required>
-                            <option value="" selected disabled>Select Office
+                            <option class="p-1 m-1" value="" selected disabled>Select Office
                                 @foreach ($offices as $row)
-                                    <option value="{{ $row->id }}" {{ old('receiverOffice_id', session('recv') ) == $row->id ? 'selected' : '' }}>{{ $row->officeName }}</option>
+                                    <option style="margin: 3px;" value="{{ $row->id }}" {{ old('receiverOffice_id', session('recv') ) == $row->id ? 'selected' : '' }}>{{ $row->officeName }}</option>
                                     </option>
                                 @endforeach
                             </select>
@@ -123,7 +141,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <select class="form-control" id="" name="docType" required>
                             <option value="" selected disabled>Select Document Type
                                 @foreach ($docType as $row)
-                                    <option value="{{ $row->id }}" {{ old('docType', session('dctyp') ) == $row->id ? 'selected' : '' }}>{{ $row->documentName }}</option>
+                                    <option class="p-1" value="{{ $row->id }}" {{ old('docType', session('dctyp') ) == $row->id ? 'selected' : '' }}>{{ $row->docType }}</option>
                                     </option>
                                 @endforeach
                             </select>
@@ -131,9 +149,23 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
 
                     <div class="btn-toolbar button-container">
                         <button type="button" style="display:none;" id="printable-mdl-btn" class="btn btn-primary" data-toggle="modal" data-target="#printable-modal">
-                            Show Printable
+                            Show QR Code
                         </button>
-                        <button class="btn btn-primary shadow mr-1" id="submit-doc-btn" type="submit">Submit</button>
+                        <button class="btn btn-success shadow mr-1" id="submit-doc-btn" type="submit"><strong>Generate</strong></button>
+                        <div class="btn-group dropdown" id="help-btn">
+                            <button type="button" class="btn btn-primary" id="help-btn" data-toggle="dropdown">
+                                <strong>Need help?</strong>
+                            </button>
+                            <div class="dropdown-menu">
+                                  <!-- Dropdown menu links -->
+                                <div class="d-flex flex-wrap bg-white p-3 instruction">
+                                    <p>To generate the QR Code, follow these steps:</p>
+                                    <p>1. Fill-in the <strong><em>Recipient Office field</em></strong> by choosing among the the list of offices.</p>
+                                    <p>2. Fill-in the <strong><em>Document Type field</em></strong> by selecting among the the list of document types.</p>
+                                    <p>3. <strong><em>Click Generate</strong></em></p>
+                                </div>
+                            </div>
+                        </div>
                         <button type="submit" class="btn btn-success float-end" style="display:none;" id="create-btn" style="display: none;" >Create New +</button>
                     </div>
                     </form>
@@ -147,7 +179,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
 
-                <div class="modal-body">
+                <div class="container">
                     @if(session('sndr') )
                     <div class="container mdl-container m-0" id="mdl-con">
                         <div class="row first-row p-3" style="border-bottom: 1px solid black; display: flex; justify-content: center; align-items: center;">
@@ -161,11 +193,11 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         <div class="row second-row p-3" style="display: flex; justify-content: center; align-items: center;">
                             <div class="col-4 text-center"> <!-- 1/3 column width, centered -->
-                                <p>Sending Office:</p>
+                                <p>Office of Origin:</p>
                                 <h5>{{ session('sndr') }}</h5>
                             </div>
                             <div class="col-4 text-center" style="border-right: 1px solid black; border-left: 1px solid black;"> <!-- 1/3 column width, centered -->
-                                <p>Receiving Office:</p>
+                                <p>Office of Destination:</p>
                                 <h5>{{ session('recv') }}</h5>
                             </div>
                             <div class="col-4 text-center"> <!-- 1/3 column width, centered -->
@@ -180,7 +212,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         <div style="display: flex; justify-content: space-between;">
                             <button class="btn btn-primary" id="download-btn" style="margin-right: 10px;">Download</button>
                             <button class="btn btn-success" id="print-btn" style="margin-right: 10px;" onclick="printDiv()">Print</button>
-                            <button type="button" class="btn btn-outline-success" id="dl-img">Download (QR Code Image Only)</button>
+                            <button type="button" class="btn btn-outline-success" style="margin-right: 10px;" id="dl-img">Download (QR Code Image Only)</button>
+                            <button type="button" class="btn btn-warning" onclick="()" data-toggle="modal" data-target="#myModal">Need help?</button>
                         </div>
                         <div class="">
                             <button type="button" class="btn btn-secondary" id="close-btn" data-dismiss="modal">Close</button>
@@ -190,6 +223,27 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         </div>
     </div>
 </div>
+
+<!-- Button to trigger modal -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Guide</h4>
+        </div>
+        <div class="modal-body">
+          <p><strong>Download</strong> button will download a PDF file of the QR Code along with the details. Like how it is shown.</p>
+          <p><strong>Print</strong> button will open a print window to print the QR Code along with the details.</p>
+          <p><strong>Download(QR Code Image Only)</strong> button will download a PNG file of the QR Code only to be inserted into documents.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <script>
 
     $(document).ready(function()
@@ -197,10 +251,15 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         if ('{{ session('message') }}')
         {
             $('#submit-doc-btn').hide();
+            $('#help-btn').hide();
             $('#printable-mdl-btn').show();
             $('#create-btn').show();
         }
     });
+
+    function guideAlert(message) {
+        alert(message);
+    }
 
     function printDiv() {
     // Get the print CSS file and append it to the head

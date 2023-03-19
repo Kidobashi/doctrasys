@@ -54,14 +54,15 @@ class QrController extends Controller
 
         // Fetch document type data from DB using reference no.
         $docCategory = DB::table('documents')
-                     ->join('document_type', 'docType', 'document_type.id')
+                     ->join('document_type', 'documents.docType', 'document_type.id')
                      ->where('referenceNo','LIKE', "%{$referenceNo}%")
                      ->first();
 
         // Fetch tracking log info from DB using reference no, sorted by newest to oldest.
         $latestTracking = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
+        ->join('users as user', 'user.id', '=', 'tracking_histories.user_id')
         ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
-        ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
+        ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName', 'user.name as userName')
         ->where('referenceNo', 'LIKE', "%{$referenceNo}%")
         ->latest()
         ->first();
@@ -76,17 +77,19 @@ class QrController extends Controller
                             // dd($latestResult);
         $latestResultRow = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
                         ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
-                        ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
+                        ->join('users as user', 'user.id', '=', 'tracking_histories.user_id')
+                        ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName', 'user.name as userName')
                         ->where('referenceNo', $referenceNo)
-                        ->where('created_at', $latestResult)
+                        ->where('tracking_histories.created_at', $latestResult)
                         ->latest()
                         ->first();
 
         $trackingHistory = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
                             ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
-                            ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
+                            ->join('users as user', 'user.id', '=', 'tracking_histories.user_id')
+                            ->select('tracking_histories.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName', 'user.name as userName')
                             ->where('referenceNo', $referenceNo)
-                            ->where('created_at', '<', $latestResult)
+                            ->where('tracking_histories.created_at', '<', $latestResult)
                             ->orderBy('created_at', 'desc')
                             ->get();
 
@@ -194,19 +197,6 @@ class QrController extends Controller
         return response($results);
     }
 
-    public function receive($referenceNo){
-
-        $doc = Documents::where('referenceNo', $referenceNo)->first();
-        $offices = Offices::all();
-
-        $officeN = DB::table('documents')
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->where('documents.referenceNo', $referenceNo)
-        ->first();
-
-        return view('users.receive')->with('officeN', $officeN)->with('offices', $offices)->with('doc', $doc)->with('message', 'Successfully Added!');
-    }
-
     public function receiveDoc($referenceNo, Request $request)
     {
         $getRecentReceiver = TrackingHistory::where('referenceNo', $referenceNo)
@@ -218,14 +208,14 @@ class QrController extends Controller
          if(isset($getRecentReceiver))
          {
             $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
+                        ->where('user_id', $getRecentReceiver->user_id)
                         ->where('status', 2)
                         ->orWhere('status', 8)
-                        ->where('senderOffice', $getRecentReceiver->senderOffice)
                         ->latest()
                         ->first();
         }
 
-        if(isset($checkIfExist->senderOffice) && $checkIfExist->senderOffice == Auth::user()->assignedOffice)
+        if(isset($checkIfExist->user_id) && $checkIfExist->user_id == Auth::user()->id)
         {
             return redirect('qrinfo/'.$referenceNo)->with('error', 'As the previous receiver of this document, you cannot receive the same document consecutively.');
         }
@@ -233,7 +223,7 @@ class QrController extends Controller
         {
             $document = Documents::where('referenceNo', $referenceNo)->first();
 
-            if(Auth::user()->assignedOffice == $document->senderOffice_id)
+            if(Auth::user()->id == $document->user_id && $document->senderOffice_id == Auth::user()->assignedOffice)
             {
                 return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
             }
@@ -241,19 +231,21 @@ class QrController extends Controller
             {
                 $validatedData = $request->validate([
                     'status' => 'required',
+                    'user_id' => 'required',
                     'action' => 'required',
                     'senderOffice' => 'required',
                 ]);
 
-                Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
-
                 TrackingHistory::create([
+                    'user_id' => $validatedData['user_id'],
                     'referenceNo' => $referenceNo,
                     'receiverOffice' => $document->receiverOffice_id,
                     'senderOffice' => $validatedData['senderOffice'],
                     'action' => $validatedData['action'],
                     'status' => $validatedData['status'],
                 ]);
+
+                Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now received by You');
             }
@@ -264,7 +256,7 @@ class QrController extends Controller
     {
         $document = Documents::where('referenceNo', $referenceNo)->first();
 
-        if(Auth::user()->assignedOffice == $document->senderOffice_id)
+        if(Auth::user()->id == $document->user_id)
         {
             return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
         }
@@ -278,9 +270,10 @@ class QrController extends Controller
                     ->latest()
                     ->first();
 
-            if($latestResultRow->senderOffice == Auth::user()->assignedOffice && $latestResultRow->status == 2)
+            if($latestResultRow->user_id == Auth::user()->id && $latestResultRow->status == 2)
             {
                 $validatedData = $request->validate([
+                    'user_id' => 'required',
                     'status' => 'required',
                     'action' => 'required',
                     'senderOffice' => 'required',
@@ -289,6 +282,7 @@ class QrController extends Controller
                 Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
                 TrackingHistory::create([
+                    'user_id' => $validatedData['user_id'],
                     'referenceNo' => $referenceNo,
                     'receiverOffice' => $document->receiverOffice_id,
                     'senderOffice' => $validatedData['senderOffice'],
@@ -330,6 +324,7 @@ class QrController extends Controller
                     'action' => 'required',
                     'senderOffice' => 'required',
                     'receiverOffice' => 'required',
+                    'user_id'=> 'required',
                 ]);
                 if(Auth::user()->assignedOffice == $validatedData['receiverOffice'])
                 {
@@ -339,6 +334,7 @@ class QrController extends Controller
                 Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
                 TrackingHistory::create([
+                    'user_id' => $validatedData['user_id'],
                     'referenceNo' => $referenceNo,
                     'receiverOffice' => $validatedData['receiverOffice'],
                     'senderOffice' => $validatedData['senderOffice'],
@@ -356,18 +352,25 @@ class QrController extends Controller
 
     public function rejectDocument($referenceNo, Request $request)
     {
-        $previousOffice = DB::table('tracking_histories')
-        ->select('senderOffice',
+        $previousUser = DB::table('tracking_histories')
+        ->select('user_id',
             DB::raw('MAX(created_at) as latest_date'),
             DB::raw('COUNT(*) as num_results'))
         ->where('referenceNo', '=', $referenceNo)
-        ->groupBy('senderOffice')
+        ->groupBy('user_id')
         ->orderByDesc('latest_date')
-        ->pluck('senderOffice')
         ->skip(1)
         ->take(1)
         ->first();
 
+        $previousOffice = DB::table('tracking_histories')
+        ->where('referenceNo', $referenceNo)
+        ->where('user_id', $previousUser->user_id)
+        ->orderByDesc('created_at')
+        ->pluck('senderOffice')
+        ->first();
+
+        // dd($previousOffice);
         $document = Documents::where('referenceNo', $referenceNo)->first();
 
         if(Auth::user()->assignedOffice == $document->senderOffice_id)
@@ -389,6 +392,7 @@ class QrController extends Controller
                     'senderOffice_id' => 'required',
                     'receiverOffice_id' => 'required',
                     'others' => 'nullable',
+                    'user_id'=> 'required',
                 ];
 
                 $messages = [
@@ -412,11 +416,13 @@ class QrController extends Controller
                         'senderOffice' => $validatedData['senderOffice_id'],
                         'action' => $validatedData['action'],
                         'status' => $validatedData['status'],
+                        'user_id'=> $validatedData['user_id'],
                     ]);
 
                     $basis = new BasisOfReturn();
                     $basis->referenceNumber = $referenceNo;
                     $basis->primary_reason_of_return_id = $validatedData['primary_reason_of_return_id'];
+                    $basis->user_id = $validatedData['user_id'];
                     $basis->others = $validatedData['others'];
                     $basis->save();
                 }
@@ -429,12 +435,14 @@ class QrController extends Controller
                         'senderOffice' => $latestResultRow->senderOffice,
                         'action' => $validatedData['action'],
                         'status' => $validatedData['status'],
+                        'user_id'=> $validatedData['user_id'],
                     ]);
 
                     $basis = new BasisOfReturn();
                     $basis->referenceNumber = $referenceNo;
                     $basis->primary_reason_of_return_id = $validatedData['primary_reason_of_return_id'];
                     $basis->lacking_doc_id = $data;
+                    $basis->user_id = $validatedData['user_id'];
                     $basis->others = $validatedData['others'];
                     $basis->save();
                 }
@@ -449,14 +457,14 @@ class QrController extends Controller
 
     public function returnToSender($referenceNo, Request $request)
     {
-        $previousOffice = DB::table('tracking_histories')
-        ->select('senderOffice',
+        $previousUser = DB::table('tracking_histories')
+        ->select('user_id',
+            DB::raw('MAX(senderOffice) as max_senderOffice'),
             DB::raw('MAX(created_at) as latest_date'),
             DB::raw('COUNT(*) as num_results'))
         ->where('referenceNo', '=', $referenceNo)
-        ->groupBy('senderOffice')
+        ->groupBy('user_id')
         ->orderByDesc('latest_date')
-        ->pluck('senderOffice')
         ->skip(1)
         ->take(1)
         ->first();
@@ -466,6 +474,8 @@ class QrController extends Controller
         ->latest()
         ->first();
 
+        // dd($getRecentSender);
+
         $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
             ->where('status', 5)
             ->where('senderOffice', $getRecentSender->senderOffice)
@@ -474,7 +484,7 @@ class QrController extends Controller
 
         $document = Documents::where('referenceNo', $referenceNo)->first();
 
-        if(Auth::user()->assignedOffice == $document->senderOffice_id)
+        if(Auth::user()->id == $document->user_id)
         {
             return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
         }
@@ -494,16 +504,18 @@ class QrController extends Controller
                     'status' => 'required',
                     'action' => 'required',
                     'senderOffice' => 'required',
+                    'user_id' => 'required'
                 ]);
 
                 Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
                 TrackingHistory::create([
                     'referenceNo' => $referenceNo,
-                    'receiverOffice' => $previousOffice,
+                    'receiverOffice' => $getRecentSender->receiverOffice,
                     'senderOffice' => $validatedData['senderOffice'],
                     'action' => $validatedData['action'],
                     'status' => $validatedData['status'],
+                    'user_id' => $previousUser->user_id,
                 ]);
 
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being returned to the sender by You');
@@ -532,6 +544,7 @@ class QrController extends Controller
                 'status' => 'required',
                 'action' => 'required',
                 'senderOffice' => 'required',
+                'user_id' => 'required',
             ]);
 
             Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
@@ -542,6 +555,7 @@ class QrController extends Controller
                 'senderOffice' => $validatedData['senderOffice'],
                 'action' => $validatedData['action'],
                 'status' => $validatedData['status'],
+                'user_id' => $validatedData['user_id'],
             ]);
 
             return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being resolved');
@@ -550,14 +564,16 @@ class QrController extends Controller
 
     public function resubmitDoc($referenceNo, Request $request)
     {
-        $previousOffice = DB::table('tracking_histories')
-        ->select('senderOffice',
+        $previousUser = DB::table('tracking_histories')
+        ->select('user_id',
+            DB::raw('MAX(receiverOffice) as recv_office'),
+            DB::raw('MAX(status) as stats'),
+            DB::raw('MAX(senderOffice) as max_senderOffice'),
             DB::raw('MAX(created_at) as latest_date'),
             DB::raw('COUNT(*) as num_results'))
         ->where('referenceNo', '=', $referenceNo)
-        ->groupBy('senderOffice')
+        ->groupBy('user_id')
         ->orderByDesc('latest_date')
-        ->pluck('senderOffice')
         ->skip(1)
         ->take(1)
         ->first();
@@ -577,16 +593,18 @@ class QrController extends Controller
                 'status' => 'required',
                 'action' => 'required',
                 'senderOffice' => 'required',
+                'user_id' => 'required'
             ]);
 
             Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
             TrackingHistory::create([
                 'referenceNo' => $referenceNo,
-                'receiverOffice' => $previousOffice,
+                'receiverOffice' => $previousUser->max_senderOffice,
                 'senderOffice' => $validatedData['senderOffice'],
                 'action' => $validatedData['action'],
                 'status' => $validatedData['action'],
+                'user_id' => $validatedData['user_id'],
             ]);
 
             return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being resubmitted');

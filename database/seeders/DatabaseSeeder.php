@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\LackingDocuments;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,6 +18,12 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             StatusSeeder::class,
+            DocumentTypeSeeder::class,
+            LackingDocuments::class,
+            OfficeSeeder::class,
+            PrimaryReasonSeeder::class,
+            RoleSeeder::class,
+            RoleUserSeeder::class,
         ]);
     }
 }

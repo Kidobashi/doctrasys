@@ -41,34 +41,38 @@ class DocumentsController extends Controller
     public function showOffices()
     {
         //
+        $last = DB::table('documents')->latest('id')->first();
 
         $offices = Offices::all();
 
         $users = User::all();
 
-        // $last = DB::table('documents')->latest('id')->first();
-
         $assignedOffice = Auth::user()->assignedOffice;
-
-        $senderOffice = Offices::where('id', $assignedOffice)->pluck('officeName')->first();
 
         $docType = DocumentType::all();
 
         $document = new Documents();
 
-        $identity = 1;
+        if(isset($last))
+        {
+            $identity = $last->id + 1;
+        }
+        else{
+            $identity = 1;
+        }
+
         $number = sprintf('%04d', $identity);
         $prefix = date('Ymd');
         $stringVal = strval($number);
 
-        if($senderOffice < 10)
+        if($assignedOffice < 10)
         {
             $extraZero = '0';
-            $refNo = "$prefix$extraZero$senderOffice$stringVal";
-            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users])->with(['document' => $document]);
+            $refNo = "$prefix$extraZero$assignedOffice$stringVal";
+            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with(['users' => $users])->with(['document' => $document]);
         }else{
-            $refNo = "$prefix$senderOffice$stringVal";
-            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with('senderOffice', $senderOffice)->with(['users' => $users])->with(['document' => $document]);
+            $refNo = "$prefix$assignedOffice$stringVal";
+            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with(['users' => $users])->with(['document' => $document]);
         }
     }
 
@@ -92,12 +96,11 @@ class DocumentsController extends Controller
          $senderOffice = Auth::user()->assignedOffice;
 
         $validatedData = $request->validate([
-             'senderName' => 'required',
              'referenceNo' => 'required',
              'senderOffice_id' => 'required',
              'receiverOffice_id' => 'required',
              'docType' => 'required',
-             'email' => 'required',
+             'user_id' => 'required',
          ]);
 
          if($senderOffice == $validatedData['receiverOffice_id'])
@@ -108,18 +111,18 @@ class DocumentsController extends Controller
             Documents::create($validatedData);
 
             TrackingHistory::create([
-                'senderName' => $validatedData['senderName'],
                 'senderOffice' => $validatedData['senderOffice_id'],
                 'receiverOffice' => $validatedData['receiverOffice_id'],
                 'referenceNo' => $validatedData['referenceNo'],
                 'status' => 1,
                 'action' => 1,
+                'user_id' => $validatedData['user_id'],
             ]);
 
             $receiverOfficeName = Offices::findOrFail($validatedData['receiverOffice_id'])->officeName;
             $senderOfficeName = Offices::findOrFail($validatedData['senderOffice_id'])->officeName;
             $flashRefNo = $validatedData['referenceNo'];
-            $flashDocType = DocumentType::findOrFail($validatedData['docType'])->documentName;
+            $flashDocType = DocumentType::findOrFail($validatedData['docType'])->docType;
 
             $qrs = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$flashRefNo));
             $filename = 'qr'.$flashRefNo.'.png';
@@ -184,11 +187,11 @@ class DocumentsController extends Controller
 
     public function userDocs()
     {
-        $userEmail = Auth::user()->email;
+        $userId = Auth::user()->id;
 
         $offices = Offices::all();
 
-        $all = Documents::where('email', $userEmail)
+        $all = Documents::where('user_id', $userId)
             ->join('offices', 'receiverOffice_id', 'offices.id')
             ->orderBy('created_at', 'DESC')
             ->paginate(20);
@@ -198,9 +201,9 @@ class DocumentsController extends Controller
 
     public function circulatingDocs()
     {
-        $userEmail = Auth::user()->email;
+        $userId = Auth::user()->id;
 
-        $circulating = Documents::where('email', $userEmail)
+        $circulating = Documents::where('user_id', $userId )
             ->join('offices', 'receiverOffice_id', 'offices.id')
             ->where('status', 1)
             ->orderBy('created_at', 'DESC')
@@ -211,9 +214,9 @@ class DocumentsController extends Controller
 
     public function completedDocs()
     {
-        $userEmail = Auth::user()->email;
+        $userId = Auth::user()->id;
 
-        $completed = Documents::where('email', $userEmail)
+        $completed = Documents::where('user_id', $userId)
             ->join('offices', 'receiverOffice_id', 'offices.id')
             ->where('status', 2)
             ->orderBy('created_at', 'DESC')
@@ -224,11 +227,11 @@ class DocumentsController extends Controller
 
     public function sentBackDocs()
     {
-        $userDocs = Auth::user()->email;
+        $userId = Auth::user()->id;
 
         $offices = Offices::all();
 
-        $sentBack = Documents::where('email', $userDocs)
+        $sentBack = Documents::where('user_id', $userId)
             ->join('offices', 'receiverOffice_id', 'offices.id')
             ->where('status', 3)
             ->orderBy('created_at', 'DESC')->paginate(20);

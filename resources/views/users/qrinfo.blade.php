@@ -231,15 +231,15 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             <div class="d-inline highlights col-md-4 text-center m-0 p-0">
                 <p>Document Type</p>
                 <h3>
-                    @if (isset($docCategory->documentName))
-                        {{ $docCategory->documentName }}
+                    @if (isset($docCategory->docType))
+                        {{ $docCategory->docType }}
                     @endif
                 </h3>
             </div>
             <div class="vl">
             </div>
             <div class="d-inline highlights col-md-4 text-center m-0 p-0">
-                <p>From</p>
+                <p>Office of Origin</p>
                 @if (isset($data->officeName))
                     <h3>{{ $data->officeName }}</h3>
                 @endif
@@ -259,31 +259,32 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         <div class="row" style="justify-content: space-between;">
             <div class="col-md-3 col-sm-5">
                 <h2>Action</h2>
-                @if ($status->status == 1)
+                @if ($status->status == 1 || $status->status == 4)
                 <div class="neomorphic-bg d-flex justify-content-center">
                 {{-- Received Status --}}
-                        Normal Receive
                         <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
                             @csrf
                             <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                            <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
                             <input class="form-control "type="text" style="display: none;" name='status' value="2">
                             <input class="form-control "type="text" style="display: none;" name='action' value="2">
                             <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
                         </form>
                 </div>
                 @elseif ($status->status == 2)
-                    @if($latestResultRow->senderOffice == Auth::user()->assignedOffice && Auth::user()->assignedOffice != $status->receiverOffice_id)
+                    @if($latestTracking->user_id == Auth::user()->id && Auth::user()->assignedOffice != $status->receiverOffice_id)
                     {{-- Process Status --}}
                     <div class="neomorphic-bg d-flex justify-content-center">
                         <form action="process/{{ $data->referenceNo }}" method="post">
                             @csrf
                             <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                            <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
                             <input type="text" style="display: none;" value="3" name="status">
                             <input type="text" style="display: none;" value="3" name="action">
                             <button type="submit" class="neo-btn btn" onclick=""><h3>Process</h3></button>
                         </form>
                     </div>
-                    @elseif ($latestResultRow->senderOffice == Auth::user()->assignedOffice && $status->receiverOffice_id == Auth::user()->assignedOffice)
+                    @elseif ($latestTracking->senderOffice == Auth::user()->assignedOffice && $status->receiverOffice_id == Auth::user()->assignedOffice)
                     <div class="neomorphic-bg">
                     <p class="text-secondary  text-center p-3 pb-0"><em>As the intended receiving office,
                         you have the option to Approve/Reject
@@ -338,7 +339,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                     </div>
                     @endif
                 @elseif ($status->status == 3)
-                    @if($latestTracking->senderOffice == Auth::user()->assignedOffice)
+                    @if($latestTracking->user_id == Auth::user()->id)
                 {{-- Return/Forward --}}
                     <div class="text-center justify-content-center">
                         <div class="">
@@ -366,6 +367,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <textarea class="form-control" name="others" id="" cols="30" rows="10" placeholder="others"></textarea>
                                     <input class="form-control "type="text" style="display: none;" name='receiverOffice_id' value="{{ $getDocumentCreator->senderOffice_id }}">
                                     <input class="form-control "type="text" style="display: none;" name='senderOffice_id' value="{{ Auth::user()->assignedOffice }}">
+                                    <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
                                     <input class="form-control "type="text" style="display: none;" name='status' value="5">
                                     <input class="form-control "type="text" style="display: none;" name='action' value="5">
                                     <button class="red-neo-btn btn mt-2 text-white" id="report-btn" type="submit"><h6>Submit</h6></button>
@@ -386,6 +388,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                             </option>
                                         @endforeach
                                         </select>
+                                        <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
                                         <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                                         <input class="form-control "type="text" style="display: none;" name='action' value="4">
                                         <input class="form-control "type="text" style="display: none;" name='status' value="4">
@@ -403,14 +406,14 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @endif
                     @elseif ($status->status == 4)
                         {{-- Forward Form Status = 4 --}}
-                        <div class="neomorphic-bg text-center">
-                            @if ($latestResultRow->receiverOffice == Auth::user()->assignedOffice && $status->receiverOffice_id == $latestResultRow->receiverOffice)
+                        {{-- <div class="neomorphic-bg text-center">
+                            @if ($latestTracking->receiverOffice == Auth::user()->assignedOffice && $status->receiverOffice_id == $latestTracking->receiverOffice)
                             <p class="text-secondary  text-center p-3 pb-0"><em>As the intended receiving office,
                                  you have the option to Approve/Reject
                                  and/or Return to Sender/Previous Office.</em>
                             </p>
                             <div class="d-flex justify-content-center">
-                                {{-- Aprrove/Return to Sender --}}
+
                                 <form id="received-by-intended-form" action="received-by-intended/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
@@ -420,7 +423,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </form>
                             </div>
                             <div class="mt-3 d-flex justify-content-center">
-                                {{-- Reject/Return to Previous Office --}}
+
                                 <form id="reject-return-to-previous-form" action="reject-return-to-previous/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
@@ -430,7 +433,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </form>
                             </div>
                             <div class="mt-3 d-flex justify-content-center">
-                                {{-- Reject/Return to Sender --}}
+
                                     <form id="reject-return-to-sender-form" action="reject-return-to-sender/{{ $data->referenceNo }}" method="post">
                                         @csrf
                                         <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
@@ -447,7 +450,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <input class="form-control "type="text" style="display: none;" name='action' value="2">
                                     <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
                                 </form>
-                            @endif
+                            @endif --}}
                         </div>
                         @elseif ($status->status == 5)
                             @if($latestTracking->senderOffice == Auth::user()->assignedOffice)
@@ -455,6 +458,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <form class="receive" action="return-to-sender/{{ $data->referenceNo }}" method="post">
                                         @csrf
                                         <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                        <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
                                         <input class="form-control "type="text" style="display: none;" name='status' value="6">
                                         <input class="form-control "type="text" style="display: none;" name='action' value="6">
                                         <button class="neo-btn btn p-auto" type="submit"><h5>Return to Sender</h5></button>
@@ -469,10 +473,11 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             @endif
                         @elseif ($status->status == 6)
                         {{-- Report = 7 --}}
-                        @if($latestTracking->receiverOffice == Auth::user()->assignedOffice)
+                        @if($latestTracking->receiverOffice == Auth::user()->assignedOffice && Auth::user()->id == $latestTracking->user_id)
                         <div class="neomorphic-bg text-center">
                                 <form id="resolve-form" action="resolve/{{ $data->referenceNo }}" method="post">
                                     @csrf
+                                    <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
                                     <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
                                     <input class="form-control "type="text" style="display: none;" name='status' value="7">
                                     <input class="form-control "type="text" style="display: none;" name='action' value="7">
@@ -481,7 +486,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @else
                             <div class="neomorphic-bg d-flex justify-content-center">
-                                <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is being resolved by another department.
+                                <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is being resolved by another department/user.
                                     Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
                                 </p>
                             </div>
@@ -493,6 +498,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <form id="resubmit-form" action="resubmit/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                 <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
                                 <input class="form-control "type="text" style="display: none;" name='status' value="1">
                                 <input class="form-control "type="text" style="display: none;" name='action' value="8">
                                 <button class="neo-btn btn p-auto" id="resubmit-btn" type="submit" ><h3>Resubmit</h3></button>
@@ -500,7 +506,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @else
                             <div class="neomorphic-bg d-flex justify-content-center">
-                                <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document being requested is currerntly being reviewd and recompiled to be resubmitted by another department.
+                                <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document being requested is currerntly being reviewed and recompiled to be resubmitted by another department.
                                     Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
                                 </p>
                             </div>
@@ -565,6 +571,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
                                         <p class="m-0 p-0 text-white">This document is currently at the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
                                 </div>
                             </div>
@@ -590,7 +597,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">This document is currently being processed at <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">This document is currently being processed at the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
                                 </div>
                             </div>
@@ -616,7 +624,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">This document was forwarded by the <strong>{{ $latestTracking->senderOfficeName }}</strong> to the <strong>{{ $latestResultRow->receiverOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">This document was forwarded by the <strong>{{ $latestTracking->senderOfficeName }}</strong> to the <strong>{{ $latestTracking->receiverOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
                                 </div>
                             </div>
@@ -644,6 +653,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <div class="d-flex flex-wrap">
                                         <p class="m-0 p-0 text-white">Rejected by the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
                                         <p class="m-0 p-0 text-white">Sent back to the <strong>{{ $latestTracking->receiverOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
                                     <div class="d-flex flex-wrap">
                                         @if (isset($documentWithIssue))
@@ -695,7 +705,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">This document is being returned to the <strong>{{ $latestResultRow->receiverOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">This document is being returned to the <strong>{{ $latestTracking->receiverOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
                                 </div>
                             </div>
@@ -739,8 +750,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="col-md-12 p-1 mt-2 px-auto bg-white" style="border-radius: 8px;">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0">Being Resolved by the<strong>{{ $latestTracking->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0">Being resolved by the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
                                         <p class="m-0 p-0 text-black">Primary Reason of Return: <strong>{{ $documentWithIssue->primary }}</strong></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
                                     <div class="row">
                                         <div class="d-flex flex-wrap mb-0">
@@ -785,7 +797,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">Resubmitted by <strong>{{ $latestResultRow->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">Resubmitted by the <strong>{{ $latestTracking->senderOfficeName }}</strong> to the <strong>{{ $latestTracking->receiverOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
                                 </div>
                             </div>
@@ -816,6 +829,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                             final state in the life cycle and is now permanently stored.
                                             No further modifications can be made to the document."
                                         </em></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
                                 </div>
                             </div>
@@ -839,7 +853,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         </div>
                     @endif
+                    @if (count($trackingHistory) != 0)
                     <h3 class="m-2">History</h3>
+                    @endif
                     @foreach ($trackingHistory as $row)
                         @if ($row->status == 1)
                             <div class="d-flex">
@@ -854,7 +870,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="dashed-line">
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
-                                    <p class="m-0 p-0">Initiated by <strong>{{ $row->senderOfficeName }}</strong></p>
+                                    <p>Initiated by the <strong>{{ $row->senderOfficeName }}</strong></p>
+                                    <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 2)
@@ -871,6 +888,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
                                     <p>Received by <strong>{{ $row->senderOfficeName }}</strong></p>
+                                    <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 3)
@@ -887,6 +905,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
                                     <p>Processed by <strong>{{ $row->senderOfficeName }}</strong></p>
+                                    <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 4)
@@ -903,6 +922,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
                                     <p>Forwarded by the <strong>{{ $row->senderOfficeName }}</strong></p>
+                                    <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 5)
@@ -918,7 +938,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="dashed-line">
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
-                                    <p class="m-0">Reported by <strong>{{ $row->senderOfficeName }}</strong></p>
+                                    <p class="m-0">Reported by the <strong>{{ $row->senderOfficeName }}</strong></p>
+                                    <p class="m-0">Sent back to the <strong>{{ $row->receiverOfficeName }}</strong></p>
                                     @if (isset($boxArray))
                                     <div class="row">
                                         <div class="d-flex flex-wrap mb-0">
@@ -932,8 +953,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     </div>
                                      @endif
                                      @if(isset($documentWithIssue->others))
-                                     <p class="m-0">More Details: <em><strong>{{ $documentWithIssue->others }}</strong></em></p>
+                                     <p>More Details: <em><strong>{{ $documentWithIssue->others }}</strong></em></p>
                                      @endif
+                                     <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 6)
@@ -950,6 +972,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                                 <div class="col-md-7 tracking-details neomorphic-bg">
                                     <p class="p-auto m-0">Sent back by <strong>{{ $row->senderOfficeName }}</strong> to the <strong>{{ $row->receiverOfficeName }}</strong></p>
+                                    <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 7)
@@ -965,7 +988,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="dashed-line">
                             </div>
                             <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
-                                <p class="p-auto m-0">Reviewed and Rerecompiled by thee <strong>{{ $row->senderOfficeName }}</strong></p>
+                                <p class="p-auto m-0">Reviewed and Rerecompiled by the <strong>{{ $row->senderOfficeName }}</strong></p>
+                                <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                             </div>
                         </div>
                         @elseif ($row->status == 8)
@@ -981,7 +1005,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="dashed-line">
                             </div>
                             <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
-                                <p class="p-auto m-0">Resubmitted by <strong>{{ $row->senderOfficeName }}</strong></p>
+                                <p class="p-auto m-0">Resubmitted by the<strong>{{ $row->senderOfficeName }}</strong></p>
+                                <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                             </div>
                         </div>
                         @endif

@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('tracking_histories', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('referenceNo');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->bigInteger('senderOffice');
             $table->bigInteger('receiverOffice');
             $table->bigInteger('status');
-            $table->string('prevReceiver')->nullable();
-            $table->string('prevOffice')->nullable();
             $table->bigInteger('action')->nullable();
             $table->timestamps();
         });
@@ -34,5 +34,8 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('tracking_histories');
+        Schema::table('tracking_histories', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
     }
 };

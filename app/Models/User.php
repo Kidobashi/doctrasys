@@ -46,4 +46,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+    }
+
+    public function hasRole($roleName)
+    {
+        return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    public function assignRole($roleName)
+    {
+        $role = Role::where('name', $roleName)->firstOrFail();
+        $this->roles()->syncWithoutDetaching($role);
+    }
 }

@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('assign_user_office', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('userID');
-            $table->bigInteger('officeID');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('office_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('office_id')->references('id')->on('offices')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,5 +31,9 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('assign_user_office');
+        Schema::table('assigen_user_office', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['office_id']);
+        });
     }
 };
