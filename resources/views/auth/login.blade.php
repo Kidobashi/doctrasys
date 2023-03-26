@@ -47,7 +47,7 @@ input[type=text], input[type=email], input[type=password]{
                     -webkit-box-shadow: 0px 3px 8px rgb(100,100,100);
                     box-shadow: 0px 3px 8px rgb(100,100,100);">
               <div class="card-body px-5 text-center">
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="/session">
                 @csrf
                 <h3 class="mb-2">Sign in</h3>
                 <p>Please enter your email and password to login</p>

@@ -1,16 +1,9 @@
-@extends('layouts.user_type.auth')
+@extends('templates.admin')
 
 @section('content')
 <div>
     <div class="container-fluid py-4">
         <div class="card">
-            {{-- <div class="col-xxs-6 col-xs-4">
-                @if(session()->has('success'))
-                    <div id="message" class="col-lg-5 bg-success rounded right-3 text-sm py-2 px-4">
-                        <h5 class="m-0">{{ session('success')}}</h5>
-                    </div>
-                @endif
-            <div> --}}
             <div class="card-header pb-0">
                 <div class="d-flex flex-row justify-content-between">
                     <div>
@@ -24,7 +17,7 @@
                 <div class="row">
                     <div class="d-flex">
                         <div class="col-sm">
-                            <p style="white-space: normal;">{{ $row->documentName }}</p>
+                            <p style="white-space: normal;">{{ $row->docType }}</p>
                         </div>
                         <div class="col-sm">
 

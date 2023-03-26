@@ -1,4 +1,4 @@
-@extends('layouts.user_type.auth')
+@extends('templates.admin')
 
 @section('content')
 

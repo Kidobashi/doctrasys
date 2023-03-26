@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Documents;
@@ -29,14 +30,14 @@ class DashboardController extends Controller
 
         $receivedDocs = TrackingHistory::where('action', 1)->groupby('referenceNo')->count();
 
-        return view('dashboard')->with(['totalDocs' => $totalDocs])->with('sentBack', $sentBack)->with('taggedDocs', $taggedDocs)->with('circulatingDocs', $circulatingDocs)->with('receivedDocs', $receivedDocs)->with('docsToday', $docsToday);
+        return view('admin.dashboard')->with(['totalDocs' => $totalDocs])->with('sentBack', $sentBack)->with('taggedDocs', $taggedDocs)->with('circulatingDocs', $circulatingDocs)->with('receivedDocs', $receivedDocs)->with('docsToday', $docsToday);
     }
 
     public function adminOffice()
     {
-        $offices = Offices::all();
+        $offices = Offices::paginate(10);
 
-        return view('laravel-examples.offices')->with(['offices' => $offices]);
+        return view('admin.offices')->with(['offices' => $offices]);
     }
 
     public function addOffice(Request $request)
@@ -54,34 +55,37 @@ class DashboardController extends Controller
 
     public function deleteOffice($id, Request $request)
     {
-        $offices = Offices::find($id);
+        $office = Offices::find($id);
 
-        $name = 'administrator';
-
-        $password = User::where('name', $name)->first();
-
-        if (! $offices) {
-            session()->flash('error_message', 'Model not found with the given id: '. $id);
-            return back();
+        if (! $office) {
+            session()->flash('error', 'Office not found'. $id);
+            return back()->with('error', 'Office not found');
         }
-
-        // $password is the password that you have saved somewhere
-        if (request()->password == Hash::check('password', $password->password)) {
-            $offices->delete();
-
-            session()->flash('success_message', 'Model deleted successfully.');
-            return back()->withSuccess(__('Office deleted successfully.'));
+        else{
+            Offices::where('id', $office->id)->update( array('status' => 2 ));
+            return back()->with('message', 'Office updated successfully');
         }
+    }
 
-        session()->flash('error_message', 'Invalid password. Try again');
-        return back();
+    public function enableOffice($id)
+    {
+        $office = Offices::find($id);
+
+        if (! $office) {
+            session()->flash('error', 'Office not found'. $id);
+            return back()->with('error', 'Office not found');
+        }
+        else{
+            Offices::where('id', $office->id)->update( array('status' => 1 ));
+            return back()->with('message', 'Office updated successfully');
+        }
     }
 
     public function docTypes()
     {
         $docType = DocumentType::all();
 
-        return view('laravel-examples.documentType')->with(['docType' => $docType]);
+        return view('admin.documentType')->with(['docType' => $docType]);
     }
 
     public function addDocType(Request $request)

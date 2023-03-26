@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('officeName');
             $table->bigInteger('status')->default(1);
+            $table->timestamps();
         });
     }
 

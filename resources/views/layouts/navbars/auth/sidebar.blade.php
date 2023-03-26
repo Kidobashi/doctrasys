@@ -1,4 +1,4 @@
-<style>
+{{-- <style>
     .wrapper {
     display: flex;
     width: 100%;
@@ -46,9 +46,9 @@ a[data-toggle="collapse"] {
 }
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+ --}}
 
-
-body {
+{{-- body {
     font-family: 'Poppins', sans-serif;
     background: #fafafa;
 }
@@ -162,10 +162,10 @@ ul ul a {
                 <a class="nav-link" href="{{ url('docType') }}">
                     <i class="fas fa-fw fa-envelope"></i>
                     <span><strong>Document Type</strong></span></a>
-            </li>
+            </li> --}}
             <!-- Divider -->
             {{-- <hr class="sidebar-divider my-0"> --}}
-        </ul>
+        {{-- </ul>
         <li class="list-group-item p-2 rounded">
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                 <i class="fas fa-fw fa-user"></i>
@@ -193,4 +193,49 @@ ul ul a {
     $('#sidebar').toggleClass('active');
     });
 });
-</script>
+</script> --}}
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-sm-3 col-md-2 d-sm-block bg-light sidebar">
+        <a class="navbar-brand" href="#">System Name</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+        <div class="sidebar-sticky">
+          <h5 class="mt-3">Links</h5>
+          <ul class="nav flex-column mb-4">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Offices</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Document Type</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Type of Reports</a>
+            </li>
+          </ul>
+          <h5 class="mt-3">User Management</h5>
+          <ul class="nav flex-column mb-4">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Users</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Roles</a>
+            </li>
+          </ul>
+          <a href="#" class="nav-link mt-auto">Logout</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+      });
+    });
+  </
+

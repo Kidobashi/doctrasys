@@ -16,6 +16,7 @@ class Offices extends Model
         'senderOffice',
         'receiverOffice',
         'officeName',
+        'updated_at',
     ];
 
     public function documents()
