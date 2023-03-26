@@ -110,7 +110,7 @@ html, body{
   text-transform: uppercase;
   padding: 10px 20px;
   border-radius: 5px;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out;
   margin-left: 5px;
 }
 
@@ -119,19 +119,18 @@ html, body{
 }
 
 .navbar-nav .nav-link:hover {
-  background-color: #007bff;
+  background-color: #4682B4;
   color: #fff;
 }
 
 .active {
-    background-color: #007bff;
+    background-color: #4682B4;
     color: #fff;
 }
 
-.active span, .active i {
+.active span, .active i, .active a span{
   color: #fff;
 }
-
 
 @media (min-width: 768px) {
     .navbar mobile  {
@@ -260,7 +259,7 @@ html, body{
             <div class="navbar" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item ">
-                        <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                        <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                             <span class="material-symbols-outlined" style="vertical-align: middle;">
                                 dashboard
                             </span>
@@ -304,20 +303,20 @@ html, body{
             </div>
         </div>
       </div>
-      <div class="col-md-7 offset-md-2" style="border: 1px red solid;">
+      <div class="col-md-7 offset-md-2 p-0">
         <!-- Second column content here -->
         @yield('content')
       </div>
       <div class="col-md-3 bg-secondary">
         <!-- Third column content here -->
-        <div class="neomorphic-bg" style="border: 1px green solid;">
+        <div class="neomorphic-bg">
             <div class="m-0" id="clock">
                 <span class="neomorphic-bg" id="hours"></span>
                 <span>:</span>
                 <span class="neomorphic-bg" id="minutes"></span>
                 <span class="neomorphic-bg bg-primary" id="ampm"></span>
             </div>
-            <div id="date" style="border: 1px green solid;">
+            <div id="date">
                 <span id="weekday"></span>
                 <span>, </span>
                 <span id="month"></span>
@@ -330,94 +329,6 @@ html, body{
       </div>
     </div>
   </div>
-{{-- <div>
-  <div class="row">
-    <div class="col-md-2 col-sm-12 p-0 ml-1 mb-3 mb-md-0 position-fixed h-100 neomorphic-bg">
-        <div class="container-fluid">
-            <div class="m-3 p-2">
-                <h3 class="navbar-brand text-wrap"  href="#">CMU DocTraSys</h3>
-            </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            <div class="navbar" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.dashboard') }}">
-                            <span class="material-symbols-outlined" style="vertical-align: middle;">
-                                dashboard
-                            </span>
-                            Dashboard
-                        </a>
-                    </li>
-                    <hr>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.offices') }}" class="nav-link" style="display: flex; align-items: center;">
-                        <i class="far fa-building fa-2x" style="margin-right: 0.5rem;"></i>
-                        <span>Offices</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.docTypes') }}" class="nav-link" style="display: flex; align-items: center;">
-                            <i class="far fa-file-alt fa-2x" style="margin-right: 0.5rem;"></i>
-                            <span>Document Type</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#Reports" class="nav-link" style="display: flex; align-items: center;">
-                            <i class="far fa-flag fa-2x" style="margin-right: 0.5rem;"></i>
-                            <span>Types of Report</span>
-                        </a>
-                    </li>
-                    <hr>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.user-management') }}" class="nav-link" style="display: flex; align-items: center;">
-                            <i class="fas fa-users-cog fa-2x" style="margin-right: 0.5rem;"></i>
-                            <span>User Management</span>
-                        </a>
-                    </li>
-                    <hr>
-                    <li class="nav-item" style="position: absolute; top: 755px;">
-                        <a href="{{ route('admin.logout') }}" class="nav-link" style="display: flex; align-items: center;">
-                            <i class="fas fa-sign-out-alt fa-2x" style="margin-right: 0.5rem;"></i>
-                            <span>Logout</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2 p-0">
-
-    </div>
-    <div class="col-md-7 col-sm-12 p-0 mb-3 mb-md-0" style="border: 1px red solid;">
-      <!-- Middle column content goes here -->
-        @yield('content')
-    </div>
-    <div class="col-md-3 col-sm-12 mt-4 h-100" style="border: 1px red solid;">
-      <!-- Third column content goes here -->
-        <div class="mb-4">
-
-        </div>
-        <div class="neomorphic-bg" style="border: 1px green solid;">
-            <div class="m-0" id="clock">
-                <span class="neomorphic-bg" id="hours"></span>
-                <span>:</span>
-                <span class="neomorphic-bg" id="minutes"></span>
-                <span class="neomorphic-bg bg-primary" id="ampm"></span>
-            </div>
-            <div id="date" style="border: 1px green solid;">
-                <span id="weekday"></span>
-                <span>, </span>
-                <span id="month"></span>
-                <span> </span>
-                <span id="day"></span>
-                <span>, </span>
-                <span id="year"></span>
-            </div>
-        </div>
-    </div>
-  </div> --}}
 
 <script>
     $(document).ready(function() {

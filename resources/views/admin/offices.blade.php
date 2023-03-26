@@ -2,14 +2,16 @@
 
 @section('content')
 <div>
-    <div class="container-fluid py-4">
+    <div class="container-fluid px-0">
         <div class="card">
             <div class="card-header pb-0">
                 <div class="d-flex flex-row justify-content-between">
-                    <div>
-                        <h3 class="mb-0">{{ __('Central Mindanao University Document Types') }}</h3>
+                    <div class="p-2">
+                        <h3 class="mb-0">{{ __('Offices') }}</h3>
                     </div>
-                    <a href="#" class="btn bg-gradient-primary float-end btn-sm mb-0 text-center" type="button" data-toggle="modal" data-target="#exampleModalCenter">+&nbsp; Add new document type</a>
+                    <div class="p-2">
+                        <button href="#" class="btn float-end btn-sm mb-0 text-white text-center" type="button" data-toggle="modal" data-target="#exampleModalCenter" style="background:  #2AAA8A;">+&nbsp; Add New Office</button>
+                    </div>
                 </div>
             </div>
             <div class="card-body pt-4 p-3">
@@ -30,7 +32,7 @@
                         </div>
                         <div class="col-md-1 text-center">
                             @if ($row->status == 1)
-                                <span class="badge bg-success p-2">Active</span>
+                                <span class="badge p-2" style="background-color: #2AAA8A;">Active</span>
                             @else
                                 <span class="badge bg-danger p-2">Inacive</span>
                             @endif
@@ -47,7 +49,7 @@
                             <span>
                                 <form id="enable-office-{{ $row->id }}" class="enable-office-form" method="post" action="enableOffice/{{ $row->id }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-success btn-sm enable-office-btn">Enable</button>
+                                    <button type="submit" class="btn btn-sm enable-office-btn" style="background: #FF4C67 ;">Enable</button>
                                 </form>
                             </span>
                             @endif
@@ -56,8 +58,8 @@
                 </div>
                 @endforeach
                 <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        {{ $offices->links('vendor.pagination.bootstrap-4') }}
+                    <ul class="pagination justify-content-start">
+                        {{ $offices->links() }}
                     </ul>
                 </nav>
             </div>
