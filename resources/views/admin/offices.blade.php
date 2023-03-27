@@ -2,7 +2,7 @@
 
 @section('content')
 <div>
-    <div class="container-fluid px-0">
+    <div class="container-fluid">
         <div class="card">
             <div class="card-header pb-0">
                 <div class="d-flex flex-row justify-content-between">
@@ -20,7 +20,7 @@
                     <div class="col-md-5"><h6>Name</h6></div>
                     <div class="col-md-1 text-center"><h6>Status</h6></div>
                     <div class="col-md-1 text-center"><h6>Action</h6></div>
-                  </div>
+                </div>
                 @foreach ($offices as $row)
                 <div class="row">
                     <div class="d-flex">
@@ -42,14 +42,14 @@
                                 <span>
                                     <form id="disable-office-{{ $row->id }}" class="disable-office-form" method="post" action="delOffice/{{ $row->id }}">
                                         @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm disable-office-btn">Disable</button>
+                                        <button type="submit" class="btn btn-sm disable-office-btn" style="background: #FF4C67; color: white;">Disable</button>
                                     </form>
                                 </span>
                             @else
                             <span>
                                 <form id="enable-office-{{ $row->id }}" class="enable-office-form" method="post" action="enableOffice/{{ $row->id }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm enable-office-btn" style="background: #FF4C67 ;">Enable</button>
+                                    <button type="submit" class="btn btn-sm enable-office-btn" style="background: #2AAA8A; color: white;">Enable</button>
                                 </form>
                             </span>
                             @endif

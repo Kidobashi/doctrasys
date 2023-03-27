@@ -44,7 +44,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('admin/addDocType', [DashboardController::class, 'addDocType'])->name('admin.addDoctypes');;
         Route::post('admin/delOffice/{id}', [DashboardController::class, 'deleteOffice'])->name('admin.deleteOffice');
         Route::post('admin/enableOffice/{id}', [DashboardController::class, 'enableOffice'])->name('admin.enableOffice');
-        Route::delete('admin/delDocType/{id}', [DashboardController::class, 'deleteDocType'])->name('admin.deleteDocType');
+        Route::post('admin/delDocType/{id}', [DashboardController::class, 'deleteDocType'])->name('admin.deleteDocType');
+        Route::post('admin/enableDocType/{id}', [DashboardController::class, 'enableDocType'])->name('admin.enableDocType');
         Route::get('admin/logout', [SessionsController::class, 'destroy'])->name('admin.logout');
         Route::get('admin/user-management', [UserController::class, 'index'])->name('user');
         Route::get('/user-profile', [ProfileController::class, 'create']);

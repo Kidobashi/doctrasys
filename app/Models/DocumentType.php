@@ -11,5 +11,7 @@ class DocumentType extends Model
 
     protected $table='document_type';
 
-    
+    protected $fillable = [
+        'docType',
+    ];
 }

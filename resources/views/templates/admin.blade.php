@@ -57,21 +57,19 @@
 <body>
 
 <style>
-/* Import the Montserrat font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
-/* Set the font family for the body element */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,400;0,700;1,300;1,600&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 html, body {
     height: 100%;
     width: 100%;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-size: cover;
     background-repeat: no-repeat;
+    overflow: hidden;
 }
 
 /* Style the heading element with Montserrat font */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   letter-spacing: 1px;
   line-height: 1.2;
@@ -79,17 +77,25 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Style the paragraphs with Montserrat font */
 p {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 400;
   font-size: 1em;
   line-height: 1.5;
 }
 
 .neomorphic-bg {
-  background-color: #f5f5f5;
-  box-shadow: 0px 10px 20px #c2c2c2, 0px -10px 15px #ffffff;
-  padding: .7rem;
+  box-shadow: 0px 10px 20px #c2c2c2, 0px -10px 20px #ffffff;
   border:1px solid #d3d3d3;
+}
+
+.levitating-div {
+  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.150s ease-in-out;
+}
+
+.levitating-div:hover {
+  box-shadow: 0 25px 25px rgba(0, 0, 0, 0.4);
+  transform: translateY(-5px);
 }
 
 *:not(input) {
@@ -110,8 +116,9 @@ html, body{
   text-transform: uppercase;
   padding: 10px 20px;
   border-radius: 5px;
-  transition: all 0.2s ease-in-out;
   margin-left: 5px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.150s ease-in-out;
 }
 
 .navbar-nav li{
@@ -121,6 +128,8 @@ html, body{
 .navbar-nav .nav-link:hover {
   background-color: #4682B4;
   color: #fff;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
 }
 
 .active {
@@ -141,74 +150,6 @@ html, body{
 #dash-icon {
     height: 20px;
     width: 20px;
-}
-
-#clock span {
-  line-height: 0.8em;
-}
-
-#date span {
-  line-height: 1em;
-}
-
-#clock {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3em;
-    font-weight: bold;
-    margin-bottom: 20px; /* add margin-bottom to create space between #time and #date */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-#date {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-
-#hours {
-  /* font-size: 2em; */
-  border-radius: 10px;
-  color: #333;
-}
-
-#minutes {
-  /* font-size: 2em; */
-  border-radius: 10px;
-  color: #666;
-}
-
-#ampm {
-  /* font-size: 2em; */
-  border-radius: 10px;
-  color: #ffffff;
-  margin-left: 2px;
-}
-
-#weekday {
-  font-size: 1.5em;
-  color: #999;
-}
-
-#month {
-  font-size: 1.5em;
-  color: #999;
-}
-
-#day {
-  font-size: 2.5em;
-  color: #333;
-}
-
-#year {
-  font-size: 1.5em;
-  color: #999;
 }
 
 .info-input {
@@ -233,8 +174,6 @@ html, body{
   height: 16px; /* adjust the size of the icon */
 }
 
-
-
 .material-symbols-outlined {
     font-size: 30px;
   font-variation-settings:
@@ -245,13 +184,13 @@ html, body{
 }
 
 </style>
-<div class="container-fluid">
+<div class="container-fluid" style="background:  #A0D6B4;">
     <div class="row">
       <div class="col-md-2 bg-white position-fixed" style="height: 100%;">
         <!-- First column content here -->
         <div class="container-fluid">
             <div class="m-3 p-2">
-                <h3 class="navbar-brand text-wrap"  href="#">CMU DocTraSys</h3>
+                <h2 class=""  href="#">CMU DocTraSys</h2>
             </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -259,7 +198,7 @@ html, body{
             <div class="navbar" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item ">
-                        <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                        <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }} " href="{{ route('admin.dashboard') }}">
                             <span class="material-symbols-outlined" style="vertical-align: middle;">
                                 dashboard
                             </span>
@@ -293,7 +232,7 @@ html, body{
                         </a>
                     </li>
                     <hr>
-                    <li class="nav-item" style="position: absolute; top: 755px;">
+                    <li class="nav-item" style="position: absolute; top: 740px;">
                         <a href="{{ route('admin.logout') }}" class="nav-link" style="display: flex; align-items: center;">
                             <i class="fas fa-sign-out-alt fa-2x" style="margin-right: 0.5rem;"></i>
                             <span>Logout</span>
@@ -303,28 +242,41 @@ html, body{
             </div>
         </div>
       </div>
-      <div class="col-md-7 offset-md-2 p-0">
-        <!-- Second column content here -->
+      <div class="col-md-7 offset-md-2 px-3" style="height: 960px;">
+        <div class="input-group mb-4 mt-5 px-5">
+            <div class="col-md-12 d-flex levitating-div rounded">
+                <input type="text" class="form-control rounded" placeholder="Search office name ..." aria-label="Search" aria-describedby="search-icon">
+                <button class="btn btn-light btn-outline-secondary rounded" type="button" id="search-icon"><i class="fas fa-search fa-2x text-black"></i></button>
+            </div>
+        </div>
         @yield('content')
       </div>
-      <div class="col-md-3 bg-secondary">
+      <div class="col-md-3 p-0 d-block justify-content-center align-items-center" >
         <!-- Third column content here -->
-        <div class="neomorphic-bg">
-            <div class="m-0" id="clock">
-                <span class="neomorphic-bg" id="hours"></span>
-                <span>:</span>
-                <span class="neomorphic-bg" id="minutes"></span>
-                <span class="neomorphic-bg bg-primary" id="ampm"></span>
+        <div class="col-md-11 p-3">
+            <div class="row mb-1">
+              <div class="col-md-5 d-flex text-center">
+              </div>
+              <div class="col-md-7 d-flex text-center bg-white" style="border-radius: 5px;">
+                  <div class="p-3">
+                      <i class="fas fa-user-tie fa-3x"></i>
+                  </div>
+                  <div class="p-3">
+                      <p class="mb-0"><strong>{{ Auth::user()->name }}</strong></p>
+                      <p class="mb-1 text-secondary"><em>{{ Auth::user()->roles->pluck('name')->implode(', ') }}</em></p>
+                  </div>
+              </div>
             </div>
-            <div id="date">
-                <span id="weekday"></span>
-                <span>, </span>
-                <span id="month"></span>
-                <span> </span>
-                <span id="day"></span>
-                <span>, </span>
-                <span id="year"></span>
-            </div>
+        </div>
+        <div class="col-md-11 bg-white p-3 levitating-div" style="border-radius: 5px;">
+            @include('admin.misc.most-documents-per-office')
+        </div>
+        <div class="col-md-11 mt-2 bg-white p-2 levitating-div" style="border-radius: 5px;">
+            @include('admin.misc.most-types')
+        </div>
+        </div>
+        <div class="col-md-11 mt-2 bg-white p-2 levitating-div" style="border-radius: 5px;">
+            @include('admin.misc.clock-with-date')
         </div>
       </div>
     </div>

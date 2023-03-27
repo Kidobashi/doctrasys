@@ -29,7 +29,7 @@ class QrComposerProvider extends ServiceProvider
 
     public function composeQr()
     {
-        view()->composer('partials.qrcode', 'App\Http\Composers\QrComposer');
-        view()->composer('users.add', 'App\Http\Composers\QrComposer');
+        view()->composer('admin.misc.most-documents-per-office', 'App\Http\Composers\QrComposer');
+        view()->composer('admin.misc.most-types', 'App\Http\Composers\QrComposer');
     }
 }

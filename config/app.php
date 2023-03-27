@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\QrComposerProvider::class,
+        App\Providers\MiscFunctionProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
