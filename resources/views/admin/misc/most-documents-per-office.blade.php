@@ -24,6 +24,6 @@
     </div>
 <nav class="mt-0">
     <ul class="pagination justify-content-center mb-0">
-        {{ $documents->links() }}
+        {{ $documents->links('vendor.pagination.bootstrap-5') }}
     </ul>
 </nav>

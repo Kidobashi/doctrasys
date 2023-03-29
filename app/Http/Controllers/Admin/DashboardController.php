@@ -8,11 +8,14 @@ use App\Models\User;
 use App\Models\Documents;
 use App\Models\DocumentType;
 use App\Models\Offices;
+use App\Models\PrimaryReasonOfReturn;
 use App\Models\TrackingHistory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illumninate\Support\Str;
 
 class DashboardController extends Controller
 {
@@ -50,15 +53,30 @@ class DashboardController extends Controller
 
     public function addOffice(Request $request)
     {
-        $request->validate([
-            'officeName' => 'required|unique:offices,officeName,except,id',
-        ]);
+        $rules = [
+            'officeName' => 'required | unique:offices,officeName,except,id',
+        ];
 
-        Offices::insert([
-            'officeName' => request('officeName'),
-        ]);
+        $messages = [
+            'officeName.required' => "This field is required",
+            'officeName.unique' => 'Already Exists',
+        ];
 
-        return redirect('offices')->withSuccess(__('Office Added successfully.'));
+        $validatedData = Validator::make($request->all(), $rules, $messages);
+
+        if($validatedData->fails()){
+            return back()->with('error', $validatedData->errors()->first());
+        }
+        else
+        {
+            $title_cased = ucwords($validatedData['officeName']);
+
+            Offices::insert([
+                'officeName' => $title_cased,
+            ]);
+
+            return redirect('offices')->with('message', 'Office Added successfully.');
+        }
     }
 
     public function deleteOffice($id, Request $request)
@@ -98,15 +116,31 @@ class DashboardController extends Controller
 
     public function addDocType(Request $request)
     {
-        $request->validate([
-            'documentName' => 'required',
-        ]);
 
-        DocumentType::insert([
-            'docType' => request('documentName'),
-        ]);
+        $rules = [
+            'docType' => 'required | unique:document_type,docType,except,id',
+        ];
 
-        return back()->with('message', 'Document Type Added Successfully');;
+        $messages = [
+            'docType.required' => "This field is required",
+            'docType.unique' => 'Already Exists',
+        ];
+
+        $validatedData = Validator::make($request->all(), $rules, $messages);
+
+        if($validatedData->fails()){
+            return back()->with('error', $validatedData->errors()->first());
+        }
+        else
+        {
+            $title_cased = ucwords($validatedData['docType']);
+
+            DocumentType::insert([
+                'docType' => $title_cased,
+            ]);
+
+            return back()->with('message', 'Document Type Added Successfully');
+        }
     }
 
     public function enableDocType($id)
@@ -171,4 +205,66 @@ class DashboardController extends Controller
         return $documentTypes;
     }
 
+    public function typesOfReports()
+    {
+        $reports = PrimaryReasonOfReturn::paginate(5);
+
+        return view('admin.types-of-report')->with(['reports' => $reports]);
+    }
+
+    public function addTypeOfReport(Request $request)
+    {
+        $rules = [
+            'report' => 'required | unique:document_type,docType,except,id',
+        ];
+
+        $messages = [
+            'report.required' => "This field is required",
+            'report.unique' => 'Already Exists',
+        ];
+
+        $validatedData = Validator::make($request->all(), $rules, $messages);
+
+        if($validatedData->fails()){
+            return back()->with('error', $validatedData->errors()->first());
+        }
+        else
+        {
+            $title_cased = ucwords($validatedData['report']);
+
+            PrimaryReasonOfReturn::insert([
+                'reason' => $title_cased,
+            ]);
+
+            return back()->with('message', 'Type of report Added Successfully');
+        }
+    }
+
+    public function enableTypeOfReport($id)
+    {
+        $primaryReason = PrimaryReasonOfReturn::find($id);
+
+        if (! $primaryReason) {
+            // session()->flash('error', 'Office not found'. $id);
+            return back()->with('error', 'Type of Report not found');
+        }
+        else{
+            PrimaryReasonOfReturn::where('id', $primaryReason->id)->update( array('status' => 1 ));
+            return back()->with('message', 'Type of Report enabled');
+        }
+    }
+
+    public function deleteTypeOfReport($id)
+    {
+        $primaryReason = PrimaryReasonOfReturn::find($id);
+
+        if (! $primaryReason) {
+            // session()->flash('error', 'Office not found'. $id);
+            return back()->with('error', 'Type of Report not found');
+        }
+        else{
+            PrimaryReasonOfReturn::where('id', $primaryReason->id)->update( array('status' => 2 ));
+            return back()->with('message', 'Type of report disabled');
+        }
+    }
 }

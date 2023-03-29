@@ -64,7 +64,7 @@ html, body {
     font-family: 'Poppins', sans-serif;
     background-size: cover;
     background-repeat: no-repeat;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 /* Style the heading element with Montserrat font */
@@ -89,7 +89,7 @@ p {
 }
 
 .levitating-div {
-  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 15px rgba(0, 0, 0, 0.2);
   transition: all 0.150s ease-in-out;
 }
 
@@ -182,15 +182,48 @@ html, body{
   'GRAD' 0,
   'opsz' 48
 }
+/* The point of this tutorial is here */
+.search-form {
+  display: flex;
+  flex-direction: row;
+}
+.search-field {
+  width: 100%;
+  padding: 10px 35px 10px 15px;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+}
 
+.search-button {
+  background: transparent;
+  border: none;
+  outline: none;
+  margin-left: -33px;
+}
+
+.search-button img {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.pagination .active {
+    background-color: #007bff; // change this to your desired color
+}
 </style>
 <div class="container-fluid" style="background:  #A0D6B4;">
     <div class="row">
-      <div class="col-md-2 bg-white position-fixed" style="height: 100%;">
+      <div class="col-md-2 bg-white" style="height: 100%;">
         <!-- First column content here -->
         <div class="container-fluid">
-            <div class="m-3 p-2">
-                <h2 class=""  href="#">CMU DocTraSys</h2>
+            <div class="col-md-11 p-2 mt-2 d-flex">
+                <div class="mr-1">
+                    <img style="height: 70px; width:70px;" src="{{ asset('images/cmulogo.png') }}" alt="Logo">
+                </div>
+                <div>
+                    <h2 href="{{ route('admin.dashboard') }}">CMU DocTraSys</h2>
+                </div>
             </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -219,7 +252,7 @@ html, body{
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#Reports" class="nav-link {{ Request::is('admin/reportType') ? 'active' : '' }}" style="display: flex; align-items: center;">
+                        <a href="{{ route('admin.reports') }}" class="nav-link {{ Request::is('admin/types-of-reports') ? 'active' : '' }}" style="display: flex; align-items: center;">
                             <i class="far fa-flag fa-2x" style="margin-right: 0.5rem;"></i>
                             <span>Types of Report</span>
                         </a>
@@ -232,8 +265,11 @@ html, body{
                         </a>
                     </li>
                     <hr>
-                    <li class="nav-item" style="position: absolute; top: 740px;">
-                        <a href="{{ route('admin.logout') }}" class="nav-link" style="display: flex; align-items: center;">
+                    <li style="height: 355px;">
+
+                    </li>
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link" style="display: flex; align-items: center;">
                             <i class="fas fa-sign-out-alt fa-2x" style="margin-right: 0.5rem;"></i>
                             <span>Logout</span>
                         </a>
@@ -242,11 +278,14 @@ html, body{
             </div>
         </div>
       </div>
-      <div class="col-md-7 offset-md-2 px-3" style="height: 960px;">
+      <div class="col-md-7 px-3 justify-content-center" style="height: 960px;">
         <div class="input-group mb-4 mt-5 px-5">
-            <div class="col-md-12 d-flex levitating-div rounded">
-                <input type="text" class="form-control rounded" placeholder="Search office name ..." aria-label="Search" aria-describedby="search-icon">
-                <button class="btn btn-light btn-outline-secondary rounded" type="button" id="search-icon"><i class="fas fa-search fa-2x text-black"></i></button>
+            <div class="col-md-9 m-auto search-container levitating-div rounded">
+                <form action="" class="search-form">
+                    @csrf
+                    <input type="text" class="search-field" placeholder="Search office name ..." aria-label="Search" aria-describedby="search-icon">
+                    <button class="search-button" type="submit" id="search-icon"><img src="{{ asset('images/search.png') }}" alt=""></button>
+                </form>
             </div>
         </div>
         @yield('content')
@@ -281,7 +320,6 @@ html, body{
       </div>
     </div>
   </div>
-
 <script>
     $(document).ready(function() {
   // add click event listener to the toggle button
@@ -344,7 +382,9 @@ setInterval(updateTime, 1000);
         "closeButton" : true,
         "progressBar" : true
     }
+        @foreach ($errors->all() as $error)
             toastr.error("{{ session('error') }}");
+        @endforeach
     @endif
 
     @if(Session::has('info'))

@@ -43,13 +43,13 @@ class DocumentsController extends Controller
         //
         $last = DB::table('documents')->latest('id')->first();
 
-        $offices = Offices::all();
+        $offices = Offices::where('status', 1)->get();
 
         $users = User::all();
 
         $assignedOffice = Auth::user()->assignedOffice;
 
-        $docType = DocumentType::all();
+        $docType = DocumentType::where('status', 1)->get();
 
         $document = new Documents();
 

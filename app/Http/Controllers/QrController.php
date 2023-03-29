@@ -397,6 +397,7 @@ class QrController extends Controller
 
                 $messages = [
                     'primary_reason_of_return_id.required' => 'Choose a primary reason of rejection',
+                    'primary_reason_of_return_id.unique' => 'Already Exists',
                 ];
 
                 $validatedData = $request->validate($rules, $messages);

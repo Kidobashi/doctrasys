@@ -10,7 +10,7 @@
                         <h3 class="mb-0">{{ __('Document Types') }}</h3>
                     </div>
                     <div class="p-2">
-                         <button href="#" class="btn float-end btn-sm mb-0 text-center" type="button" data-toggle="modal" data-target="#exampleModalCenter" style="background:  #2AAA8A;">+&nbsp; Add new document type</button>
+                         <button href="#" class="btn text-white float-end btn-sm mb-0 text-center" type="button" data-toggle="modal" data-target="#exampleModalCenter" style="background:  #2AAA8A;">+&nbsp; Add new document type</button>
                     </div>
                 </div>
             </div>
@@ -32,9 +32,9 @@
                         </div>
                         <div class="col-md-1 text-center">
                             @if ($row->status == 1)
-                                <span class="badge p-2" style="background-color: #2AAA8A;">Active</span>
+                                <span class="badge rounded-pill bg-primary">Active</span>
                             @else
-                                <span class="badge bg-danger p-2">Inacive</span>
+                                <span class="badge rounded-pill bg-secondary">Inactive</span>
                             @endif
                         </div>
                         <div class="col-md-1 text-center">
@@ -57,9 +57,10 @@
                     </div>
                 </div>
                 @endforeach
+                <hr>
                 <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-start">
-                        {{ $docType->links() }}
+                    <ul class="pagination justify-content-center mb-0">
+                        {{ $docType->links('vendor.pagination.bootstrap-5') }}
                     </ul>
                 </nav>
             </div>
@@ -67,17 +68,14 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add New Document Type</h5>
-        </div>
+          <h5 class="modal-title mx-3 mt-3" id="exampleModalLongTitle">Add New Document Type<span class="text-danger">*</span></h5>
         <div class="modal-body">
           <form action="{{ route('admin.addDoctypes') }}" method="post">
             @csrf
-            Name of Document Type
-            <input type="text" class="form-control" name="documentName" id="name" aria-label="Name" aria-describedby="name">
+            <input type="text" style="text-transform: capitalize;" class="form-control" name="docType" id="name" aria-label="Name" aria-describedby="name">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -87,6 +85,7 @@
       </div>
     </div>
   </div>
+
   <script>
     $(document).on('click', '.disable-doctype-btn', function(event) {
          event.preventDefault();

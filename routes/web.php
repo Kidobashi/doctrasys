@@ -14,6 +14,7 @@ use App\Http\Controllers\QrController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserManagementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
@@ -46,13 +47,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('admin/enableOffice/{id}', [DashboardController::class, 'enableOffice'])->name('admin.enableOffice');
         Route::post('admin/delDocType/{id}', [DashboardController::class, 'deleteDocType'])->name('admin.deleteDocType');
         Route::post('admin/enableDocType/{id}', [DashboardController::class, 'enableDocType'])->name('admin.enableDocType');
-        Route::get('admin/logout', [SessionsController::class, 'destroy'])->name('admin.logout');
         Route::get('admin/user-management', [UserController::class, 'index'])->name('user');
+        Route::get('admin/types-of-reports', [DashboardController::class, 'typesOfReports'])->name('admin.reports');
+        Route::post('admin/add-reports', [DashboardController::class, 'addTypeOfReport'])->name('admin.addReport');
+        Route::post('admin/delete-report/{id}', [DashboardController::class, 'deleteTypeOfReport']);
+        Route::post('admin/enable-report/{id}', [DashboardController::class, 'enableTypeOfReport']);
         Route::get('/user-profile', [ProfileController::class, 'create']);
         Route::post('admin/details', [ProfileController::class, 'store']);
-        Route::get('admin/user-management', function () {
-            return view('admin/user-management');
-        })->name('admin.user-management');
+        Route::get('admin/user-management', [UserManagementController::class, 'index'])->name('admin.user-management');
+        Route::post('admin/add-user', [UserManagementController::class, 'store'])->name('admin.addUser');
     });
 });
 
@@ -124,7 +127,7 @@ Route::middleware(['auth'])->group(function () {
 // 		return view('dashboard');
 // 	})->name('sign-up');
 // });
-
+Route::get('/logout', [SessionsController::class, 'destroy'])->name('logout');
 Route::get('/register', [RegisterController::class, 'create']);
 Route::post('/register', [RegisterController::class, 'store']);
 Route::get('/login', [SessionsController::class, 'create']);

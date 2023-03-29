@@ -23,7 +23,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5em;
+  font-size: 1.4em;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
@@ -74,7 +74,7 @@
     <span id="minutes"></span>
     <span class="bg-dark p-1" id="ampm"></span>
 </div>
-<div id="date">
+<div class="p-1" id="date">
     <span id="weekday"></span>
     <span>, </span>
     <span id="month"></span>

@@ -17,6 +17,16 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             'id' => 1,
+            'name' => 'Super Administrator',
+            'assignedOffice' => 3,
+            'email' => 'superAdmin@doctrasys.com',
+            'password' => Hash::make('admin1234'),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('users')->insert([
+            'id' => 2,
             'name' => 'Admin',
             'assignedOffice' => 1,
             'email' => 'admin@doctrasys.com',
