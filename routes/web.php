@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CommentsController;
-use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
@@ -21,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\ConfirmPasswordController;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +55,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('admin/details', [ProfileController::class, 'store']);
         Route::get('admin/user-management', [UserManagementController::class, 'index'])->name('admin.user-management');
         Route::post('admin/add-user', [UserManagementController::class, 'store'])->name('admin.addUser');
+        Route::get('/admin/{id}/edit', [UserManagementController::class, 'edit'])->name('admin.edit');
+        Route::put('admin/update-user/{id}', [UserManagementController::class, 'update'])->name('admin.update-user');
+        Route::post('/disable-user/{id}', [UserManagementController::class, 'disableUser'])->name('admin.disable-user');
+        Route::post('/enable-user/{id}', [UserManagementController::class, 'enableUser'])->name('admin.enable-user');
     });
 });
 
@@ -106,7 +109,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/getLiveUpdate', [DocumentsController::class, 'getOfficeByUser']);
     Route::get('/', [HomeController::class, 'index']);
 });
+// Route::post('/check-password', function(Request $request) {
+//     dd('passswordchecking');
+//     // Get the password from the request
+//     $password = $request->input('password');
 
+//     // Check if the password is valid (replace this with your own password validation code)
+//     $valid = $password === 'mysecretpassword';
+
+//     // Return a JSON response with the validation result
+//     return response()->json(['valid' => $valid]);
+//   });
 // Route::group(['middleware' => 'auth'], function () {
 // 	Route::get('dashboard', function () {
 // 		return view('dashboard');

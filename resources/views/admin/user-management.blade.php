@@ -1,7 +1,17 @@
 @extends('templates.admin')
 
 @section('content')
-
+<style>
+    .pointer {cursor: pointer;}
+    html, body {
+        background-color:  #A0D6B4;
+    }
+    th, td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
 <div>
     <div class="row">
         <div class="col-12">
@@ -17,8 +27,8 @@
                     </div>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <table class="table align-items-center mb-0">
+                    <div class="table-responsive p-1" style="width: 100%; overflow-x: auto;">
+                        <table class="table mb-0 p-3">
                             <thead>
                                 <tr>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -37,6 +47,9 @@
                                        Role
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Status
+                                    </th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Creation Date
                                     </th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -45,33 +58,60 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($users as $row)
+                                @foreach($users as $user)
                                 <tr>
-                                    <td class="ps-4">
+                                    <td class="text-center">
                                         {{ $loop->iteration }}
                                     </td>
-                                    <td class="text-center">
-                                        {{ $row->name }}
+                                    <td class=" text-center">
+                                        {{ $user->name }}
+                                    </td>
+                                    <td class=" text-center">
+                                        {{ $user->email }}
+                                    </td>
+                                    <td class=" text-center">
+                                        {{ $user->office->officeName }}
+                                    </td>
+                                    <td class=" text-center">
+                                        {{ $user->roles->implode('name', ', ') }}
+                                    </td>
+                                     <td class="text-center">
+                                        @if ($user->status == 1)
+                                            <span class="badge pill-rounded bg-success">Active</span>
+                                        @else
+                                            <span class="badge pill-rounded bg-secondary">Inactive</span>
+                                        @endif
                                     </td>
                                     <td class="text-center">
-                                        {{ $row->email }}
+                                        {{ \Carbon\Carbon::parse($user->created_at)->format('Y-m-d') }}
                                     </td>
-                                    <td class="text-center">
-                                        {{ $row->office->officeName }}
-                                    </td>
-                                    <td class="text-center">
-                                        {{ $row->roles->implode('name', ', ') }}
-                                    </td>
-                                    <td class="text-center">
-                                        {{ \Carbon\Carbon::parse($row->created_at)->format('Y-m-d') }}
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="#" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit user">
-                                            <i class="fas fa-user-edit text-secondary"></i>
-                                        </a>
-                                        <span>
-                                            <i class="cursor-pointer fas fa-trash text-secondary"></i>
-                                        </span>
+
+                                    <td class="text-center d-flex">
+                                        <div class="pointer mx-3">
+                                            <button class="btn p-0" data-toggle="modal" data-target="#editModal{{ $user->id }}">
+                                                <i title="Edit" type="button" class="p-2 fas fa-user-edit text-white bg-warning rounded"></i>
+                                            </button>
+                                        </div>
+                                            <!-- Edit Modal -->
+                                            @include('admin.modals.edit-user-modal', ['user' => $user])
+                                        @if ($user->status == 1)
+                                        <div class="pointer mx-3">
+                                            <button class="btn p-0" type="submit" data-toggle="modal" data-target="#disableUserModal{{ $user->id }}">
+                                                <i title="Disable" class="p-2 fas fa-ban text-white bg-danger rounded"></i>
+                                            </button>
+                                        </div>
+                                        @else
+                                        <div class="pointer mx-3">
+                                                <button class="btn p-0" type="submit" data-toggle="modal" data-target="#enableUserModal{{ $user->id }}">
+                                                    <i title="Enable" class="p-2 fas fa-thumbs-up text-white bg-success rounded"></i>
+                                                </button>
+                                        </div>
+                                        @endif
+                                        <div class="pointer mx-3">
+                                            <button class="btn p-0">
+                                                <i title="Reset password" class="p-2 fas fa-key text-white bg-primary rounded"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -89,6 +129,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -133,6 +174,11 @@
                 @endforeach
               </select>
             </div>
+            <hr>
+            <div class="form-group px-5">
+                <label for="password_confirmation">Administrator Password</label>
+                <input type="password" id="password2" name="check_password" autocomplete="off" required>
+            </div>
           </div>
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -142,4 +188,58 @@
       </div>
     </div>
   </div>
+<!-- Disable User Modal -->
+<div class="modal fade" id="disableUserModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="disableUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="disableUserModalLabel">Disable User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="disableUserForm" action="/disable-user/{{ $user->id }}">
+                    @csrf
+                Are you sure you want to disable this user? Enter administrator password.                <div class="form-group d-flex">
+                    <input type="password" id="password2" name="check_password" autocomplete="off" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                {{-- <form method="POST" action="/disable-user/{{ $user->id }}" id="disableUserForm">
+                    @csrf --}}
+                    <button type="submit" class="btn btn-danger">Disable</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enable User Modal -->
+<div class="modal fade" id="enableUserModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="enableUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="enableUserModalLabel">Enable User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to enable this user? Enter the Adminisatrator password
+                <div class="form-group">
+                    <input type="password" id="password2" name="check_password" autocomplete="off" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form method="POST" action="/enable-user/{{ $user->id }}">
+                    @csrf
+                    <button type="submit" class="btn btn-success">Enable</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

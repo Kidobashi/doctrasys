@@ -39,12 +39,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani&family=Raleway:wght@600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    {{-- <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css"> --}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<!-- In the <head> section of your layout file -->
+    {{-- <link rel="stylesheet" href="{{ asset('css/sweetalert2.min.css') }}"> --}}
 
+    <!-- Before the closing </body> tag of your layout file -->
+    {{-- <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
@@ -64,6 +68,7 @@ html, body {
     font-family: 'Poppins', sans-serif;
     background-size: cover;
     background-repeat: no-repeat;
+    background-color:  #A0D6B4;
     /* overflow: hidden; */
 }
 
@@ -212,7 +217,7 @@ html, body{
     background-color: #007bff; // change this to your desired color
 }
 </style>
-<div class="container-fluid" style="background:  #A0D6B4;">
+<div class="container-fluid">
     <div class="row">
       <div class="col-md-2 bg-white" style="height: 100%;">
         <!-- First column content here -->
@@ -280,7 +285,7 @@ html, body{
       </div>
       <div class="col-md-7 px-3 justify-content-center" style="height: 960px;">
         <div class="input-group mb-4 mt-5 px-5">
-            <div class="col-md-9 m-auto search-container levitating-div rounded">
+            <div class="col-md-9 m-auto search-container levitating-div rounded" style="height: 42px;">
                 <form action="" class="search-form">
                     @csrf
                     <input type="text" class="search-field" placeholder="Search office name ..." aria-label="Search" aria-describedby="search-icon">
@@ -382,6 +387,7 @@ setInterval(updateTime, 1000);
         "closeButton" : true,
         "progressBar" : true
     }
+        toastr.error("{{ session('error') }}");
         @foreach ($errors->all() as $error)
             toastr.error("{{ session('error') }}");
         @endforeach
@@ -405,7 +411,7 @@ setInterval(updateTime, 1000);
             toastr.warning("{{ session('warning') }}");
     @endif
   </script>
-<script src="/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
+{{-- <script src="/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script> --}}
 
   <script>
     $(document).ready(function () {
