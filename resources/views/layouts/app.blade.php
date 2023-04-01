@@ -32,23 +32,23 @@
 
 </head>
 <body>
-    <div id="app">
+    {{-- <div id="app">
         <div class="row">
             <div class="d-flex">
                 @auth
                 <div>
                     @include('layouts.navbars.auth.nav')
                 </div>
-                @endauth
+                @endauth --}}
                 <div class="col-sm-12">
                     <main>
                         @yield('content')
                     </main>
                 </div>
 
-            </div>
+            {{-- </div>
         </div>
-    </div>
+    </div> --}}
     <script>
         @if(Session::has('message'))
         toastr.options =

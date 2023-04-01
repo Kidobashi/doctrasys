@@ -20,6 +20,8 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\ConfirmPasswordController;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -62,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     //Documents Controller
     Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('add-document');
@@ -109,6 +111,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/getLiveUpdate', [DocumentsController::class, 'getOfficeByUser']);
     Route::get('/', [HomeController::class, 'index']);
 });
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
 // Route::post('/check-password', function(Request $request) {
 //     dd('passswordchecking');
 //     // Get the password from the request

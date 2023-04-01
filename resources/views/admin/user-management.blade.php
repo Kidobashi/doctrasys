@@ -99,12 +99,14 @@
                                             <button class="btn p-0" type="submit" data-toggle="modal" data-target="#disableUserModal{{ $user->id }}">
                                                 <i title="Disable" class="p-2 fas fa-ban text-white bg-danger rounded"></i>
                                             </button>
+                                            @include('admin.modals.disable-user-modal', ['user' => $user])
                                         </div>
                                         @else
                                         <div class="pointer mx-3">
                                                 <button class="btn p-0" type="submit" data-toggle="modal" data-target="#enableUserModal{{ $user->id }}">
                                                     <i title="Enable" class="p-2 fas fa-thumbs-up text-white bg-success rounded"></i>
                                                 </button>
+                                            @include('admin.modals.enable-user-modal', ['user' => $user])
                                         </div>
                                         @endif
                                         <div class="pointer mx-3">

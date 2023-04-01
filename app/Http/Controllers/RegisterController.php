@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Offices;
 use App\Models\Role;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -36,6 +37,8 @@ class RegisterController extends Controller
         // Assign a role to the user
         $role = Role::where ('name', 'User')->first(); // Replace "admin" with the actual name of the role you want to assign
         $user->roles()->sync([$role->id]);
+
+        event(new Registered($user));
 
         // Log in the user and redirect to the dashboard
         Auth::login($user);
