@@ -23,6 +23,11 @@ class Documents extends Model
         'email'
     ];
 
+    public function office()
+    {
+        return $this->belongsTo(Offices::class, 'receiverOffice_id', 'senderOffiec_id');
+    }
+
     // public function office()
     // {
     //     return $this->hasOne(Offices::class);

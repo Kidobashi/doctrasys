@@ -177,6 +177,22 @@
     margin-top: 10px;
 }
 
+.icon-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .icon-wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
 @media screen and (max-width: 700px) {
     .vl{
         display: none;
@@ -220,28 +236,36 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
     <div class="col-md-8 row py-4 mx-auto neomorphic-bg" style="border-radius:20px; border:1px solid #d3d3d3;">
         <h2 class="text-center">Document Details</h2>
         <div class="docDetails mt-2 m-0 p-0">
-            <div class="d-inline highlights col-md-4 text-center m-0 p-0">
+            <div class="d-inline highlights col-md-3 text-center m-0 p-0">
                 <p>Reference Number</p>
                 @if (isset($data->referenceNo))
-                    <h3>{{ $data->referenceNo }}</h3>
+                    <h4>{{ $data->referenceNo }}</h4>
                 @endif
             </div>
             <div class="vl">
             </div>
-            <div class="d-inline highlights col-md-4 text-center m-0 p-0">
+            <div class="d-inline highlights col-md-3 text-center m-0 p-0">
                 <p>Document Type</p>
-                <h3>
+                <h4>
                     @if (isset($docCategory->docType))
                         {{ $docCategory->docType }}
                     @endif
-                </h3>
+                </h4>
             </div>
             <div class="vl">
             </div>
-            <div class="d-inline highlights col-md-4 text-center m-0 p-0">
+            <div class="d-inline highlights col-md-3 text-center m-0 p-0">
                 <p>Office of Origin</p>
-                @if (isset($data->officeName))
-                    <h3>{{ $data->officeName }}</h3>
+                @if (isset($data->senderOfficeName))
+                    <h4>{{ $data->senderOfficeName }}</h3>
+                @endif
+            </div>
+            <div class="vl">
+            </div>
+            <div class="d-inline highlights col-md-3 text-center m-0 p-0">
+                <p>Office of Destination</p>
+                @if (isset($data->receiverOfficeName))
+                    <h4>{{ $data->receiverOfficeName }}</h4>
                 @endif
             </div>
         </div>
@@ -295,6 +319,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <form id="approved-and-keep-form" action="approved-and-kept/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                    <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
                                     <input class="form-control "type="text" style="display: none;" name='status' value="9">
                                     <input class="form-control "type="text" style="display: none;" name='action' value="9">
                                     <button class="neo-btn btn" id="approve-and-keep-btn" type="submit"><h5>Approve and Keep</h5></button>
@@ -305,8 +330,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <form id="approved-and-return-form" action="approved-and-return/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                 <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                                <input class="form-control "type="text" style="display: none;" name='status' value="2">
-                                <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="10">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="10">
                                 <button class="neo-btn btn" id="received-by-intended-btn" type="submit"><h5>Approve/Return to Sender</h5></button>
                             </form>
                         </div>
@@ -315,8 +341,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <form id="reject-return-to-previous-form" action="reject-return-to-previous/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                 <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                                <input class="form-control "type="text" style="display: none;" name='status' value="2">
-                                <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="3">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="3">
                                 <button class="neo-btn btn" id="reject-return-to-previous-btn" type="submit"><h5>Reject/Return to Previous Office</h5></button>
                             </form>
                         </div>
@@ -325,8 +352,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <form id="reject-return-to-sender-form" action="reject-return-to-sender/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                 <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                                <input class="form-control "type="text" style="display: none;" name='status' value="2">
-                                <input class="form-control "type="text" style="display: none;" name='action' value="2">
+                                <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="12">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="12">
                                 <button class="neo-btn btn" id="reject-return-to-sender-btn" type="submit"><h5>Reject/Return to Sender</h5></button>
                             </form>
                         </div>
@@ -528,6 +556,42 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         <div class="neomorphic-bg text-center">
                             <p class="text-secondary  text-center p-3 pb-0"><em>No further modifications will be made.</em>
                             </p>
+                        </div>
+                        @elseif ($status->status == 10)
+                        {{-- Report = 9 --}}
+                            @if (Auth::user()->assignedOffice == $latestTracking->receiverOffice && $data->senderOffice_id == $latestTracking->receiverOffice)
+                            <div class="neomorphic-bg text-center">
+                                <form id="approved-and-keep-form" action="approved-and-kept/{{ $data->referenceNo }}" method="post">
+                                    @csrf
+                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                    <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
+                                    <input class="form-control "type="text" style="display: none;" name='status' value="9">
+                                    <input class="form-control "type="text" style="display: none;" name='action' value="9">
+                                    <button class="neo-btn btn" id="approve-and-keep-btn" type="submit"><h5>RECEIVE TO TAG</h5></button>
+                                </form>
+                            </div>
+                            @else
+                                <div class="neomorphic-bg text-center">
+                                    <p class="text-secondary text-center p-3 pb-0"><em>No further modifications will be made.</em>
+                                    </p>
+                                </div>
+                            @endif
+                        @elseif ($status->status == 11)
+                        <div class="neomorphic-bg text-center">
+                            <p class="text-secondary  text-center p-3 pb-0"><em>No further modifications will be made.</em>
+                            </p>
+                        </div>
+                        @elseif ($status->status == 12)
+                        {{-- Report = 9 --}}
+                        <div class="neomorphic-bg text-center">
+                            <form class="receive" action="receive-to-keep/{{ $data->referenceNo }}" method="post">
+                                @csrf
+                                <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
+                                <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
+                                <input class="form-control "type="text" style="display: none;" name='status' value="11">
+                                <input class="form-control "type="text" style="display: none;" name='action' value="11">
+                                <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
+                            </form>
                         </div>
                         @endif
             </div>
@@ -740,9 +804,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                             <div class="d-flex flex-wrap bg-white p-3 instruction" style="border-radius: 10px; font-size: 12px;">
                                                 <p>To properly resubmit the document, follow these steps:</p>
                                                 <p>1. <strong>Complete the missing requirements</strong>.</p>
-                                                <p>2. <strong>Reevaluate and recompile</strong> if necessary.<p>
-                                                <p>3. Conduct a <strong>double check.</strong></p>
-                                                <p class="mb-3">4. Proceed to <strong>resubmit</strong> the document.</p>
+                                                <p>2. <strong>Reevaluate and recompile</strong> if necessary.</p>
+                                                <p>3. Conduct a <strong>double check.</strong> Proceed to resubmit the document.</p>
                                                 <p><em><strong>Note that only the creator (office) of the document has the authority to resolve any issues and resubmit the document.</strong></em></p>
                                             </div>
                                         </div>
@@ -820,14 +883,103 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                             <div class="col-md-8 neomorphic-bg bg-success">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
-                                    <h5 class="text-success text-center"><strong>RECEIVED</strong></h5>
+                                    <h5 class="text-success text-center"><strong>APPROVED</strong></h5>
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white"><em>"The document has been received and tagged by the intended office
-                                            <strong>({{ $latestTracking->senderOfficeName }})</strong>, indicating that it has reached its
-                                            final state in the life cycle and is now permanently stored.
-                                            No further modifications can be made to the document."
+                                        <p class="m-0 p-0 text-white"><em>"The document has been received and approved by the receipient office, indicating that it has reached its
+                                            final state in its life cycle and is now permanently stored.
+                                            No further modifications will be made to the document."
+                                        </em></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @elseif($latestTracking->status == 10)
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-lock fa-4x text-success"></i>
+                            </div>
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid #28a745; height: 95%;">
+                                    <div class="green-circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg bg-success">
+                                <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-success text-center"><strong>APPROVED AND SENT TO ORIGIN</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white"><em>"The document has been received and <em><strong>approved</strong></em> by the intended office
+                                            <strong>({{ $latestTracking->senderOfficeName }})</strong>. This document will be sent back to its originator and permanently stored.
+                                            No further modifications will be made to the document."
+                                        </em></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @elseif($latestTracking->status == 11)
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-lock fa-4x text-danger"></i>
+                            </div>
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid red; height: 95%;">
+                                    <div class="red-circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg bg-danger">
+                                <div class="col-md-8 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-danger text-center"><strong>REJECTED AND SENT TO ORIGIN</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white"><em>"The document has been received and <em><strong>rejected</strong></em> by the intended office
+                                            <strong>({{ $latestTracking->senderOfficeName }})</strong>. This document will be sent back to its originator and permanently stored.
+                                            No further modifications will be made to the document."
+                                        </em></p>
+                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @elseif($latestTracking->status == 12)
+                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                            <div class="col-md-1 m-1 text-center">
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            </div>
+                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
+                                <i class="fas fa-undo fa-spin spin-reverse fa-4x text-danger"></i>
+                            </div>
+                            <div class="col-md-1" style="width:10px;">
+                                <div class="col-md-12" style="position: relative; border-left: 6px solid red; height: 95%;">
+                                    <div class="red-circle">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 neomorphic-bg bg-danger">
+                                <div class="col-md-8 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-danger text-center"><strong>REJECTED AND SENT TO ORIGIN</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex flex-wrap">
+                                        <p class="m-0 p-0 text-white"><em>"The document has been received and <em><strong>rejected</strong></em> by the intended office
+                                            <strong>({{ $latestTracking->senderOfficeName }})</strong>. This document will be sent back to its originator and permanently stored.
+                                            No further modifications will be made to the document."
                                         </em></p>
                                         <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
@@ -1009,6 +1161,59 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                             </div>
                         </div>
+                        @elseif ($row->status == 10)
+                        <div class="d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-4 neomorphic-bg bg-success alt-icon-sz">
+                                    <div class="icon-wrapper">
+                                        <i class="fas fa-undo fa-3x text-white"></i>
+                                        <i class="fas fa-check fa-2x text-white"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                </div>
+                            </div>
+                            <div class="dashed-line">
+                            </div>
+                            <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
+                                <p class="p-auto m-0">Approved and Sent back to the originator, <strong>{{ $row->receiverOfficeName }}</strong> by the receipient office <strong>{{ $row->senderOfficeName }}</strong></p>
+                                <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
+                            </div>
+                        </div>
+                        @elseif($row->status == 12)
+                        <div class="d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-4 neomorphic-bg bg-danger alt-icon-sz">
+                                    <i class="fas fa-undo fa-spin spin-reverse fa-2x text-white"></i>
+                                </div>
+                                <div class="col-md-7">
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                </div>
+                            </div>
+                            <div class="dashed-line">
+                            </div>
+                            <div class="col-md-7 tracking-details neomorphic-bg">
+                                <p class="m-0">Rejected by the <strong>{{ $row->senderOfficeName }}</strong></p>
+                                <p class="m-0">Sent back to the <strong>{{ $row->receiverOfficeName }}</strong></p>
+                                @if (isset($boxArray))
+                                <div class="row">
+                                    <div class="d-flex flex-wrap mb-0">
+                                    <p class="text-black m-0">Missing Documents: </p>
+                                    @foreach ($boxArray as $item)
+                                        @foreach ($item as $value)
+                                            <p class="m-0 p-0 text-black"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
+                                        @endforeach
+                                    @endforeach
+                                    </div>
+                                </div>
+                                 @endif
+                                 @if(isset($documentWithIssue->others))
+                                 <p>More Details: <em><strong>{{ $documentWithIssue->others }}</strong></em></p>
+                                 @endif
+                                 <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
+                            </div>
+                        </div>
                         @endif
                     @endforeach
                 </div>
@@ -1134,7 +1339,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
         if (willProceed.isConfirmed) {
             // The user clicked the "Proceed" button
             // Submit the form
-            document.getElementById("approve-and-return-form").submit();
+            document.getElementById("approved-and-return-form").submit();
             Swal.fire({
                 text: "Status Changed Successfully",
                 icon: "success",

@@ -51,6 +51,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.0/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.0/dist/sweetalert2.min.js"></script>
 
+
+
 </head>
 
 <body>
@@ -155,6 +157,15 @@ div.content {
   padding-bottom: 50px;
 }
 </style>
+@if (session('verified'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Verification successful',
+    });
+</script>
+@endif
+
 @include('layouts.navbars.auth.nav')
 
   <div class="content">
@@ -210,16 +221,7 @@ div.content {
             $(this).addClass('active');
         });
     });
-
-    window.addEventListener('alert', event => {
-            toastr[event.detail.type](event.detail.message,
-            event.detail.title ?? ''), toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-            }
-        });
   </script>
 
-  {{-- @include('layouts.footers.auth.footer') --}}
 </body>
 </html>

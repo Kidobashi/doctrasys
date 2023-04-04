@@ -11,12 +11,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-// use Barryvdh\DomPDF\Facade\Pdf;
-// use Barryvdh\DomPDF\PDF as DomPDFPDF;
-// use Dompdf\Dompdf;
-// use Illuminate\Pagination\LengthAwarePaginator;
-// use Illuminate\Pagination\Paginator;
-// use League\CommonMark\Node\Block\Document;
 
 class DocumentsController extends Controller
 {
@@ -89,8 +83,8 @@ class DocumentsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function store(Request $request)
-     {
+    public function store(Request $request)
+    {
          //
          $sender = Auth::user()->name;
          $senderOffice = Auth::user()->assignedOffice;
@@ -193,7 +187,7 @@ class DocumentsController extends Controller
 
         $all = Documents::where('user_id', $userId)
             ->join('offices', 'receiverOffice_id', 'offices.id')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('documents.created_at', 'DESC')
             ->paginate(20);
 
         return view('users.documents')->with(['all' => $all])->with(['offices' => $offices]);
@@ -237,5 +231,16 @@ class DocumentsController extends Controller
             ->orderBy('created_at', 'DESC')->paginate(20);
 
         return view('users.documentList.sentBackDocs')->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
+    }
+
+    public function googleDocu(Request $request)
+    {
+        $validatedData = $request->validate([
+            'referenceNo' => 'required',
+            'senderOffice_id' => 'required',
+            'receiverOffice_id' => 'required',
+            'docType' => 'required',
+            'user_id' => 'required',
+        ]);
     }
 }

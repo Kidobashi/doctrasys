@@ -308,6 +308,7 @@ html, body{
                   <div class="p-3">
                       <p class="mb-0"><strong>{{ Auth::user()->name }}</strong></p>
                       <p class="mb-1 text-secondary"><em>{{ Auth::user()->roles->pluck('name')->implode(', ') }}</em></p>
+                      {{-- <p class="mb-1 text-secondary"><em>{{ Auth::user()->office->officeName }}</em></p> --}}
                   </div>
               </div>
             </div>

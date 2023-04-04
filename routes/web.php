@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\ConfirmPasswordController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Middleware\RedirectIfAuthenticated;
 
 
 /*
@@ -95,6 +96,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/qrinfo/approved-and-return/{referenceNo}', [QrController::class, 'approveAndReturn']);
     Route::post('/qrinfo/reject-return-to-previous/{referenceNo}', [QrController::class, 'rejectedReturnToPrevious']);
     Route::post('/qrinfo/reject-return-to-sender/{referenceNo}', [QrController::class, 'rejectedReturnToSender']);
+    Route::post('/qrinfo/receive-to-keep/{referenceNo}', [QrController::class, 'receiveToKeep']);
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('offices', [DashboardController::class, 'adminOffice']);
@@ -119,7 +121,7 @@ Route::get('/email/verify', function () {
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
-    return redirect('/home');
+    return redirect('/index')->with('verified', 'Verification Successful, Welcome!');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
@@ -177,8 +179,6 @@ Route::get('index', [DocumentsController::class, 'index'])->name('index');
 Route::get('/coming', function () {
     return view('unused.coming');
 });
-
-Auth::routes();
 
 Auth::routes();
 

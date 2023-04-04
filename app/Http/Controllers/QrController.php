@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\LackingDocuments;
 use App\Models\PrimaryReasonOfReturn;
 use App\Models\User;
+use Google\Service\Docs\Document;
 
 class QrController extends Controller
 {
@@ -47,10 +48,17 @@ class QrController extends Controller
         $offices = Offices::all();
 
         // Fetch document data from DB suing reference no.
-        $data = DB::table('documents')
-              ->join('offices', 'senderOffice_id', 'offices.id')
-              ->where('referenceNo','LIKE', "%{$referenceNo}%")
-              ->first();
+        // $data = DB::table('documents')
+        //       ->join('offices', 'senderOffice_id', 'offices.id')
+        //       ->where('referenceNo','LIKE', "%{$referenceNo}%")
+        //       ->first();
+
+        $data = Documents::join('offices as sender', 'sender.id', '=', 'documents.senderOffice_id')
+        ->join('offices as receiver', 'receiver.id', '=', 'documents.receiverOffice_id')
+        ->select('documents.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
+        ->where('referenceNo', 'LIKE', "%{$referenceNo}%")
+        ->latest()
+        ->first();
 
         // Fetch document type data from DB using reference no.
         $docCategory = DB::table('documents')
@@ -625,6 +633,7 @@ class QrController extends Controller
                 'status' => 'required',
                 'action' => 'required',
                 'senderOffice' => 'required',
+                'user_id' => 'required'
             ]);
 
             Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
@@ -634,7 +643,8 @@ class QrController extends Controller
                 'receiverOffice' => $document->receiverOffice_id,
                 'senderOffice' => $validatedData['senderOffice'],
                 'action' => $validatedData['action'],
-                'status' => $validatedData['action'],
+                'status' => $validatedData['status'],
+                'user_id' => $validatedData['user_id'],
             ]);
 
             return redirect('qrinfo/'.$referenceNo)->with('message', "This document is now approved and will be kept in this office. This is the end of the document's life cycle.");
@@ -644,18 +654,189 @@ class QrController extends Controller
         }
     }
 
-    public function approveAndReturn()
+    public function approveAndReturn(Request $request, $referenceNo)
     {
-        dd('Ha! Approved and Returned');
+        $document = Documents::where('referenceNo', $referenceNo)->first();
+
+        if(Auth::user()->id == $document->user_id)
+        {
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
+        }
+        else
+        {
+            $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->max('created_at');
+
+            $latestResultRow = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->where('created_at', $latestResult)
+                    ->latest()
+                    ->first();
+
+            if($latestResultRow->senderOffice == Auth::user()->assignedOffice)
+            {
+                $validatedData = $request->validate([
+                    'status' => 'required',
+                    'action' => 'required',
+                    'senderOffice' => 'required',
+                    'user_id' => 'required'
+                ]);
+
+                Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+
+                TrackingHistory::create([
+                    'referenceNo' => $referenceNo,
+                    'receiverOffice' => $document->senderOffice_id,
+                    'senderOffice' => $validatedData['senderOffice'],
+                    'action' => $validatedData['action'],
+                    'status' => $validatedData['status'],
+                    'user_id' => $validatedData['user_id'],
+                ]);
+
+                return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being returned to the sender by You');
+            }
+            else{
+                return redirect('qrinfo/'.$referenceNo)->with('error', 'This document is currently in another office.');
+            }
+        }
     }
 
-    public function rejectedReturnToPrevious()
+    public function rejectedReturnToPrevious(Request $request, $referenceNo)
     {
-        dd('Rejected Return To Previous');
+        $previousUser = DB::table('tracking_histories')
+        ->select('user_id',
+            DB::raw('MAX(senderOffice) as max_senderOffice'),
+            DB::raw('MAX(created_at) as latest_date'),
+            DB::raw('COUNT(*) as num_results'))
+        ->where('referenceNo', '=', $referenceNo)
+        ->groupBy('user_id')
+        ->orderByDesc('latest_date')
+        ->skip(1)
+        ->take(1)
+        ->first();
+
+        $getRecentSender = TrackingHistory::where('referenceNo', $referenceNo)
+        ->where('status', 5)
+        ->latest()
+        ->first();
+
+        $document = Documents::where('referenceNo', $referenceNo)->first();
+
+        if(Auth::user()->id == $document->user_id)
+        {
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
+        }
+        else
+        {
+            $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->max('created_at');
+
+            $latestResultRow = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->where('created_at', $latestResult)
+                    ->latest()
+                    ->first();
+
+                if($latestResultRow->senderOffice == Auth::user()->assignedOffice)
+                {
+                    $validatedData = $request->validate([
+                        'status' => 'required',
+                        'action' => 'required',
+                        'senderOffice' => 'required',
+                        'user_id' => 'required'
+                    ]);
+
+                    Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+
+                    TrackingHistory::create([
+                        'referenceNo' => $referenceNo,
+                        'receiverOffice' => $previousUser->max_senderOffice,
+                        'senderOffice' => $validatedData['senderOffice'],
+                        'action' => $validatedData['action'],
+                        'status' => $validatedData['status'],
+                        'user_id' => $validatedData['user_id'],
+                    ]);
+
+                    return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being returned to the sender by You');
+                }
+                else{
+                    return redirect('qrinfo/'.$referenceNo)->with('error', 'This document is currently in another office.');
+                }
+        }
     }
 
-    public function rejectedReturnToSender()
+    public function rejectedReturnToSender(Request $request, $referenceNo)
     {
-        dd('Huhu! Rejected Return To Sender');
+        $document = Documents::where('referenceNo', $referenceNo)->first();
+
+        if(Auth::user()->id == $document->user_id)
+        {
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'As the creator of this document, You cannot modify the status of this document!');
+        }
+        else
+        {
+            $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->max('created_at');
+
+            $latestResultRow = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->where('created_at', $latestResult)
+                    ->latest()
+                    ->first();
+
+            if($latestResultRow->senderOffice == Auth::user()->assignedOffice)
+            {
+                $validatedData = $request->validate([
+                    'status' => 'required',
+                    'action' => 'required',
+                    'senderOffice' => 'required',
+                    'user_id' => 'required'
+                ]);
+
+                Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+
+                TrackingHistory::create([
+                    'referenceNo' => $referenceNo,
+                    'receiverOffice' => $document->senderOffice_id,
+                    'senderOffice' => $validatedData['senderOffice'],
+                    'action' => $validatedData['action'],
+                    'status' => $validatedData['status'],
+                    'user_id' => $validatedData['user_id'],
+                ]);
+
+                return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being returned to the sender by You');
+            }
+            else{
+                return redirect('qrinfo/'.$referenceNo)->with('error', 'This document is currently in another office.');
+            }
+        }
+    }
+
+    public function receiveToKeep(Request $request, $referenceNo)
+    {
+        $document = Documents::where('referenceNo', $referenceNo)->first();
+
+        $validatedData = $request->validate([
+            'status' => 'required',
+            'action' => 'required',
+            'senderOffice' => 'required',
+            'user_id' => 'required'
+        ]);
+
+        if($document->user_id == Auth::user()->id)
+        {
+            Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+
+                TrackingHistory::create([
+                    'referenceNo' => $referenceNo,
+                    'receiverOffice' => $document->senderOffice_id,
+                    'senderOffice' => $validatedData['senderOffice'],
+                    'action' => $validatedData['action'],
+                    'status' => $validatedData['status'],
+                    'user_id' => $validatedData['user_id'],
+                ]);
+
+            return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now permanently stored');
+        }
+        else{
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'You do not have permission to keep this document');
+        }
     }
 }

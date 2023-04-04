@@ -149,7 +149,7 @@ nav a{
         <ul class="navbar-nav d-flex flex-row ms-auto me-3">
             @auth
             <div class="dropdown">
-                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Assigned in {{ Auth::user()->office->officeName }}">
                     {{ Auth::user()->name }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">

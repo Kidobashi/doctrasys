@@ -1,6 +1,11 @@
 @extends('templates.admin')
 
 @section('content')
+<style>
+    html, body {
+      background-color:  #A0D6B4;
+  }
+</style>
 {{-- All time --}}
     <div class="container-fluid">
         <div class="row">
