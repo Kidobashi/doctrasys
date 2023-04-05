@@ -12,7 +12,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\LackingDocuments;
 use App\Models\PrimaryReasonOfReturn;
 use App\Models\User;
+use App\Mail\DocumentReceivedNotification;
+use App\Mail\DocumentUpdateMailer;
+use Illuminate\Support\Facades\Mail;
 use Google\Service\Docs\Document;
+use Illuminate\Support\Carbon;
 
 class QrController extends Controller
 {
@@ -36,7 +40,7 @@ class QrController extends Controller
         $document_id = $documents_query->pluck('id')->first();
 
         // Fetch all offices that should appear as a dropdown selection.
-        $selectOffice = Offices::all();
+        $selectOffice = Offices::where('status', '1')->get();
 
         // Fetch office data where documents were offered.
         $officeN = DB::table('documents')
@@ -108,7 +112,7 @@ class QrController extends Controller
 
         // Merge both arrays together.
 
-        $selectOffice = Offices::all();
+
 
         $getDocumentCreator = Documents::where('referenceNo', $referenceNo)->first();
         $documentWithIssue = BasisOfReturn::join('primary_reason_of_returns as reason', 'reason.id', '=', 'basis_of_returns.primary_reason_of_return_id')
@@ -181,13 +185,6 @@ class QrController extends Controller
         return view('users.add', compact('refNo'));
     }
 
-    public function selectOffice()
-    {
-        $selectOffice = Offices::all();
-
-        return view('users.qrinfo')->with(['selectOffice' => $selectOffice]);
-    }
-
     public function altSearch(Request $request)
     {
         $search = $request->input('search');
@@ -253,6 +250,18 @@ class QrController extends Controller
                     'status' => $validatedData['status'],
                 ]);
 
+                $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+                $receiver = Offices::where('id', $document->receiverOffice_id)->first();
+
+                $user = User::findOrFail($document->user_id);
+                $status = 'received';
+                $senderOffice = $sender->officeName;
+                $receiverOffice = $receiver->officeName;;
+                $date = Carbon::now()->format('F j, Y');
+                $time = Carbon::now()->format('h:i A');
+
+                Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
+
                 Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now received by You');
@@ -298,6 +307,18 @@ class QrController extends Controller
                     'status' => $validatedData['status'],
                 ]);
 
+                $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+                $receiver = Offices::where('id', $document->receiverOffice_id)->first();
+
+                $user = User::findOrFail($document->user_id);
+                $status = 'process';
+                $senderOffice = $sender->officeName;
+                $receiverOffice = $receiver->officeName;;
+                $date = Carbon::now()->format('F j, Y');
+                $time = Carbon::now()->format('h:i A');
+
+                Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
+
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now being processed by You');
             }
             else
@@ -334,6 +355,7 @@ class QrController extends Controller
                     'receiverOffice' => 'required',
                     'user_id'=> 'required',
                 ]);
+
                 if(Auth::user()->assignedOffice == $validatedData['receiverOffice'])
                 {
                     return redirect('qrinfo/'.$referenceNo)->with('error', "You can't forward this Document to yourself");
@@ -349,6 +371,19 @@ class QrController extends Controller
                     'action' => $validatedData['action'],
                     'status' => $validatedData['status'],
                 ]);
+
+                $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+                $receiver = Offices::where('id', $validatedData['receiverOffice'])->first();
+
+                $user = User::findOrFail($document->user_id);
+                $status = 'forwarded';
+                $senderOffice = $sender->officeName;
+                $receiverOffice = $receiver->officeName;;
+                $date = Carbon::now()->format('F j, Y');
+                $time = Carbon::now()->format('h:i A');
+
+                Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
+
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'You have forwarded this Document');
                 }
             }
@@ -428,6 +463,18 @@ class QrController extends Controller
                         'user_id'=> $validatedData['user_id'],
                     ]);
 
+                    $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+                    $receiver = Offices::where('id', $previousOffice)->first();
+
+                    $user = User::findOrFail($document->user_id);
+                    $status = 'rejected';
+                    $senderOffice = $sender->officeName;
+                    $receiverOffice = $receiver->officeName;;
+                    $date = Carbon::now()->format('F j, Y');
+                    $time = Carbon::now()->format('h:i A');
+
+                    Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
+
                     $basis = new BasisOfReturn();
                     $basis->referenceNumber = $referenceNo;
                     $basis->primary_reason_of_return_id = $validatedData['primary_reason_of_return_id'];
@@ -446,6 +493,18 @@ class QrController extends Controller
                         'status' => $validatedData['status'],
                         'user_id'=> $validatedData['user_id'],
                     ]);
+
+                    $sender = Offices::where('id', $latestResultRow->senderOffice)->first();
+                    $receiver = Offices::where('id', $previousOffice)->first();
+
+                    $user = User::findOrFail($document->user_id);
+                    $status = 'rejected';
+                    $senderOffice = $sender->officeName;
+                    $receiverOffice = $receiver->officeName;;
+                    $date = Carbon::now()->format('F j, Y');
+                    $time = Carbon::now()->format('h:i A');
+
+                    Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
                     $basis = new BasisOfReturn();
                     $basis->referenceNumber = $referenceNo;
@@ -524,8 +583,20 @@ class QrController extends Controller
                     'senderOffice' => $validatedData['senderOffice'],
                     'action' => $validatedData['action'],
                     'status' => $validatedData['status'],
-                    'user_id' => $previousUser->user_id,
+                    'user_id' => $validatedData['user_id'],
                 ]);
+
+                $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+                $receiver = Offices::where('id', $getRecentSender->receiverOffice)->first();
+
+                $user = User::findOrFail($document->user_id);
+                $status = 'return';
+                $senderOffice = $sender->officeName;
+                $receiverOffice = $receiver->officeName;;
+                $date = Carbon::now()->format('F j, Y');
+                $time = Carbon::now()->format('h:i A');
+
+                Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being returned to the sender by You');
             }
@@ -566,6 +637,18 @@ class QrController extends Controller
                 'status' => $validatedData['status'],
                 'user_id' => $validatedData['user_id'],
             ]);
+
+            $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+            $receiver = Offices::where('id', $latestResult->senderOffcie)->first();
+
+            $user = User::findOrFail($latestResult->user_id);
+            $status = 'resolved';
+            $senderOffice = $sender->officeName;
+            $receiverOffice = $receiver->officeName;;
+            $date = Carbon::now()->format('F j, Y');
+            $time = Carbon::now()->format('h:i A');
+
+            Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
             return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being resolved');
         }
@@ -616,6 +699,18 @@ class QrController extends Controller
                 'user_id' => $validatedData['user_id'],
             ]);
 
+            $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+            $receiver = Offices::where('id', $previousUser->max_senderOffice)->first();
+
+            $user = User::findOrFail($latestResult->user_id);
+            $status = 'resubmitted';
+            $senderOffice = $sender->officeName;
+            $receiverOffice = $receiver->officeName;;
+            $date = Carbon::now()->format('F j, Y');
+            $time = Carbon::now()->format('h:i A');
+
+            Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
+
             return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being resubmitted');
         }
     }
@@ -627,6 +722,7 @@ class QrController extends Controller
             ->where('status', 2)
             ->latest()
             ->first();
+
         if($document->receiverOffice_id && Auth::user()->assignedOffice)
         {
             $validatedData = $request->validate([
@@ -646,6 +742,18 @@ class QrController extends Controller
                 'status' => $validatedData['status'],
                 'user_id' => $validatedData['user_id'],
             ]);
+
+            $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+            $receiver = Offices::where('id', $document->receiverOffice_id)->first();
+
+            $user = User::findOrFail($document->user_id);
+            $status = 'approved and kept';
+            $senderOffice = $sender->officeName;
+            $receiverOffice = $receiver->officeName;;
+            $date = Carbon::now()->format('F j, Y');
+            $time = Carbon::now()->format('h:i A');
+
+            Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
             return redirect('qrinfo/'.$referenceNo)->with('message', "This document is now approved and will be kept in this office. This is the end of the document's life cycle.");
         }
@@ -691,6 +799,18 @@ class QrController extends Controller
                     'status' => $validatedData['status'],
                     'user_id' => $validatedData['user_id'],
                 ]);
+
+                $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+                $receiver = Offices::where('id', $document->senderOffice_id)->first();
+
+                $user = User::findOrFail($document->user_id);
+                $status = 'approved';
+                $senderOffice = $sender->officeName;
+                $receiverOffice = $receiver->officeName;;
+                $date = Carbon::now()->format('F j, Y');
+                $time = Carbon::now()->format('h:i A');
+
+                Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being returned to the sender by You');
             }
@@ -755,6 +875,18 @@ class QrController extends Controller
                         'user_id' => $validatedData['user_id'],
                     ]);
 
+                    $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+                    $receiver = Offices::where('id', $previousUser->max_senderOffice)->first();
+
+                    $user = User::findOrFail($document->user_id);
+                    $status = 'rejected';
+                    $senderOffice = $sender->officeName;
+                    $receiverOffice = $receiver->officeName;;
+                    $date = Carbon::now()->format('F j, Y');
+                    $time = Carbon::now()->format('h:i A');
+
+                    Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
+
                     return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being returned to the sender by You');
                 }
                 else{
@@ -800,6 +932,18 @@ class QrController extends Controller
                     'status' => $validatedData['status'],
                     'user_id' => $validatedData['user_id'],
                 ]);
+
+                $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+                $receiver = Offices::where('id', $document->senderOffice_id)->first();
+
+                $user = User::findOrFail($document->user_id);
+                $status = 'rejected sent back';
+                $senderOffice = $sender->officeName;
+                $receiverOffice = $receiver->officeName;;
+                $date = Carbon::now()->format('F j, Y');
+                $time = Carbon::now()->format('h:i A');
+
+                Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is being returned to the sender by You');
             }

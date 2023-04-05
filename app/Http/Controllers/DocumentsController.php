@@ -186,7 +186,6 @@ class DocumentsController extends Controller
         $offices = Offices::all();
 
         $all = Documents::where('user_id', $userId)
-            ->join('offices', 'receiverOffice_id', 'offices.id')
             ->orderBy('documents.created_at', 'DESC')
             ->paginate(20);
 

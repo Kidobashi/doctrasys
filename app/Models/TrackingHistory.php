@@ -24,18 +24,28 @@ class TrackingHistory extends Model
         'createad_at',
     ];
 
-    public function senderOffice()
-    {
-        return $this->belongsTo(Offices::class, 'senderOffice');
-    }
+    // public function senderOffice()
+    // {
+    //     return $this->belongsTo(Offices::class, 'senderOffice');
+    // }
 
-    public function receiverOffice()
-    {
-        return $this->belongsTo(Offices::class, 'receiverOffice');
-    }
+    // public function receiverOffice()
+    // {
+    //     return $this->belongsTo(Offices::class, 'receiverOffice');
+    // }
 
     public function document()
     {
         return $this->belongsTo('App\Models\Documents');
+    }
+
+    public function office()
+    {
+        return $this->belongsTo(Offices::class, 'senderOffice');
+    }
+
+    public function receiver()
+    {
+        return $this->belongsTo(Offices::class, 'receiverOffice');
     }
 }

@@ -78,14 +78,41 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <tr>
                                     <td class="text-center"> {{ $loop->iteration }} </td>
                                     <td class="text-center"> {{ $doc->referenceNo }}</td>
-                                    <td class="text-center"> {{ $doc->officeName }}</td>
-                                     @if ($doc->status == 3)
-                                            <td><span class="badge bg-danger d-inline">Sent Back</span></td>
-                                        @endif
-                                        @if ($doc->status == 2)
-                                            <td><span class="badge bg-success d-inline">Completed</span></td>
-                                        @endif
-                                        @if ($doc->status == 1)
+                                    <td class="text-center"> {{ $doc->receiverOffice->officeName }}</td>
+                                    @if ($doc->status == 12)
+                                    //rejected sent back
+                                        <td><span class="badge bg-secondary d-inline">REJECTED(REDEEMABLE)</span></td>
+                                    @elseif ($doc->status == 11)
+                                    //rejected
+                                        <td><span class="badge bg-secondary d-inline">REJECTED(IRREDEEMABLE)</span></td>
+                                    @elseif ($doc->status == 10)
+                                    //approved and return
+                                        <td><span class="badge bg-success d-inline">APPROVED</span></td>
+                                    @elseif ($doc->status == 9)
+                                    //approved and kept
+                                        <td><span class="badge bg-success d-inline">APPROVED</span></td>
+                                    @elseif ($doc->status ==8)
+                                    //resubmitted
+                                        <td><span class="badge bg-primary-50 d-inline">Resubmitted</span></td>
+                                    @elseif ($doc->status == 7)
+                                    //resolved
+                                        <td><span class="badge bg-warning d-inline">Resolving Issue</span></td>
+                                    @elseif ($doc->status == 6)
+                                    //returned
+                                        <td><span class="badge bg-secondary d-inline">Return to Originator</span></td>
+                                    @elseif ($doc->status == 5)
+                                    //rejected sent back to
+                                        <td><span class="badge bg-danger d-inline">Rejected</span></td>
+                                    @elseif ($doc->status == 4)
+                                    //forwarded
+                                        <td><span class="badge bg-success d-inline">Forwarded</span></td>
+                                    @elseif ($doc->status == 3)
+                                    //process
+                                        <td><span class="badge bg-secondary d-inline">Processing</span></td>
+                                    @elseif ($doc->status == 2)
+                                    //received
+                                        <td><span class="badge bg-primary d-inline">Received</span></td>
+                                    @elseif ($doc->status == 1)
                                         <td><span class="badge bg-info d-inline">Circulating</span></td>
                                     @endif
                                     <td class="text-center"><a href="{{ url('qrinfo/'.$doc->referenceNo) }}" title="Click for more Information"><i class="fa fa-link" aria-hidden="true"></i></a></td>

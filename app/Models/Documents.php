@@ -23,10 +23,16 @@ class Documents extends Model
         'email'
     ];
 
-    public function office()
+    public function senderOffice()
     {
-        return $this->belongsTo(Offices::class, 'receiverOffice_id', 'senderOffiec_id');
+        return $this->belongsTo(Offices::class,  'senderOffice_id');
     }
+
+    public function receiverOffice()
+    {
+        return $this->belongsTo(Offices::class,  'receiverOffice_id');
+    }
+
 
     // public function office()
     // {

@@ -14,7 +14,6 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserManagementController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Support\Facades\Auth;
@@ -22,8 +21,9 @@ use App\Http\Controllers\Auth\ConfirmPasswordController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Middleware\RedirectIfAuthenticated;
-
-
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -114,6 +114,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'index']);
 });
 
+//Email Verification Routes
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
@@ -131,37 +132,54 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
-// Route::post('/check-password', function(Request $request) {
-//     dd('passswordchecking');
-//     // Get the password from the request
-//     $password = $request->input('password');
 
-//     // Check if the password is valid (replace this with your own password validation code)
-//     $valid = $password === 'mysecretpassword';
+//Reset Password Routes
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
 
-//     // Return a JSON response with the validation result
-//     return response()->json(['valid' => $valid]);
-//   });
-// Route::group(['middleware' => 'auth'], function () {
-// 	Route::get('dashboard', function () {
-// 		return view('dashboard');
-// 	})->name('dashboard');
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate(['email' => 'required|email']);
 
-// 	// Route::get('billing', function () {
-// 	// 	return view('billing');
-// 	// })->name('billing');
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
 
-// 	// Route::get('profile', function () {
-// 	// 	return view('profile');
-// 	// })->name('profile');
+    return $status === Password::RESET_LINK_SENT
+                ? back()->with(['status' => __($status)])
+                : back()->withErrors(['email' => __($status)]);
+})->middleware('guest')->name('password.email');
 
-//     // Route::get('/logout', [SessionsController::class, 'destroy']);
-// 	// Route::get('/user-profile', [InfoUserController::class, 'create']);
-// 	// Route::post('/user-profile', [InfoUserController::class, 'store']);
-//     Route::get('/login', function () {
-// 		return view('dashboard');
-// 	})->name('sign-up');
-// });
+Route::get('/reset-password/{token}', function ($token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+Route::post('/reset-password', function (Request $request) {
+    $request->validate([
+        'token' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:8|confirmed',
+    ]);
+
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function ($user, $password) {
+            $user->forceFill([
+                'password' => Hash::make($password)
+            ])->setRememberToken(Str::random(60));
+
+            $user->save();
+
+            event(new PasswordReset($user));
+        }
+    );
+
+    return $status === Password::PASSWORD_RESET
+                ? redirect()->route('login')->with('status', __($status))
+                : back()->withErrors(['email' => [__($status)]]);
+})->middleware('guest')->name('password.update');
+
+//Guest Routes
 Route::get('/logout', [SessionsController::class, 'destroy'])->name('logout');
 Route::get('/register', [RegisterController::class, 'create']);
 Route::post('/register', [RegisterController::class, 'store']);
@@ -175,10 +193,7 @@ Route::post('/reset-password', [ChangePasswordController::class, 'changePassword
 Route::get('index', [SearchController::class, 'search']);
 Route::get('tracking', [SearchController::class, 'search']);
 Route::get('index', [DocumentsController::class, 'index'])->name('index');
-
-Route::get('/coming', function () {
-    return view('unused.coming');
-});
+Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo'])->name('qrinfo');
 
 Auth::routes();
 
