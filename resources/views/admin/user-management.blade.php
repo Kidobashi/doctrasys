@@ -109,22 +109,16 @@
                                             @include('admin.modals.enable-user-modal', ['user' => $user])
                                         </div>
                                         @endif
-                                        <div class="pointer mx-3">
+                                        {{-- <div class="pointer mx-3">
                                             <button class="btn p-0">
                                                 <i title="Reset password" class="p-2 fas fa-key text-white bg-primary rounded"></i>
                                             </button>
-                                        </div>
+                                        </div> --}}
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        <hr>
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center mb-0">
-                                {{ $users->links('vendor.pagination.bootstrap-5') }}
-                            </ul>
-                        </nav>
                     </div>
                 </div>
             </div>

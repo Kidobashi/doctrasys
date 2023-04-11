@@ -81,7 +81,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <td class="text-center"> {{ $doc->receiverOffice->officeName }}</td>
                                     @if ($doc->status == 12)
                                     //rejected sent back
-                                        <td><span class="badge bg-secondary d-inline">REJECTED(REDEEMABLE)</span></td>
+                                        <td><span class="badge bg-danger d-inline">Found Issue</span></td>
                                     @elseif ($doc->status == 11)
                                     //rejected
                                         <td><span class="badge bg-secondary d-inline">REJECTED(IRREDEEMABLE)</span></td>
@@ -93,22 +93,22 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         <td><span class="badge bg-success d-inline">APPROVED</span></td>
                                     @elseif ($doc->status ==8)
                                     //resubmitted
-                                        <td><span class="badge bg-primary-50 d-inline">Resubmitted</span></td>
+                                        <td><span class="badge d-inline" style="background-color: rgb(48, 48, 185);">Resubmitted</span></td>
                                     @elseif ($doc->status == 7)
                                     //resolved
                                         <td><span class="badge bg-warning d-inline">Resolving Issue</span></td>
                                     @elseif ($doc->status == 6)
                                     //returned
-                                        <td><span class="badge bg-secondary d-inline">Return to Originator</span></td>
+                                        <td><span class="badge bg-secondary d-inline">Sent Back</span></td>
                                     @elseif ($doc->status == 5)
                                     //rejected sent back to
-                                        <td><span class="badge bg-danger d-inline">Rejected</span></td>
+                                        <td><span class="badge bg-danger d-inline">Found Issue</span></td>
                                     @elseif ($doc->status == 4)
                                     //forwarded
                                         <td><span class="badge bg-success d-inline">Forwarded</span></td>
                                     @elseif ($doc->status == 3)
                                     //process
-                                        <td><span class="badge bg-secondary d-inline">Processing</span></td>
+                                        <td><span class="badge bg-warning d-inline">Processing</span></td>
                                     @elseif ($doc->status == 2)
                                     //received
                                         <td><span class="badge bg-primary d-inline">Received</span></td>

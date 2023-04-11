@@ -42,15 +42,19 @@ Route::middleware(['auth'])->group(function () {
             // this route is only accessible to users with the "admin" role
         Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         Route::get('admin/offices', [DashboardController::class, 'adminOffice'])->name('admin.offices');
-        Route::post('admin/addOffice', [DashboardController::class, 'addOffice'])->name('admin.addOffices');;
-        Route::get('admin/docType', [DashboardController::class, 'docTypes'])->name('admin.docTypes');;
-        Route::post('admin/addDocType', [DashboardController::class, 'addDocType'])->name('admin.addDoctypes');;
+        Route::post('admin/addOffice', [DashboardController::class, 'addOffice'])->name('admin.addOffices');
+        Route::get('admin/docType', [DashboardController::class, 'docTypes'])->name('admin.docTypes');
+        Route::post('admin/addDocType', [DashboardController::class, 'addDocType'])->name('admin.addDoctypes');
+        Route::put('admin/{id}/update-office', [DashboardController::class, 'updateOffice'])->name('admin.updateOffice');
         Route::post('admin/delOffice/{id}', [DashboardController::class, 'deleteOffice'])->name('admin.deleteOffice');
         Route::post('admin/enableOffice/{id}', [DashboardController::class, 'enableOffice'])->name('admin.enableOffice');
         Route::post('admin/delDocType/{id}', [DashboardController::class, 'deleteDocType'])->name('admin.deleteDocType');
         Route::post('admin/enableDocType/{id}', [DashboardController::class, 'enableDocType'])->name('admin.enableDocType');
         Route::get('admin/user-management', [UserController::class, 'index'])->name('user');
         Route::get('admin/types-of-reports', [DashboardController::class, 'typesOfReports'])->name('admin.reports');
+        Route::get('admin/{id}/edit-type-of-report', [DashboardController::class, 'editTypeOfReport'])->name('admin.EditReport');
+        Route::put('admin/{id}/update-type-of-report', [DashboardController::class, 'updateTypeOfReport'])->name('admin.updateReport');
+        Route::put('admin/{id}/update-doctype', [DashboardController::class, 'updateDocType'])->name('admin.updateDocType');
         Route::post('admin/add-reports', [DashboardController::class, 'addTypeOfReport'])->name('admin.addReport');
         Route::post('admin/delete-report/{id}', [DashboardController::class, 'deleteTypeOfReport']);
         Route::post('admin/enable-report/{id}', [DashboardController::class, 'enableTypeOfReport']);
@@ -62,6 +66,11 @@ Route::middleware(['auth'])->group(function () {
         Route::put('admin/update-user/{id}', [UserManagementController::class, 'update'])->name('admin.update-user');
         Route::post('/disable-user/{id}', [UserManagementController::class, 'disableUser'])->name('admin.disable-user');
         Route::post('/enable-user/{id}', [UserManagementController::class, 'enableUser'])->name('admin.enable-user');
+        Route::post('/add-required-document', [DashboardController::class, 'addRequiredDocument'])->name('admin.addRequiredDocument');
+        Route::get('admin/{id}/edit-required-document/', [DashboardController::class, 'editRequiredDocument'])->name('admin.editRequiredDocument');
+        Route::put('admin/{id}/update-required-document/', [DashboardController::class, 'updateRequiredDocument'])->name('admin.updateRequiredDocument');
+        Route::post('/enable-required-document/{id}', [DashboardController::class, 'enableRequiredDocument'])->name('admin.enableRequiredDocument');
+        Route::post('/disable-required-document/{id}', [DashboardController::class, 'disableRequiredDocument'])->name('admin.disableRequiredDocument');
     });
 });
 
@@ -178,7 +187,6 @@ Route::post('/reset-password', function (Request $request) {
                 ? redirect()->route('login')->with('status', __($status))
                 : back()->withErrors(['email' => [__($status)]]);
 })->middleware('guest')->name('password.update');
-
 //Guest Routes
 Route::get('/logout', [SessionsController::class, 'destroy'])->name('logout');
 Route::get('/register', [RegisterController::class, 'create']);
@@ -194,6 +202,11 @@ Route::get('index', [SearchController::class, 'search']);
 Route::get('tracking', [SearchController::class, 'search']);
 Route::get('index', [DocumentsController::class, 'index'])->name('index');
 Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo'])->name('qrinfo');
+Route::get('/search', [UserManagementController::class, 'index'])->name('admin.search');
+
+Route::get('/test-email', function () {
+    return view('emails.document-update'); // Replace 'test_view' with the name of your view file
+});
 
 Auth::routes();
 

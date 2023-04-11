@@ -501,7 +501,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             @endif
                         @elseif ($status->status == 6)
                         {{-- Report = 7 --}}
-                        @if($latestTracking->receiverOffice == Auth::user()->assignedOffice && Auth::user()->id == $latestTracking->user_id)
+                        @if($latestTracking->receiverOffice == Auth::user()->assignedOffice && Auth::user()->id == $getRecentOffice->user_id)
                         <div class="neomorphic-bg text-center">
                                 <form id="resolve-form" action="resolve/{{ $data->referenceNo }}" method="post">
                                     @csrf
@@ -710,14 +710,13 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </div>
                             </div>
                             <div class="col-md-8 neomorphic-bg bg-danger">
-                                <div class="col-md-3 p-auto bg-white" style="border-radius: 10px;">
-                                    <h5 class="text-danger text-center"><strong>REJECTED</strong></h5>
+                                <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
+                                    <h5 class="text-danger text-center"><strong>FOUND ISSUES</strong></h5>
                                 </div>
                                 <div class="row">
                                     <div class="d-flex flex-wrap">
-                                        <p class="m-0 p-0 text-white">Rejected by the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
+                                        <p class="m-0 p-0 text-white">Evaluated by the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
                                         <p class="m-0 p-0 text-white">Sent back to the <strong>{{ $latestTracking->receiverOfficeName }}</strong></p>
-                                        <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                                     </div>
                                     <div class="d-flex flex-wrap">
                                         @if (isset($documentWithIssue))
@@ -746,6 +745,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         @endif
                                     </div>
                                 </div>
+                                <p class="m-0 p-0 text-white"><cite>&mdash;<strong> {{ $latestTracking->userName }}</strong></cite></p>
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 6 )
@@ -1140,7 +1140,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="dashed-line">
                             </div>
                             <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
-                                <p class="p-auto m-0">Reviewed and Rerecompiled by the <strong>{{ $row->senderOfficeName }}</strong></p>
+                                <p class="p-auto m-0">Reviewed and Recompiled by the <strong>{{ $row->senderOfficeName }}</strong></p>
                                 <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                             </div>
                         </div>

@@ -24,7 +24,7 @@
                     <div class="col-md-1 text-center"><h6>No</h6></div>
                     <div class="col-md-5"><h6>Name</h6></div>
                     <div class="col-md-1 text-center"><h6>Status</h6></div>
-                    <div class="col-md-1 text-center"><h6>Action</h6></div>
+                    <div class="col-md-2 text-center"><h6>Action</h6></div>
                 </div>
                 @foreach ($offices as $row)
                 <div class="row">
@@ -59,6 +59,13 @@
                             </span>
                             @endif
                         </div>
+                        <div class="col-md-1 text-center">
+                            <button class="btn p-0" data-toggle="modal" data-target="#editOfficeModal{{ $row->id }}">
+                                <i title="Edit" type="button" class="p-2 fas fa-user-edit text-white bg-warning rounded"></i>
+                            </button>
+                        </div>
+                            <!-- Edit Modal -->
+                            @include('admin.modals.edit-office-modal', ['row' => $row])
                     </div>
                 </div>
                 @endforeach

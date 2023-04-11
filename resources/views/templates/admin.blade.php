@@ -146,6 +146,33 @@ html, body{
   color: #fff;
 }
 
+/* #search-results {
+    position: absolute;
+    top: 95px;
+    left: 0;
+    z-index: 999;
+    background-color: #fff;
+    width: 100%;
+    max-height: 70px;
+    overflow-y: auto;
+} */
+
+#search-results ul {
+    padding: 5px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#search-results li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* #search-results li:hover {
+    background-color: #f2f2f2;
+} */
+
 @media (min-width: 768px) {
     .navbar mobile  {
       display: none !important;
@@ -285,12 +312,19 @@ html, body{
       </div>
       <div class="col-md-7 px-3 justify-content-center" style="height: 960px;">
         <div class="input-group mb-4 mt-5 px-5">
+            @if (Request::is('admin/user-management'))
             <div class="col-md-9 m-auto search-container levitating-div rounded" style="height: 42px;">
                 <form action="" class="search-form">
                     @csrf
-                    <input type="text" class="search-field" placeholder="Search office name ..." aria-label="Search" aria-describedby="search-icon">
+                    <input type="text" name="adminSearch" id="adminSearch" class="search-field" placeholder="Search name, email ..." aria-label="Search" aria-describedby="search-icon">
                     <button class="search-button" type="submit" id="search-icon"><img src="{{ asset('images/search.png') }}" alt=""></button>
                 </form>
+            </div>
+            @endif
+        </div>
+        <div class="col-md-12 mb-2">
+            <div class="bg-white rounded" id="search-results">
+
             </div>
         </div>
         @yield('content')
@@ -308,7 +342,6 @@ html, body{
                   <div class="p-3">
                       <p class="mb-0"><strong>{{ Auth::user()->name }}</strong></p>
                       <p class="mb-1 text-secondary"><em>{{ Auth::user()->roles->pluck('name')->implode(', ') }}</em></p>
-                      {{-- <p class="mb-1 text-secondary"><em>{{ Auth::user()->office->officeName }}</em></p> --}}
                   </div>
               </div>
             </div>

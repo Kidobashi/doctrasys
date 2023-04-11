@@ -51,12 +51,6 @@ class QrController extends Controller
         // Fetch all offices from DB.
         $offices = Offices::all();
 
-        // Fetch document data from DB suing reference no.
-        // $data = DB::table('documents')
-        //       ->join('offices', 'senderOffice_id', 'offices.id')
-        //       ->where('referenceNo','LIKE', "%{$referenceNo}%")
-        //       ->first();
-
         $data = Documents::join('offices as sender', 'sender.id', '=', 'documents.senderOffice_id')
         ->join('offices as receiver', 'receiver.id', '=', 'documents.receiverOffice_id')
         ->select('documents.*', 'sender.officeName as senderOfficeName', 'receiver.officeName as receiverOfficeName')
@@ -112,9 +106,22 @@ class QrController extends Controller
 
         // Merge both arrays together.
 
+        $getRecentOffice = TrackingHistory::where('referenceNo', $referenceNo)
+                    ->select('user_id',
+                        DB::raw('MAX(created_at) as latest_date'),
+                        DB::raw('COUNT(*) as num_results'))
+                    ->where('referenceNo', '=', $referenceNo)
+                    ->groupBy('user_id')
+                    ->orderByDesc('latest_date')
+                    ->skip(1)
+                    ->take(1)
+                    ->first();
+                // dd($getRecentOffice);
+
 
 
         $getDocumentCreator = Documents::where('referenceNo', $referenceNo)->first();
+
         $documentWithIssue = BasisOfReturn::join('primary_reason_of_returns as reason', 'reason.id', '=', 'basis_of_returns.primary_reason_of_return_id')
                             ->select('basis_of_returns.*', 'reason.reason as primary')
                             ->where('referenceNumber', $referenceNo)->first();
@@ -146,7 +153,8 @@ class QrController extends Controller
         ->with(['selectOffice' => $selectOffice])
         ->with(['lacking'=> $lacking])
         ->with(['primaryReason'=> $primaryReason])
-        ->with(['boxArray' => $unserialized]);
+        ->with(['boxArray' => $unserialized])
+        ->with('getRecentOffice', $getRecentOffice);
         } else {
             // user is not logged in, redirect to login page
             return redirect()->route('login');
@@ -205,22 +213,24 @@ class QrController extends Controller
     public function receiveDoc($referenceNo, Request $request)
     {
         $getRecentReceiver = TrackingHistory::where('referenceNo', $referenceNo)
-                    ->where('status', 2)
-                    ->orWhere('status', 8)
+                    ->where(function ($query) {
+                        $query->where('status', 2)->orWhere('status', 8)->orWhere('status', 4);
+                    })
                     ->latest()
                     ->first();
-
+                    // dd($getRecentReceiver);
          if(isset($getRecentReceiver))
          {
             $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
                         ->where('user_id', $getRecentReceiver->user_id)
-                        ->where('status', 2)
-                        ->orWhere('status', 8)
+                        ->where(function ($query) {
+                            $query->where('status', 2)->orWhere('status', 8)->orWhere('status', 4);
+                        })
                         ->latest()
                         ->first();
         }
 
-        if(isset($checkIfExist->user_id) && $checkIfExist->user_id == Auth::user()->id)
+        if($getRecentReceiver->user_id == Auth::user()->id)
         {
             return redirect('qrinfo/'.$referenceNo)->with('error', 'As the previous receiver of this document, you cannot receive the same document consecutively.');
         }
@@ -254,7 +264,7 @@ class QrController extends Controller
                 $receiver = Offices::where('id', $document->receiverOffice_id)->first();
 
                 $user = User::findOrFail($document->user_id);
-                $status = 'received';
+                $status = $validatedData['status'];
                 $senderOffice = $sender->officeName;
                 $receiverOffice = $receiver->officeName;;
                 $date = Carbon::now()->format('F j, Y');
@@ -311,7 +321,7 @@ class QrController extends Controller
                 $receiver = Offices::where('id', $document->receiverOffice_id)->first();
 
                 $user = User::findOrFail($document->user_id);
-                $status = 'process';
+                $status = $validatedData['status'];
                 $senderOffice = $sender->officeName;
                 $receiverOffice = $receiver->officeName;;
                 $date = Carbon::now()->format('F j, Y');
@@ -376,7 +386,7 @@ class QrController extends Controller
                 $receiver = Offices::where('id', $validatedData['receiverOffice'])->first();
 
                 $user = User::findOrFail($document->user_id);
-                $status = 'forwarded';
+                $status = $validatedData['status'];
                 $senderOffice = $sender->officeName;
                 $receiverOffice = $receiver->officeName;;
                 $date = Carbon::now()->format('F j, Y');
@@ -463,11 +473,11 @@ class QrController extends Controller
                         'user_id'=> $validatedData['user_id'],
                     ]);
 
-                    $sender = Offices::where('id', $validatedData['senderOffice'])->first();
+                    $sender = Offices::where('id', $validatedData['senderOffice_id'])->first();
                     $receiver = Offices::where('id', $previousOffice)->first();
 
-                    $user = User::findOrFail($document->user_id);
-                    $status = 'rejected';
+                    $user = User::findOrFail($previousUser->user_id);
+                    $status = $validatedData['status'];
                     $senderOffice = $sender->officeName;
                     $receiverOffice = $receiver->officeName;;
                     $date = Carbon::now()->format('F j, Y');
@@ -497,8 +507,8 @@ class QrController extends Controller
                     $sender = Offices::where('id', $latestResultRow->senderOffice)->first();
                     $receiver = Offices::where('id', $previousOffice)->first();
 
-                    $user = User::findOrFail($document->user_id);
-                    $status = 'rejected';
+                    $user = User::findOrFail($previousUser->user_id);
+                    $status = $validatedData['status'];
                     $senderOffice = $sender->officeName;
                     $receiverOffice = $receiver->officeName;;
                     $date = Carbon::now()->format('F j, Y');
@@ -589,8 +599,8 @@ class QrController extends Controller
                 $sender = Offices::where('id', $validatedData['senderOffice'])->first();
                 $receiver = Offices::where('id', $getRecentSender->receiverOffice)->first();
 
-                $user = User::findOrFail($document->user_id);
-                $status = 'return';
+                $user = User::findOrFail($previousUser->user_id);
+                $status = $validatedData['status'];
                 $senderOffice = $sender->officeName;
                 $receiverOffice = $receiver->officeName;;
                 $date = Carbon::now()->format('F j, Y');
@@ -639,12 +649,12 @@ class QrController extends Controller
             ]);
 
             $sender = Offices::where('id', $validatedData['senderOffice'])->first();
-            $receiver = Offices::where('id', $latestResult->senderOffcie)->first();
+            $receiver = Offices::where('id', $latestResult->senderOffice)->first();
 
             $user = User::findOrFail($latestResult->user_id);
-            $status = 'resolved';
+            $status = $validatedData['status'];
             $senderOffice = $sender->officeName;
-            $receiverOffice = $receiver->officeName;;
+            $receiverOffice = $receiver->officeName;
             $date = Carbon::now()->format('F j, Y');
             $time = Carbon::now()->format('h:i A');
 
@@ -690,6 +700,8 @@ class QrController extends Controller
 
             Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
+            BasisOfReturn::where('referenceNumber', $referenceNo)->delete();
+
             TrackingHistory::create([
                 'referenceNo' => $referenceNo,
                 'receiverOffice' => $previousUser->max_senderOffice,
@@ -702,8 +714,8 @@ class QrController extends Controller
             $sender = Offices::where('id', $validatedData['senderOffice'])->first();
             $receiver = Offices::where('id', $previousUser->max_senderOffice)->first();
 
-            $user = User::findOrFail($latestResult->user_id);
-            $status = 'resubmitted';
+            $user = User::findOrFail($previousUser->user_id);
+            $status = $validatedData['action'];
             $senderOffice = $sender->officeName;
             $receiverOffice = $receiver->officeName;;
             $date = Carbon::now()->format('F j, Y');
@@ -747,7 +759,7 @@ class QrController extends Controller
             $receiver = Offices::where('id', $document->receiverOffice_id)->first();
 
             $user = User::findOrFail($document->user_id);
-            $status = 'approved and kept';
+            $status = $validatedData['status'];
             $senderOffice = $sender->officeName;
             $receiverOffice = $receiver->officeName;;
             $date = Carbon::now()->format('F j, Y');
@@ -804,7 +816,7 @@ class QrController extends Controller
                 $receiver = Offices::where('id', $document->senderOffice_id)->first();
 
                 $user = User::findOrFail($document->user_id);
-                $status = 'approved';
+                $status = $validatedData['status'];
                 $senderOffice = $sender->officeName;
                 $receiverOffice = $receiver->officeName;;
                 $date = Carbon::now()->format('F j, Y');
@@ -879,7 +891,7 @@ class QrController extends Controller
                     $receiver = Offices::where('id', $previousUser->max_senderOffice)->first();
 
                     $user = User::findOrFail($document->user_id);
-                    $status = 'rejected';
+                    $status = $validatedData['status'];
                     $senderOffice = $sender->officeName;
                     $receiverOffice = $receiver->officeName;;
                     $date = Carbon::now()->format('F j, Y');
@@ -937,7 +949,7 @@ class QrController extends Controller
                 $receiver = Offices::where('id', $document->senderOffice_id)->first();
 
                 $user = User::findOrFail($document->user_id);
-                $status = 'rejected sent back';
+                $status = $validatedData['status'];
                 $senderOffice = $sender->officeName;
                 $receiverOffice = $receiver->officeName;;
                 $date = Carbon::now()->format('F j, Y');

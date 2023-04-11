@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
@@ -16,16 +17,27 @@ use RealRashid\SweetAlert\Facades\Alert;
 class UserManagementController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('roles', 'office')
-                ->paginate(10);
-
         $roles = Role::all();
 
         $offices = Offices::where('status', 1)->get();
 
-        return view('admin.user-management')->with('users', $users)->with(['roles' => $roles])->with(['offices' => $offices]);
+        $query = $request->input('adminSearch');
+
+        if ($query) {
+            $users = User::with('roles', 'office')
+                ->where('name', 'LIKE', '%' . $query . '%')
+                ->orWhere('email', 'LIKE', '%' . $query . '%')
+                ->get();
+            if ($users->isEmpty()) {
+                return back()->with('error', 'No results found');
+            }
+        } else {
+            $users = User::with('roles', 'office')->get();
+        }
+
+        return view('admin.user-management', ['users' => $users])->with(['roles' => $roles])->with(['offices' => $offices]);
     }
 
     public function store(Request $request)

@@ -30,37 +30,156 @@
        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.0/dist/sweetalert2.min.js"></script>
 </head>
 <body>
-    <div class="card">
+    <style>
+        body {
+            background-color: rgb(238, 234, 234);
+        }
+    </style>
+    <div style="width: 800px; height: 500px; border: 1px solid rgb(204, 201, 201); margin: 0 auto; margin-top: 20px; text-align: center; background-color:white; border-radius: 5px;">
         @isset($status)
-        @if ($status == 'received')
-            <div class="card-body">
-                <p class="card-text text-right">Date: {{ $date }} - {{ $time }}</p>
+        @if ($status == 2)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
 
-                <p class="card-text">Dear {{ $user->name }},</p>
-                <p class="card-text">Your document "{{ $referenceNo }}" has been
-                <strong>{{ $status }}</strong> by
-                {{ $senderOffice->receiver->officeName }}.
-                </p>
-
-                <p class="card-text">Best regards,<br>
-                CMU Doctrasys</p>
-
-            <a href="{{ route('qrinfo', $referenceNo) }}" class="btn btn-primary">Click here to redirect to document</a>
-            </div>
-        @elseif($status == 'forwarded')
-        <div class="card-body">
-            <p class="card-text text-right">Date: {{ $date }} - {{ $time }}</p>
-
-            <p class="card-text">Dear {{ $user->name }},</p>
-            <p class="card-text">Your document "{{ $referenceNo }}" has been
-            <strong>{{ $status }}</strong> by
-            {{ $senderOffice }} to {{ $receiverOffice }}.
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document "<em>{{ $referenceNo }}</em>" has been
+            <strong><em>received</em></strong> by the
+            {{ $senderOffice }} .
             </p>
 
-            <p class="card-text">Best regards,<br>
-            CMU Doctrasys</p>
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 92%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
+        @elseif($status == 3)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
 
-        <a href="{{ route('qrinfo', $referenceNo) }}" class="btn btn-primary">Click here to redirect to document</a>
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document "<em>{{ $referenceNo }}</em>" is being
+            <strong><em>processed</em></strong> by the
+            {{ $senderOffice }} .
+            </p>
+
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 92%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
+        </div>
+        @elseif($status == 4)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
+
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document with reference number [{{ $referenceNo }}] was
+            <strong><em>forwarded</em></strong> by the
+            {{ $senderOffice }} to {{ $receiverOffice }} .
+            </p>
+
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 89%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
+        </div>
+        @elseif($status == 5)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
+
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document with reference number [{{ $referenceNo }}] has been evaluated and
+            <strong><em style="color:red;">found issues</em></strong> by the
+            {{ $senderOffice }}. Wait for current holder of the document to send it back to you.
+            </p>
+
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 89%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
+        </div>
+        @elseif($status == 6)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
+
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document with reference number [{{ $referenceNo }}] is being returned to you. Please wait for its arrival and process the document to address the issues. Once resolved, you can resubmit the document.</p>
+
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 89%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
+        </div>
+        @elseif($status == 7)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
+
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document with reference number [{{ $referenceNo }}] has now arrived. Please resolve the issues with the document and resubmit it.</p>
+
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 89%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
+        </div>
+        @elseif($status == 8)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
+
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document with reference number [{{ $referenceNo }}] is now resubmitted. Wait for the next office to receive it.</p>
+
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 89%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
         </div>
         @endif
         @endisset

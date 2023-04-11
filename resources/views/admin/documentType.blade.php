@@ -24,7 +24,7 @@
                     <div class="col-md-1 text-center"><h6>No</h6></div>
                     <div class="col-md-5"><h6>Name</h6></div>
                     <div class="col-md-1 text-center"><h6>Status</h6></div>
-                    <div class="col-md-1 text-center"><h6>Action</h6></div>
+                    <div class="col-md-2 text-center"><h6>Action</h6></div>
                 </div>
                 @foreach ($docType as $row)
                 <div class="row">
@@ -58,6 +58,15 @@
                                 </form>
                             </span>
                             @endif
+                        </div>
+                        <div class="col-md-1 text-center">
+                            <div class="pointer mx-3">
+                                <button class="btn p-0" data-toggle="modal" data-target="#editDocTypeModal{{ $row->id }}">
+                                    <i title="Edit" type="button" class="p-2 fas fa-user-edit text-white bg-warning rounded"></i>
+                                </button>
+                            </div>
+                                <!-- Edit Modal -->
+                                @include('admin.modals.edit-docType', ['row' => $row])
                         </div>
                     </div>
                 </div>
