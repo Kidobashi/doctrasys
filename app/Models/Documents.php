@@ -33,6 +33,11 @@ class Documents extends Model
         return $this->belongsTo(Offices::class,  'receiverOffice_id');
     }
 
+    public function documentType()
+    {
+        return $this->belongsTo(DocumentType::class,  'docType');
+    }
+
 
     // public function office()
     // {

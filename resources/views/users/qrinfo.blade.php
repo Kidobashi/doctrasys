@@ -590,7 +590,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
                                 <input class="form-control "type="text" style="display: none;" name='status' value="11">
                                 <input class="form-control "type="text" style="display: none;" name='action' value="11">
-                                <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
+                                <button class="neo-btn btn" type="submit"><h3>End</h3></button>
                             </form>
                         </div>
                         @endif
@@ -1092,18 +1092,6 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="col-md-7 tracking-details neomorphic-bg">
                                     <p class="m-0">Reported by the <strong>{{ $row->senderOfficeName }}</strong></p>
                                     <p class="m-0">Sent back to the <strong>{{ $row->receiverOfficeName }}</strong></p>
-                                    @if (isset($boxArray))
-                                    <div class="row">
-                                        <div class="d-flex flex-wrap mb-0">
-                                        <p class="text-black m-0">Missing Documents: </p>
-                                        @foreach ($boxArray as $item)
-                                            @foreach ($item as $value)
-                                                <p class="m-0 p-0 text-black"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
-                                            @endforeach
-                                        @endforeach
-                                        </div>
-                                    </div>
-                                     @endif
                                      @if(isset($documentWithIssue->others))
                                      <p>More Details: <em><strong>{{ $documentWithIssue->others }}</strong></em></p>
                                      @endif
@@ -1196,18 +1184,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-7 tracking-details neomorphic-bg">
                                 <p class="m-0">Rejected by the <strong>{{ $row->senderOfficeName }}</strong></p>
                                 <p class="m-0">Sent back to the <strong>{{ $row->receiverOfficeName }}</strong></p>
-                                @if (isset($boxArray))
-                                <div class="row">
-                                    <div class="d-flex flex-wrap mb-0">
-                                    <p class="text-black m-0">Missing Documents: </p>
-                                    @foreach ($boxArray as $item)
-                                        @foreach ($item as $value)
-                                            <p class="m-0 p-0 text-black"><strong>&nbsp; {{ $value }} &nbsp;</strong></p>
-                                        @endforeach
-                                    @endforeach
-                                    </div>
-                                </div>
-                                 @endif
+
                                  @if(isset($documentWithIssue->others))
                                  <p>More Details: <em><strong>{{ $documentWithIssue->others }}</strong></em></p>
                                  @endif

@@ -93,6 +93,16 @@ p {
   border:1px solid #d3d3d3;
 }
 
+.levitating-div {
+  box-shadow: 0 15px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.150s ease-in-out;
+}
+
+.levitating-div:hover {
+  box-shadow: 0 25px 25px rgba(0, 0, 0, 0.4);
+  transform: translateY(-5px);
+}
+
 *:not(input) {
   user-select: none;
   -moz-user-select: none;

@@ -213,12 +213,9 @@ class QrController extends Controller
     public function receiveDoc($referenceNo, Request $request)
     {
         $getRecentReceiver = TrackingHistory::where('referenceNo', $referenceNo)
-                    ->where(function ($query) {
-                        $query->where('status', 2)->orWhere('status', 8)->orWhere('status', 4);
-                    })
                     ->latest()
                     ->first();
-                    // dd($getRecentReceiver);
+
          if(isset($getRecentReceiver))
          {
             $checkIfExist = TrackingHistory::where('referenceNo', $referenceNo)
@@ -230,7 +227,7 @@ class QrController extends Controller
                         ->first();
         }
 
-        if($getRecentReceiver->user_id == Auth::user()->id)
+        if(isset($getRecentReceiver) && $getRecentReceiver->user_id == Auth::user()->id)
         {
             return redirect('qrinfo/'.$referenceNo)->with('error', 'As the previous receiver of this document, you cannot receive the same document consecutively.');
         }
@@ -890,7 +887,7 @@ class QrController extends Controller
                     $sender = Offices::where('id', $validatedData['senderOffice'])->first();
                     $receiver = Offices::where('id', $previousUser->max_senderOffice)->first();
 
-                    $user = User::findOrFail($document->user_id);
+                    $user = User::findOrFail($previousUser->user_id);
                     $status = $validatedData['status'];
                     $senderOffice = $sender->officeName;
                     $receiverOffice = $receiver->officeName;;
@@ -946,7 +943,7 @@ class QrController extends Controller
                 ]);
 
                 $sender = Offices::where('id', $validatedData['senderOffice'])->first();
-                $receiver = Offices::where('id', $document->senderOffice_id)->first();
+                $receiver = Offices::where('id', $document->receiverOffice_id)->first();
 
                 $user = User::findOrFail($document->user_id);
                 $status = $validatedData['status'];

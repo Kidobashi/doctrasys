@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="row">
-            @foreach ($documents as $docs)
+            @foreach ($miscdocuments as $docs)
                 <div class="col-md-6 text-center mb-0">
                     <p style="font-size: 14px;">{{ $docs->officeName }}</p>
                 </div>
@@ -24,6 +24,6 @@
     </div>
 <nav class="mt-0">
     <ul class="pagination justify-content-center mb-0">
-        {{ $documents->links('vendor.pagination.bootstrap-5') }}
+        {{ $miscdocuments->links('vendor.pagination.bootstrap-5') }}
     </ul>
 </nav>

@@ -78,10 +78,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //Documents Controller
     Route::get('add-document', [DocumentsController::class, 'showOffices'])->name('add-document');
+    // Route::get('add-document', [DocumentsController::class, 'showStats']);
     Route::get('download/{token}', [DocumentsController::class, 'fileGenerator'])->name('download');
     Route::post('add-documents', [DocumentsController::class, 'store'])->name('add-documents');
     // Route::get('add-document', [DocumentsController::class, 'store']);
-    Route::get('documents', [DocumentsController::class, 'userDocs']);
+    Route::get('documents', [DocumentsController::class, 'userDocs'])->name('documents-list');
     Route::get('/documents/completed', [DocumentsController::class, 'completedDocs']);
     Route::get('/documents/circulating', [DocumentsController::class, 'circulatingDocs']);
     Route::get('/documents/sentBack', [DocumentsController::class, 'sentBackDocs']);

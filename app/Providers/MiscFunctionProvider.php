@@ -28,9 +28,9 @@ class MiscFunctionProvider extends ServiceProvider
         //
         View::composer('*', function ($view) {
             $controller = new DashboardController();
-            $documents = $controller->mostDocumentsByOffice();
-            $documentTypes = $controller->mostTypes();
-            $view->with(['documents' => $documents, 'documentTypes' => $documentTypes]);
+            $miscdocuments = $controller->mostDocumentsByOffice();
+            $miscdocumentTypes = $controller->mostTypes();
+            $view->with(['miscdocuments' => $miscdocuments, 'miscdocumentTypes' => $miscdocumentTypes]);
         });
     }
 }

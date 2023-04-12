@@ -35,6 +35,14 @@ class DocumentsController extends Controller
     public function showOffices()
     {
         //
+        $eachDocTypeCount = DocumentType::leftJoin('documents', 'document_type.id', '=', 'documents.docType')
+        ->where('documents.user_id', Auth::user()->id)
+        ->select('document_type.id', 'document_type.docType', DB::raw('COUNT(documents.id) as total'))
+        ->groupBy('document_type.id', 'document_type.docType')
+        ->get();
+
+        $totalDocByUser = Documents::where('user_id', Auth::user()->id)->count();
+
         $last = DB::table('documents')->latest('id')->first();
 
         $offices = Offices::where('status', 1)->get();
@@ -63,17 +71,21 @@ class DocumentsController extends Controller
         {
             $extraZero = '0';
             $refNo = "$prefix$extraZero$assignedOffice$stringVal";
-            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with(['users' => $users])->with(['document' => $document]);
+            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with(['users' => $users])->with(['document' => $document])->with(['eachDocTypeCount' => $eachDocTypeCount])->with('totalDocByUser', $totalDocByUser);
         }else{
             $refNo = "$prefix$assignedOffice$stringVal";
-            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with(['users' => $users])->with(['document' => $document]);
+            return view('users.add')->with(['docType'=> $docType])->with(['offices'=> $offices])->with('refNo', $refNo)->with(['users' => $users])->with(['document' => $document])->with(['eachDocTypeCount' => $eachDocTypeCount])->with('totalDocByUser', $totalDocByUser);
         }
     }
 
-    public function create()
+    public function showStats()
     {
-        //
+        $eachDocTypeCount = DocumentType::leftJoin('documents', 'document_type.id', '=', 'documents.docType')
+                ->select('document_type.id', 'document_type.docType', DB::raw('COUNT(documents.id) as total'))
+                ->groupBy('document_type.id', 'document_type.docType')
+                ->get();
 
+        return view('users.add')->with(['eachDocTypeCount' => $eachDocTypeCount]);
     }
 
     /**
@@ -179,17 +191,59 @@ class DocumentsController extends Controller
         //
     }
 
-    public function userDocs()
+    public function userDocs(Request $request)
     {
         $userId = Auth::user()->id;
 
-        $offices = Offices::all();
+        $offices = Offices::where('status', 1)->get();
 
-        $all = Documents::where('user_id', $userId)
-            ->orderBy('documents.created_at', 'DESC')
+        $allDocTypes = DocumentType::where('status', 1)->get();
+
+        $query = $request->input('search');
+
+        if ($query) {
+            $all = Documents::where('user_id', $userId)
+                ->where('referenceNo', 'LIKE', '%' . $query . '%')
+                ->paginate(20);
+            if ($all->isEmpty()) {
+                return back()->with('error', 'No results found');
+            }
+        } else {
+            $all = Documents::where('user_id', $userId)
+            ->orderBy('documents.created_at', $request->get('sort', 'asc'))
             ->paginate(20);
+        }
 
-        return view('users.documents')->with(['all' => $all])->with(['offices' => $offices]);
+        $totalDoc = Documents::where('user_id', $userId)->count();
+
+        $totalApproved = Documents::where('user_id', $userId)
+        ->where(function ($query) {
+            $query->where('status', 9)->orWhere('status', 10);
+        })
+        ->count();
+
+        $totalProcessing = Documents::where('user_id', $userId)
+        ->where(function ($query) {
+            $query->where('status', 1)->orWhere('status', 2)->orWhere('status', 3)
+            ->orWhere('status', 4)->orWhere('status', 5)->orWhere('status', 6)
+            ->orWhere('status', 7)->orWhere('status', 8);
+        })
+        ->count();
+
+        $totalRejected = Documents::where('user_id', $userId)
+        ->where(function ($query) {
+            $query->where('status', 11);
+        })
+        ->count();
+
+
+        return view('users.documents')->with(['all' => $all])
+        ->with(['offices' => $offices])
+        ->with(['allDocTypes' => $allDocTypes])
+        ->with('totalDoc', $totalDoc)
+        ->with('totalApproved', $totalApproved)
+        ->with('totalProcessing', $totalProcessing)
+        ->with('totalRejected', $totalRejected);
     }
 
     public function circulatingDocs()

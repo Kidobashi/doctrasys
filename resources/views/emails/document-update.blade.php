@@ -181,6 +181,63 @@
             <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
         </div>
         </div>
+        @elseif($status == 9)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
+
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document with reference number [{{ $referenceNo }}] is now <strong style="color: green;">approved</strong> and decided to keep it by the {{ $receiverOffice }}.</p>
+
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 89%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
+        </div>
+        @elseif($status == 10)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
+
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document with reference number [{{ $referenceNo }}] is now <strong style="color: green;">approved</strong> by the {{ $receiverOffice }}.</p>
+
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 89%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
+        </div>
+        @elseif($status == 12)
+        <div style="text-align: center;">
+            <h1 style="text-decoration: underline; padding: 30px;"><strong>{{ env('APP_NAME') }}</strong></h1>
+        </div>
+        <hr>
+        <div class="card-body" style="margin: 30px; padding: 10px;">
+
+            <h2 style="margin-bottom: 5px;">Dear <strong>{{ $user->name }}</strong>,</h2>
+            <p class="card-text">Your document with reference number [{{ $referenceNo }}] is now <strong style="color: red;">rejected</strong> by the intended recipient, {{ $receiverOffice }}.</p>
+
+            <a href="{{ route('qrinfo', $referenceNo) }}">
+            <button style="margin: 20px; padding:5px; text-align: center; background-color:rgb(23, 172, 97); color: white;
+            font-size: 30px; font-weight: 700;  border-radius: 5px;"
+            >Check Now</button></a>
+        </div>
+        <div style="width: 89%; height: 118px; background-color:rgb(40, 156, 98); padding: 25px;">
+            <p>Or click this link <a href="{{ route('qrinfo', $referenceNo) }}" style="color:white;">https://cmudoctraus.com/1283781273</a></p>
+        </div>
+        </div>
         @endif
         @endisset
     </div>

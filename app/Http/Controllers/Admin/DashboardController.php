@@ -35,7 +35,6 @@ class DashboardController extends Controller
         $documents = Offices::leftJoin('documents', 'offices.id', '=', 'documents.senderOffice_id')
             ->select('offices.id', 'offices.officeName', DB::raw('count(documents.id) as total'))
             ->groupBy('offices.id', 'offices.officeName')
-            ->orderByDesc('total')
             ->get();
 
             // Extract the data from the query results
@@ -59,7 +58,7 @@ class DashboardController extends Controller
                 'scales' => [
                     'yAxes' => [
                         [
-                            'ticks' => [
+                            'grid' => [
                             'beginAtZero' => true,
                         ],
                     ],
@@ -70,7 +69,6 @@ class DashboardController extends Controller
         $documentTypes = DocumentType::leftJoin('documents', 'document_type.id', '=', 'documents.docType')
                 ->select('document_type.id', 'document_type.docType', DB::raw('COUNT(documents.id) as total'))
                 ->groupBy('document_type.id', 'document_type.docType')
-                ->orderByDesc('total')
                 ->get();
 
         // Extract the data from the query results
@@ -93,7 +91,7 @@ class DashboardController extends Controller
                 'scales' => [
                     'yAxes' => [
                         [
-                            'ticks' => [
+                            'grid' => [
                             'beginAtZero' => true,
                         ],
                     ],
@@ -325,7 +323,7 @@ class DashboardController extends Controller
         $cacheKey = 'mostDocumentsByOffice_' . $currentPage;
         $cacheMinutes = 60;
 
-        $documents = Cache::remember($cacheKey, $cacheMinutes, function () {
+        $miscdocuments = Cache::remember($cacheKey, $cacheMinutes, function () {
             return Offices::leftJoin('documents', 'offices.id', '=', 'documents.senderOffice_id')
                 ->select('offices.id', 'offices.officeName', DB::raw('count(documents.id) as total'))
                 ->groupBy('offices.id', 'offices.officeName')
@@ -333,7 +331,7 @@ class DashboardController extends Controller
                 ->paginate(5, ['*'], 'documents_page'); // Add 'documents_page' as the custom parameter
          });
 
-        return $documents;
+        return $miscdocuments;
     }
 
     public function mostTypes()
@@ -342,7 +340,7 @@ class DashboardController extends Controller
         $cacheKey = 'mostTypes_' . $currentPage;
         $cacheMinutes = 60;
 
-        $documentTypes = Cache::remember($cacheKey, $cacheMinutes, function () {
+        $miscdocumentTypes = Cache::remember($cacheKey, $cacheMinutes, function () {
             return DocumentType::leftJoin('documents', 'document_type.id', '=', 'documents.docType')
                 ->select('document_type.id', 'document_type.docType', DB::raw('COUNT(documents.id) as total'))
                 ->groupBy('document_type.id', 'document_type.docType')
@@ -350,7 +348,7 @@ class DashboardController extends Controller
                 ->paginate(3, ['*'], 'types_page');
         });
 
-        return $documentTypes;
+        return $miscdocumentTypes;
     }
 
     public function typesOfReports()

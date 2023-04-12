@@ -110,7 +110,33 @@ select {
 </style>
 
 This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
-<div class="container-fluid col-lg-6 col-md-6">
+<div class="container-fluid mb-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="my-3">
+                <div class="row justify-content-between">
+                    @isset($totalDocByUser)
+                    <div class="col-md-2 m-auto p-3 levitating-div bg-white rounded">
+                        <h2 class="font-weight-bolder mb-0">
+                            {{ $totalDocByUser }}
+                        </h2>
+                        <p class="text-sm mb-0 text-capitalize">Documents Created</p>
+                    </div>
+                    @endisset
+                    @foreach ($eachDocTypeCount as $eachDoc)
+                    <div class="col-md-2 m-auto p-3 levitating-div bg-white rounded">
+                        <h2 class="font-weight-bolder mb-0">
+                            {{ $eachDoc->total }}
+                        </h2>
+                        <p class="text-sm mb-0 text-capitalize">{{ $eachDoc->docType }}</p>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid col-lg-6 col-md-6 levitating-div">
     <div class="row neomorphic-bg">
         <span><h1 class="display-6 text-center"><strong>Generate&nbsp;QR Code</strong></h1></span>
             <div class="card-body">

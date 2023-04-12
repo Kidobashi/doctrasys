@@ -322,11 +322,6 @@ html, body{
             </div>
             @endif
         </div>
-        <div class="col-md-12 mb-2">
-            <div class="bg-white rounded" id="search-results">
-
-            </div>
-        </div>
         @yield('content')
       </div>
       <div class="col-md-3 p-0 d-block justify-content-center align-items-center" >

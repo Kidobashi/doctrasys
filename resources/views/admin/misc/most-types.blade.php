@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="row">
-            @foreach ($documentTypes as $types)
+            @foreach ($miscdocumentTypes as $types)
             <div class="col-md-6 text-center mb-0">
                 <p style="font-size: 14px;">{{ $types->docType }}</p>
             </div>
@@ -22,6 +22,6 @@
         </div>
     <nav class="mt-3">
         <ul class="pagination justify-content-center mb-0">
-            {{ $documentTypes->links('vendor.pagination.bootstrap-5') }}
+            {{ $miscdocumentTypes->links('vendor.pagination.bootstrap-5') }}
         </ul>
     </nav>
