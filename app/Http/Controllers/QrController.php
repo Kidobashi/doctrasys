@@ -42,11 +42,6 @@ class QrController extends Controller
         // Fetch all offices that should appear as a dropdown selection.
         $selectOffice = Offices::where('status', '1')->get();
 
-        // Fetch office data where documents were offered.
-        $officeN = DB::table('documents')
-                ->join('offices', 'receiverOffice_id', 'offices.id')
-                ->where('documents.referenceNo', $referenceNo)
-                ->first();
 
         // Fetch all offices from DB.
         $offices = Offices::all();
@@ -80,7 +75,7 @@ class QrController extends Controller
         //Query Tracking history of a Document
         $latestResult = TrackingHistory::where('referenceNo', $referenceNo)
                         ->max('created_at');
-                            // dd($latestResult);
+
         $latestResultRow = TrackingHistory::join('offices as sender', 'sender.id', '=', 'tracking_histories.senderOffice')
                         ->join('offices as receiver', 'receiver.id', '=', 'tracking_histories.receiverOffice')
                         ->join('users as user', 'user.id', '=', 'tracking_histories.user_id')
@@ -99,12 +94,8 @@ class QrController extends Controller
                             ->orderBy('created_at', 'desc')
                             ->get();
 
-            // dd($trackingHistory);
-
         // Fetch status info from DB using reference number.
         $status = Documents::where('referenceNo', $referenceNo)->first();
-
-        // Merge both arrays together.
 
         $getRecentOffice = TrackingHistory::where('referenceNo', $referenceNo)
                     ->select('user_id',
@@ -116,15 +107,13 @@ class QrController extends Controller
                     ->skip(1)
                     ->take(1)
                     ->first();
-                // dd($getRecentOffice);
-
 
 
         $getDocumentCreator = Documents::where('referenceNo', $referenceNo)->first();
 
         $documentWithIssue = BasisOfReturn::join('primary_reason_of_returns as reason', 'reason.id', '=', 'basis_of_returns.primary_reason_of_return_id')
                             ->select('basis_of_returns.*', 'reason.reason as primary')
-                            ->where('referenceNumber', $referenceNo)->first();
+                            ->where('referenceNumber', $referenceNo)->latest()->first();
 
 
         $serializedData = BasisOfReturn::where('referenceNumber', $referenceNo)
@@ -144,7 +133,6 @@ class QrController extends Controller
         ->with('assignedOffice', $assignedOffice)
         ->with('status', $status)
         ->with('offices', $offices)
-        ->with('officeN', $officeN)
         ->with('docCategory', $docCategory)
         ->with('data', $data)
         ->with('getDocumentCreator', $getDocumentCreator)
@@ -248,15 +236,6 @@ class QrController extends Controller
                     'senderOffice' => 'required',
                 ]);
 
-                TrackingHistory::create([
-                    'user_id' => $validatedData['user_id'],
-                    'referenceNo' => $referenceNo,
-                    'receiverOffice' => $document->receiverOffice_id,
-                    'senderOffice' => $validatedData['senderOffice'],
-                    'action' => $validatedData['action'],
-                    'status' => $validatedData['status'],
-                ]);
-
                 $sender = Offices::where('id', $validatedData['senderOffice'])->first();
                 $receiver = Offices::where('id', $document->receiverOffice_id)->first();
 
@@ -267,9 +246,18 @@ class QrController extends Controller
                 $date = Carbon::now()->format('F j, Y');
                 $time = Carbon::now()->format('h:i A');
 
-                Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
-
                 Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
+
+                TrackingHistory::create([
+                    'user_id' => $validatedData['user_id'],
+                    'referenceNo' => $referenceNo,
+                    'receiverOffice' => $document->receiverOffice_id,
+                    'senderOffice' => $validatedData['senderOffice'],
+                    'action' => $validatedData['action'],
+                    'status' => $validatedData['status'],
+                ]);
+
+                Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
                 return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now received by You');
             }
@@ -697,7 +685,7 @@ class QrController extends Controller
 
             Documents::where('referenceNo', $referenceNo)->update( array('status' => $validatedData['status'] ));
 
-            BasisOfReturn::where('referenceNumber', $referenceNo)->delete();
+            // BasisOfReturn::where('referenceNumber', $referenceNo)->delete();
 
             TrackingHistory::create([
                 'referenceNo' => $referenceNo,

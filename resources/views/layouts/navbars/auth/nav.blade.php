@@ -10,8 +10,21 @@ nav a{
   color: #fff;
 }
 
+.web-input input{
+    width: 340px;
+}
 .active {
     border-bottom: 2px solid white;
+}
+
+input {
+    font-size: 15px;
+    width: 520px;
+    padding:7.5px;
+    border-radius: 5px;
+    background-color: rgb(238, 225, 225);
+    border:0;
+    outline:0;
 }
 
 .nav-item:after {
@@ -52,11 +65,16 @@ nav a{
     display: none;
   }
 
+  .web-input {
+    display: none;
+  }
+
  #loginMobile, #myLinks , .mobileDropDown, .mobile-menu-container, .mobile-menu-container a{
     display: block;
   }
 .mobile-menu-container {
     position: fixed;
+    margin-top:20px;
     overflow:hidden;
     border: 1px solid grey;
     background-color: green;
@@ -90,8 +108,8 @@ nav a{
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-    <div class="container-fluid col-md-8 justify-content-center">
-      <a class="navbar-brand" href="#">
+    <div class="container-fluid col-md-12 justify-content-center">
+      <a class="navbar-brand" href="index">
         <span>{{ config('app.name', 'Laravel') }}</span>
       </a>
       @guest
@@ -118,7 +136,11 @@ nav a{
                 {{ Auth::user()->name }}
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a href="{{ url('/logout')}}" class="nav-link text-center font-weight-bold px-0">
+                <p class="p-1 pb-0 pt-2 bg-secondary">Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong></p>
+                {{-- <a href="{{ url('/profile-settings')}}" class="nav-link font-weight-bold p-3">
+                    <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fas fa-cog"></i>Profile Settings</span>
+                </a> --}}
+                <a href="{{ url('/logout')}}" class="nav-link font-weight-bold p-3">
                     <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fa-solid fa-right-from-bracket"></i>Sign Out</span>
                 </a>
             </div>
@@ -145,6 +167,13 @@ nav a{
               </a>
             </li>
             @endauth
+            <li class="nav-item mx-2 my-auto col-md-3">
+                <div class="d-flex pt-0 web-input">
+                    <form action="tracking" method="get">
+                        <input type="text" name="search" placeholder=" Search with reference number...">
+                    </form>
+                </div>
+            </li>
         </ul>
         <ul class="navbar-nav d-flex flex-row ms-auto me-3">
             @auth
@@ -153,7 +182,11 @@ nav a{
                     {{ Auth::user()->name }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a href="{{ url('/logout')}}" class="nav-link text-center font-weight-bold px-0">
+                    <p class="p-3 pb-0 pt-2"><span>Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong><span></p>
+                    {{-- <a href="{{ url('/profile-settings')}}" class="nav-link p-3 font-weight-bold">
+                        <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fas fa-cog"></i>Profile Settings</span>
+                    </a> --}}
+                    <a href="{{ url('/logout')}}" class="nav-link p-3 font-weight-bold">
                         <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fa-solid fa-right-from-bracket"></i>Sign Out</span>
                     </a>
                 </div>

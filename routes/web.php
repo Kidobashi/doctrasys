@@ -121,7 +121,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/filters/search',[ DocumentsController::class, 'searchTest'])->name('document.search');
 
     Route::get('/getLiveUpdate', [DocumentsController::class, 'getOfficeByUser']);
-    Route::get('/', [HomeController::class, 'index']);
 });
 
 //Email Verification Routes
@@ -188,6 +187,7 @@ Route::post('/reset-password', function (Request $request) {
                 ? redirect()->route('login')->with('status', __($status))
                 : back()->withErrors(['email' => [__($status)]]);
 })->middleware('guest')->name('password.update');
+
 //Guest Routes
 Route::get('/logout', [SessionsController::class, 'destroy'])->name('logout');
 Route::get('/register', [RegisterController::class, 'create']);
@@ -208,7 +208,7 @@ Route::get('/search', [UserManagementController::class, 'index'])->name('admin.s
 Route::get('/test-email', function () {
     return view('emails.document-update'); // Replace 'test_view' with the name of your view file
 });
-
+Route::get('/', [HomeController::class, 'index']);
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

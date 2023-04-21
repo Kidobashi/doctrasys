@@ -57,7 +57,12 @@
     margin-top:17.5px;
 }
 
+    .history-left-details{
+        display: block;
+    }
+
 .yellow-circle {
+    display: none;
     position: absolute;
     top: 0;
     left: -3px;
@@ -69,6 +74,7 @@
     box-shadow: -10px -10px 20px #d9d9d9, 10px 10px 20px #ffffff;
 }
 .gray-circle {
+    display: none;
     position: absolute;
     top: 13px;
     left: -3px;
@@ -80,6 +86,7 @@
     box-shadow: -10px -10px 20px #d9d9d9, 10px 10px 20px #ffffff;
 }
 .blue-circle {
+    display: none;
     position: absolute;
     top: 13px;
     left: -3px;
@@ -92,6 +99,7 @@
 }
 
 .red-circle {
+    display: none;
     position: absolute;
     top: 13px;
     left: -3px;
@@ -103,6 +111,7 @@
     box-shadow: -10px -10px 20px #d9d9d9, 10px 10px 20px #ffffff;
 }
 .green-circle {
+    display: none;
   position: absolute;
   top: 13px;
   left: -3px;
@@ -193,10 +202,11 @@
     transform: translate(-50%, -50%);
   }
 
-@media screen and (max-width: 700px) {
-    .vl{
-        display: none;
+    .history-left-details{
+        display: flex;
     }
+
+@media screen and (max-width: 700px) {
     .highlights {
         margin: 2px;
     }
@@ -226,9 +236,26 @@
         border: 1px solid gray;
         width: 100%;
     }
-    h5{
-        font-size: 4.5vw;
+    .action-div , .dashed-line{
+        display: none;
+    }
+    .tracking-details{
+        margin-left: 1px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+        font-size: 13px;
+    }
+
+    .history-left-details{
+        display: block;
+        font-size: 11px;
+    }
 }
+
+@media screen and (max-width: 700px) {
+    .icon-sz{
+        display: none;
+    }
 }
 </style>
 This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
@@ -284,7 +311,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             <div class="col-md-3 col-sm-5">
                 <h2>Action</h2>
                 @if ($status->status == 1 || $status->status == 4)
-                <div class="neomorphic-bg d-flex justify-content-center">
+                <div class="neomorphic-bg action-div d-flex justify-content-center">
                 {{-- Received Status --}}
                         <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
                             @csrf
@@ -433,54 +460,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @endif
                     @elseif ($status->status == 4)
-                        {{-- Forward Form Status = 4 --}}
-                        {{-- <div class="neomorphic-bg text-center">
-                            @if ($latestTracking->receiverOffice == Auth::user()->assignedOffice && $status->receiverOffice_id == $latestTracking->receiverOffice)
-                            <p class="text-secondary  text-center p-3 pb-0"><em>As the intended receiving office,
-                                 you have the option to Approve/Reject
-                                 and/or Return to Sender/Previous Office.</em>
-                            </p>
-                            <div class="d-flex justify-content-center">
 
-                                <form id="received-by-intended-form" action="received-by-intended/{{ $data->referenceNo }}" method="post">
-                                    @csrf
-                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                                    <input class="form-control "type="text" style="display: none;" name='status' value="2">
-                                    <input class="form-control "type="text" style="display: none;" name='action' value="2">
-                                    <button class="neo-btn btn" id="received-by-intended-btn" type="submit"><h5>Aprrove/Return to Sender</h5></button>
-                                </form>
-                            </div>
-                            <div class="mt-3 d-flex justify-content-center">
-
-                                <form id="reject-return-to-previous-form" action="reject-return-to-previous/{{ $data->referenceNo }}" method="post">
-                                    @csrf
-                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                                    <input class="form-control "type="text" style="display: none;" name='status' value="2">
-                                    <input class="form-control "type="text" style="display: none;" name='action' value="2">
-                                    <button class="neo-btn btn" id="reject-return-to-previous-btn" type="submit"><h5>Reject/Return to Previous Office</h5></button>
-                                </form>
-                            </div>
-                            <div class="mt-3 d-flex justify-content-center">
-
-                                    <form id="reject-return-to-sender-form" action="reject-return-to-sender/{{ $data->referenceNo }}" method="post">
-                                        @csrf
-                                        <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                                        <input class="form-control "type="text" style="display: none;" name='status' value="2">
-                                        <input class="form-control "type="text" style="display: none;" name='action' value="2">
-                                        <button class="neo-btn btn" id="reject-return-to-sender-btn" type="submit"><h5>Reject/Return to Sender</h5></button>
-                                    </form>
-                                </div>
-                            @else
-                            <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
-                                @csrf
-                                    <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
-                                    <input class="form-control "type="text" style="display: none;" name='status' value="2">
-                                    <input class="form-control "type="text" style="display: none;" name='action' value="2">
-                                    <button class="neo-btn btn" type="submit"><h3>Receive</h3></button>
-                                </form>
-                            @endif --}}
                         </div>
-                        @elseif ($status->status == 5)
+                    @elseif ($status->status == 5)
                             @if($latestTracking->senderOffice == Auth::user()->assignedOffice)
                                 <div class="neomorphic-bg text-center">
                                     <form class="receive" action="return-to-sender/{{ $data->referenceNo }}" method="post">
@@ -499,7 +481,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 </p>
                             </div>
                             @endif
-                        @elseif ($status->status == 6)
+                    @elseif ($status->status == 6)
                         {{-- Report = 7 --}}
                         @if($latestTracking->receiverOffice == Auth::user()->assignedOffice && Auth::user()->id == $getRecentOffice->user_id)
                         <div class="neomorphic-bg text-center">
@@ -596,9 +578,9 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @endif
             </div>
             {{-- Tracking Portion --}}
-            <div class="col-md-9 col-sm-7">
+            <div class="col-md-9 col-sm-7 mb-5" style="">
                 <!-- 80% width on desktop, 50% width on mobile -->
-                <h3>Current Status</h3>
+                <h3>Present</h3>
                     @if (isset($latestTracking->status))
                         @if ( $latestTracking->status == 1 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1">
@@ -622,12 +604,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-check fa-4x text-primary"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #0d6efd; height: 95%;">
                                     <div class="blue-circle">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-8 neomorphic-bg bg-primary">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-primary text-center"><strong>RECEIVED</strong></h5>
@@ -649,12 +631,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-spinner fa-spin fa-4x text-secondary"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
-                                <div class="col-md-12" style="position: relative; border-left: 6px solid #6c757d; height: 95%;">
-                                    <div class="gray-circle">
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="col-md-8 neomorphic-bg bg-secondary">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-dark text-center"><strong>Processing</strong></h5>
@@ -669,20 +646,22 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif( $latestTracking->status == 4 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
-                            <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
-                                <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                            <div class="">
+                                <div class="col-md-1 bg-light text-center icon-sz m-auto" style="border-radius: 10px;">
+                                    <i class="fas fa-envelope fa-4x" style="color: #28a745;"></i>
+                                </div>
+                                <div class="col-md-12 m-1 text-center">
+                                    <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                    <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
+                                </div>
                             </div>
-                            <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
-                                <i class="fas fa-envelope fa-4x" style="color: #28a745;"></i>
-                            </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #28a745; height: 95%;">
                                     <div class="green-circle">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-8 neomorphic-bg bg-success p-auto">
+                            </div> --}}
+                            <div class="col-md-9 neomorphic-bg bg-success p-auto">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-success text-center"><strong>Forwarded</strong></h5>
                                 </div>
@@ -703,12 +682,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-exclamation-circle fa-4x text-danger"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #dc3545; height: 95%;">
                                     <div class="red-circle">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-8 neomorphic-bg bg-danger">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-danger text-center"><strong>FOUND ISSUES</strong></h5>
@@ -757,12 +736,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-undo fa-spin spin-reverse fa-4x text-secondary"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #6c757d; height: 95%;">
                                     <div class="gray-circle">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-8 neomorphic-bg bg-secondary p-auto">
                                 <div class="col-md-8 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="px-2 text-secondary text-center"><strong>RETURNED TO PREVIOUS OFFICE</strong></h5>
@@ -784,12 +763,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-tasks fa-4x text-warning"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #f0ad4e; height: 95%;">
                                     <div class="yellow-circle">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-8 neomorphic-bg bg-warning">
                                 <div class="row d-flex justify-content-between">
                                     <div class="col-md-5 bg-white mb-2" style="border-radius: 8px; margin-left: 10px;">
@@ -848,12 +827,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-check-double fa-4x text-primary"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #0d6efd; height: 95%;">
                                     <div class="blue-circle">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-8 neomorphic-bg bg-primary p-auto">
                                 <div class="col-md-5 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-black text-center"><strong>RESUBMITTED</strong></h5>
@@ -875,12 +854,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-lock fa-4x text-success"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #28a745; height: 95%;">
                                     <div class="green-circle">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-8 neomorphic-bg bg-success">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-success text-center"><strong>APPROVED</strong></h5>
@@ -905,12 +884,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-lock fa-4x text-success"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid #28a745; height: 95%;">
                                     <div class="green-circle">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-8 neomorphic-bg bg-success">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-success text-center"><strong>APPROVED AND SENT TO ORIGIN</strong></h5>
@@ -935,12 +914,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-lock fa-4x text-danger"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid red; height: 95%;">
                                     <div class="red-circle">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-8 neomorphic-bg bg-danger">
                                 <div class="col-md-8 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-danger text-center"><strong>REJECTED AND SENT TO ORIGIN</strong></h5>
@@ -965,12 +944,12 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
                                 <i class="fas fa-undo fa-spin spin-reverse fa-4x text-danger"></i>
                             </div>
-                            <div class="col-md-1" style="width:10px;">
+                            {{-- <div class="col-md-1" style="width:10px;">
                                 <div class="col-md-12" style="position: relative; border-left: 6px solid red; height: 95%;">
                                     <div class="red-circle">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-8 neomorphic-bg bg-danger">
                                 <div class="col-md-8 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-danger text-center"><strong>REJECTED AND SENT TO ORIGIN</strong></h5>
@@ -1010,8 +989,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                     @endif
                     @foreach ($trackingHistory as $row)
                         @if ($row->status == 1)
-                            <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                            <div class="d-flex mb-5">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                     <div class="col-md-4 neomorphic-bg bg-info alt-icon-sz">
                                         <i class="fas fa-flag fa-2x text-white"></i>
                                     </div>
@@ -1028,7 +1007,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         @elseif ($row->status == 2)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                     <div class="col-md-4 neomorphic-bg alt-icon-sz bg-primary">
                                         <i class="fas fa-check fa-2x text-white"></i>
                                     </div>
@@ -1045,7 +1024,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         @elseif ($row->status == 3)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                     <div class="col-md-4 neomorphic-bg bg-secondary alt-icon-sz">
                                         <i class="fas fa-spinner fa-spin fa-2x text-white"></i>
                                     </div>
@@ -1062,7 +1041,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         @elseif ($row->status == 4)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                     <div class="col-md-4 neomorphic-bg bg-success alt-icon-sz">
                                         <i class="fas fa-envelope fa-2x text-white"></i>
                                     </div>
@@ -1079,7 +1058,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         @elseif ($row->status == 5)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                     <div class="col-md-4 neomorphic-bg bg-danger alt-icon-sz">
                                         <i class="fas fa-exclamation-circle fa-2x text-white"></i>
                                     </div>
@@ -1100,7 +1079,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         @elseif ($row->status == 6)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                     <div class="col-md-4 neomorphic-bg alt-icon-sz">
                                         <i class="fas fa-undo fa-spin spin-reverse fa-2x text-secondary"></i>
                                     </div>
@@ -1117,7 +1096,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                         @elseif ($row->status == 7)
                         <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                 <div class="col-md-4 neomorphic-bg bg-warning alt-icon-sz">
                                     <i class="fas fa-tasks fa-2x text-white"></i>
                                 </div>
@@ -1134,7 +1113,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif ($row->status == 8)
                         <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                 <div class="col-md-4 neomorphic-bg bg-primary alt-icon-sz">
                                     <i class="fas fa-check-double fa-2x text-white"></i>
                                 </div>
@@ -1151,7 +1130,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif ($row->status == 10)
                         <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                 <div class="col-md-4 neomorphic-bg bg-success alt-icon-sz">
                                     <div class="icon-wrapper">
                                         <i class="fas fa-undo fa-3x text-white"></i>
@@ -1171,7 +1150,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         </div>
                         @elseif($row->status == 12)
                         <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center d-flex">
+                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
                                 <div class="col-md-4 neomorphic-bg bg-danger alt-icon-sz">
                                     <i class="fas fa-undo fa-spin spin-reverse fa-2x text-white"></i>
                                 </div>

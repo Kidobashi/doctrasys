@@ -109,7 +109,6 @@ select {
     }
 </style>
 
-This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
 <div class="container-fluid mb-3">
     <div class="row">
         <div class="col-md-12">
@@ -270,6 +269,11 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
       </div>
     </div>
   </div>
+<script>
+$('#post-form').submit(function() {
+  $('#submit-doc-btn').prop('disabled', true);
+});
+</script>
 <script>
 
     $(document).ready(function()

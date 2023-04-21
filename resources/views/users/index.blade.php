@@ -9,49 +9,41 @@ body, html {
     overflow: hidden;
     background-color: white;
 }
-.search{
-    display: flex;
-    justify-content: center;
-    position: relative;
-    height: 30%;
-    width: 100%;
-    margin-bottom: 20px;
+.alt-search{
+    display: none;
 }
 
 .script {
+    display:block;
     text-align: center;
 }
-input {
-    font-size: 16px;
-    margin-top: 120px;
-    width: 520px;
-    padding:10px;
-    border-radius:25px 0 0 25px;
+
+.center-home-div img{
+    width: 80%;
 }
 
-button {
-    padding:10px;
-    font-size: 16px;
-    border-radius:0 25px 25px 0;
+.center-home-container{
+    display:flex;
+    margin-top: 150px;
+}
+
+input {
+    font-size: 15px;
+    width: 520px;
+    padding:7.5px;
+    border-radius: 5px;
+    background-color: rgb(238, 225, 225);
+    border:0;
+    outline:0;
 }
 
 @media screen and (max-width: 600px) {
-.search button {
-    margin-top: 10px;
-    width: 40%;
-    padding: 8px;
-    font-size: 12px;
-    border-radius:25px;
-    justify-content: center;
-}
-
-.search {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 60px;
+.alt-search{
+    display: block;
 }
 
 .script{
+    display: block;
     text-align: center;
     position: relative;
     bottom:50px;
@@ -59,10 +51,12 @@ button {
 }
 @media screen and (max-width: 400px) {
 
-.search {
-    position: relative;
+    .center-home-container{
+    display:flex;
+    margin-top: 30px;
+}
+    .alt-search{
     display: block;
-    justify-content: center;
 }
 input {
     width: 100%;
@@ -79,6 +73,16 @@ button {
     font-size: 5px;
     border-radius:25px;
 }
+
+.center-home-container .center-home-div, .center-home-div img{
+    display:none;
+}
+
+.script
+{
+    margin-top: 10px;
+    display: block;
+}
 }
 
 @media screen and (max-width: 950px) {
@@ -87,7 +91,7 @@ button {
     justify-content: center;
 }
 .search {
-    position: relative;
+    /* position: relative; */
     display: block;
     justify-content: center;
 }
@@ -106,6 +110,11 @@ button {
     font-size: 14px;
     border-radius:25px;
 }
+
+.script{
+    margin-top: 10px;
+    display: block;
+}
 }
 
 @media screen and (max-width: 1100px) {
@@ -120,7 +129,6 @@ input {
     font-size: 18px;
     padding: 10px;
     border-radius:25px;
-
 }
 button {
     margin-top: 10px;
@@ -132,23 +140,39 @@ button {
 }
 
 </style>
-This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
-<div class="d-flex flex-column">
-<div class="search col-lg-12 col-md-12 col-sm-12">
-    <form action="tracking" method="get">
-        <input type="text" name="search">
-        <button type="submit">Track Document</button>
-    </form>
+<div class="d-block mt-3">
+    <div class="alt-search col-lg-12 col-md-12 col-sm-12">
+        <form action="tracking" method="get">
+            <input type="text" name="search" placeholder="🔍 Reference number">
+        </form>
+    </div>
 </div>
-
-<div class="script">
+<section>
+    <div class="container center-home-container">
+        <div class="col-md-6 d-flex align-items-center justify-content-center center-home-div">
+            <img src="{{ asset('images/home-qr.png') }}" alt="CMU Logo">
+        </div>
+        <div class="col-md-6 d-flex align-items-center justify-content-center with-semicircle-div">
+            <div class="p-4 bg-warning rounded">
+                <div class="d-block btn bg-success text-white" style="border-bottom-left-radius: 350px; border-bottom-right-radius: 350px;">
+                    <h1>Central Mindanao University</h1>
+                    <h3>Document Tracking System</h3>
+                    <div>
+                     <img src="{{ asset('images/cmulogo.png') }}" alt="CMU Logo" width="140">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="script mt-5">
     @if(session()->has('success'))
         <p class="display-4">No 'results' found</td></p>
     @elseif (Request::is('index') || Request::is('tracking'))
-        <p class="display-4">Track 'Document' with reference number...</p>
+        <p class="display-5"></p>
     @endif
 </div>
-</div>
+{{-- </div> --}}
 
 <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 <script>
