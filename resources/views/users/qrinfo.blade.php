@@ -290,7 +290,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             <div class="vl">
             </div>
             <div class="d-inline highlights col-md-3 text-center m-0 p-0">
-                <p>Office of Destination</p>
+                <p>Recipient Office</p>
                 @if (isset($data->receiverOfficeName))
                     <h4>{{ $data->receiverOfficeName }}</h4>
                 @endif

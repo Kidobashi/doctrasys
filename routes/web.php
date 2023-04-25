@@ -88,7 +88,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/documents/sentBack', [DocumentsController::class, 'sentBackDocs']);
 
     //Qr Controllers
-    Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo']);
+    // Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo']);
     Route::get('forward/{referenceNo}', [QrController::class, 'forward']);
     Route::post('qrinfo/forward/{referenceNo}', [QrController::class, 'forwardDoc']);
     Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
@@ -119,6 +119,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('searchByDate', [SearchController::class, 'dateFilter']);
     Route::get('filterByRcvOffice', [SearchController::class, 'rcvOfficeFilter']);
     Route::post('/filters/search',[ DocumentsController::class, 'searchTest'])->name('document.search');
+    Route::get('/download-qr-code',[DocumentsController::class, 'downloadQRCode'])->name('download-qr-code');
 
     Route::get('/getLiveUpdate', [DocumentsController::class, 'getOfficeByUser']);
 });

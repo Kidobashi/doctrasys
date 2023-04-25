@@ -1,5 +1,5 @@
 
-<h5 class="text-center">Documents by Office</h5>
+<h5 class="text-center">Top 5 Offices</h5>
     <div class="bg-white p-2">
         <div class="col-md-12">
             <div class="row">
@@ -24,6 +24,6 @@
     </div>
 <nav class="mt-0">
     <ul class="pagination justify-content-center mb-0">
-        {{ $miscdocuments->links('vendor.pagination.bootstrap-5') }}
+        {{-- {{ $miscdocuments->links('vendor.pagination.bootstrap-5') }} --}}
     </ul>
 </nav>

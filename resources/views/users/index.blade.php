@@ -7,7 +7,8 @@
 <style>
 body, html {
     overflow: hidden;
-    background-color: white;
+    background-color: #eee8e1;
+    /* background: linear-gradient(to right, #68a18b, #7cffcb); */
 }
 .alt-search{
     display: none;
@@ -37,6 +38,10 @@ input {
     outline:0;
 }
 
+.bordered-image {
+    border: 15px solid black;
+    border-radius: 15px;
+}
 @media screen and (max-width: 600px) {
 .alt-search{
     display: block;
@@ -74,7 +79,7 @@ button {
     border-radius:25px;
 }
 
-.center-home-container .center-home-div, .center-home-div img{
+.center-home-container .center-home-div, .scan-ins, .center-home-div img{
     display:none;
 }
 
@@ -123,6 +128,10 @@ button {
     position: relative;
     left: 10px;
 }
+
+.center-home-div , .bordered-image, .scan-ins{
+    display: none;
+}
 input {
     width: 100%;
     position: relative;
@@ -138,7 +147,6 @@ button {
     border-radius:25px;
 }
 }
-
 </style>
 <div class="d-block mt-3">
     <div class="alt-search col-lg-12 col-md-12 col-sm-12">
@@ -147,15 +155,23 @@ button {
         </form>
     </div>
 </div>
+<div class="script mt-5">
+    @if(session()->has('success'))
+        <p class="display-4">No 'results' found</td></p>
+    @elseif (Request::is('index') || Request::is('tracking'))
+        <p class="display-5"></p>
+    @endif
+</div>
 <section>
     <div class="container center-home-container">
-        <div class="col-md-6 d-flex align-items-center justify-content-center center-home-div">
-            <img src="{{ asset('images/home-qr.png') }}" alt="CMU Logo">
+        <div class="col-md-6 d-flex flex-column align-items-center justify-content-center center-home-div">
+            <img class="bordered-image" src="{{ asset('images/home-qr.png') }}" alt="CMU Logo">
+            <h1 class="scan-ins">[ Scan ]</h1>
         </div>
         <div class="col-md-6 d-flex align-items-center justify-content-center with-semicircle-div">
             <div class="p-4 bg-warning rounded">
-                <div class="d-block btn bg-success text-white" style="border-bottom-left-radius: 350px; border-bottom-right-radius: 350px;">
-                    <h1>Central Mindanao University</h1>
+                <div class="d-block btn bg-success text-white">
+                    <h1>Welcome! This is the Central Mindanao University</h1>
                     <h3>Document Tracking System</h3>
                     <div>
                      <img src="{{ asset('images/cmulogo.png') }}" alt="CMU Logo" width="140">
@@ -165,13 +181,6 @@ button {
         </div>
     </div>
 </section>
-<div class="script mt-5">
-    @if(session()->has('success'))
-        <p class="display-4">No 'results' found</td></p>
-    @elseif (Request::is('index') || Request::is('tracking'))
-        <p class="display-5"></p>
-    @endif
-</div>
 {{-- </div> --}}
 
 <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>

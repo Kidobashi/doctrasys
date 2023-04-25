@@ -87,7 +87,7 @@
         <div class="modal-body">
           <form action="/addOffice" method="post">
             @csrf
-            <input type="text" style="text-transform: capitalize;" class="form-control" name="officeName" id="name" aria-label="Name" aria-describedby="name" data-backdrop="static" data-keyboard="false">
+            <input type="text" style="text-transform: capitalize;" class="form-control" name="officeName" id="name" aria-label="Name" aria-describedby="name">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

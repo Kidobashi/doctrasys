@@ -14,9 +14,9 @@ class RegisterController extends Controller
 {
     public function create()
     {
-        $offices = Offices::all();
-
-        return view('session.register')->with('offices', $offices);
+        $offices = Offices::where('status', 1)->get();
+        
+        return view('layouts.navbars.auth.nav')->with(['offices' => $offices]);
     }
 
     public function store()

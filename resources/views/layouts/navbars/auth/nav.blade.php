@@ -74,8 +74,7 @@ input {
   }
 .mobile-menu-container {
     position: fixed;
-    margin-top:20px;
-    overflow:hidden;
+    margin-top:50px;
     border: 1px solid grey;
     background-color: green;
     border-top-left-radius: 20px;
@@ -114,19 +113,14 @@ input {
       </a>
       @guest
       <div class="container" id="loginMobile">
-        <div class="row">
-          <div class="col text-center border border-white rounded mx-1">
-            <a href="{{ route('register') }}" class="nav-link text-body font-weight-bold px-0">
-                <i class="fa fa-user-circle-o fa-lg text-white" aria-hidden="true"></i>
-                <span class="d-sm-inline text-white bolder">Register</span>
-            </a>
-          </div>
-          <div class="col text-center border border-white rounded mx-1">
-            <a href="{{ route('login') }}" class="nav-link text-body font-weight-bold px-0">
-                <i class="fa fa-sign-in fa-lg text-white" aria-hidden="true"></i>
-                <span class="d-sm-inline text-white bolder">Login</span>
-            </a>
-          </div>
+        <div class="row d-flex justify-content-between">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#loginModal">
+                Login
+            </button>
+
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#registerModal">
+                Register
+            </button>
         </div>
       </div>
       @endguest
@@ -163,7 +157,7 @@ input {
             @auth
             <li class="nav-item mx-2">
               <a class="nav-link {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
-                  <span class="mx-2 my-2">Create Document</span>
+                  <span class="mx-2 my-2">Generate QR Code</span>
               </a>
             </li>
             @endauth
@@ -183,9 +177,6 @@ input {
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <p class="p-3 pb-0 pt-2"><span>Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong><span></p>
-                    {{-- <a href="{{ url('/profile-settings')}}" class="nav-link p-3 font-weight-bold">
-                        <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fas fa-cog"></i>Profile Settings</span>
-                    </a> --}}
                     <a href="{{ url('/logout')}}" class="nav-link p-3 font-weight-bold">
                         <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fa-solid fa-right-from-bracket"></i>Sign Out</span>
                     </a>
@@ -195,18 +186,16 @@ input {
             @guest
             <div>
                 <li class="nav-item mx-2">
-                    <a href="{{ route('register') }}" class="nav-link text-body font-weight-bold px-0">
-                    <i class="fa-sharp fa-solid fa-user white"></i>
-                    <span class="d-sm-inline text-black">Register</span>
-                    </a>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#registerModal">
+                        Register
+                    </button>
                 </li>
             </div>
             <div>
                 <li class="nav-item mx-2">
-                    <a href="{{ url('/login')}}" class="nav-link text-body font-weight-bold px-0">
-                    <i class="fa-sharp fa-solid fa-right-to-bracket white"></i>
-                    <span class="d-sm-inline text-black">Login</span>
-                    </a>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#loginModal">
+                        Login
+                    </button>
                 </li>
             </div>
             @endguest
@@ -216,7 +205,7 @@ input {
   </nav>
 
 @auth
-<nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom bg-success pb-0">
+<nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom bg-success pb-0 mt-5">
     <a class="nav-item nav-link pb-0 mb-0 {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
         <i class="fa-solid fa-location-dot fa-lg mb-3"></i>
         <p class="pb-0 mb-0">Tracking</p>
@@ -231,3 +220,150 @@ input {
     </a>
   </nav>
 @endauth
+{{-- Login Modal --}}
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header d-flex justify-content-end p-1">
+          <button type="button" class="btn bg-white text-danger m-0" style="border: 1px solid black;" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"><i class="fas fa-times fa-2x m-0 p-0" aria-hidden="true"></i>
+            </span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+            <form method="POST" action="/session">
+                @csrf
+                <h3 class="mb-2">Sign in</h3>
+                <p>Please enter your email and password to login</p>
+                <div class="form-outline mb-4">
+                  <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email" />
+                  @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
+                <div class="form-outline mb-2">
+                  <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password"/>
+                    @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                    @enderror
+                </div>
+
+                <!-- Checkbox -->
+                <div class="form-check d-flex justify-content-center mb-3">
+                  <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} id="form1Example3" />
+                  <label class="form-check-label" for="form1Example3">&nbsp; Remember password </label>
+                </div>
+
+                <button class="btn btn-success btn-lg btn-block w-30 mb-2 px-5 fs-6" style="border-radius: 18px;" type="submit">Sign In</button>
+                <div class="form-outline mb-2">
+                    @if (Route::has('password.request'))
+                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                        {{ __('Forgot Your Password?') }}
+                    </a>
+                     @endif
+                </div>
+
+                <hr class="my-2">
+                <p>Don't have an account?</p>
+                <a href="/register" class="btn btn-outline-success mb-4c" style="border-radius: 18px;" role="button">Sign Up</a>
+                {{-- <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #dd4b39;"
+                  type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button>
+                <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #3b5998;"
+                  type="submit"><i class="fab fa-facebook-f me-2"></i>Sign in with facebook</button> --}}
+                </form>
+        </div>
+      </div>
+    </div>
+</div>
+{{-- Register Modal --}}
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header d-flex justify-content-end p-1">
+          {{-- <h5 class="modal-title" id="exampleModalLongTitle">Msdfasdfsditle</h5> --}}
+          <button type="button" class="btn bg-white text-danger m-0" style="border: 1px solid black;" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"><i class="fas fa-times fa-2x m-0" aria-hidden="true"></i>
+            </span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+                <h3 class="mb-2">Create an Account</h3>
+                <p>Fill-in the fields to register</p>
+
+                <div class="form-outline mb-4">
+                    <input type="text" name="name" class="form-control" placeholder="Name" required/>
+                    @error('name')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-outline mb-4">
+                  <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email" required />
+                  @error('email')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-outline mb-4">
+                    <select class="form-control text-center" style="border-radius: 22px;" id="assignedOffice" name="assignedOffice" required>
+                        <option value="" selected disabled>Select Assigned Office
+                            @foreach ($offices as $row)
+                            <option style="font-size:1.2rem;" value="{{ $row->id }}">{{ $row->officeName }}</option>
+                        </option>
+                            @endforeach
+                    </select>
+                    @error('assignedOffice')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-outline mb-4">
+                    <input type="password" name="password" class="form-control" placeholder="Password" required/>
+                    @error('password')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-outline mb-4">
+                    <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" required/>
+                    @error('password_confirmation')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-check d-flex justify-content-center mb-4">
+                    <input type="checkbox" class="form-check-input" id="terms-checkbox" name="terms">
+                    <label class="form-check-label" for="terms-checkbox">&nbsp;&nbsp; I agree to the terms and conditions</label>
+                    @error('terms')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <button class="btn btn-success btn-lg btn-block w-30 mb-2 px-5 fs-6" style="border-radius: 18px;" type="submit">Register</button>
+                <div class="form-outline mb-2">
+                    @if (Route::has('password.request'))
+                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                        {{ __('Forgot Your Password?') }}
+                    </a>
+                     @endif
+                </div>
+
+                <hr class="mt-2">
+                <p class="mb-0">Already have an account? <a href="/login" style="border-radius: 18px;" role="button">Login here</a></p>
+
+                {{-- <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #dd4b39;"
+                  type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button>
+                <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #3b5998;"
+                  type="submit"><i class="fab fa-facebook-f me-2"></i>Sign in with facebook</button> --}}
+                </form>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -10,6 +10,7 @@ use App\Models\TrackingHistory;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DocumentsController extends Controller
@@ -24,8 +25,10 @@ class DocumentsController extends Controller
         // Retrieve all documents from Documents class
         $docs = Documents::all();
 
+        $offices = Offices::where('status', 1)->get();
+
         // Pass documents data to users.index view
-        return view('users.index', compact(['docs']));
+        return view('users.index', compact(['docs']))->with(['offices' => $offices]);
     }
     /**
      * Show the form for creating a new resource.
@@ -210,7 +213,7 @@ class DocumentsController extends Controller
             }
         } else {
             $all = Documents::where('user_id', $userId)
-            ->orderBy('documents.created_at', $request->get('sort', 'asc'))
+            ->orderBy('documents.created_at', $request->get('sort', 'desc'))
             ->paginate(20);
         }
 
@@ -246,44 +249,12 @@ class DocumentsController extends Controller
         ->with('totalRejected', $totalRejected);
     }
 
-    public function circulatingDocs()
+    public function downloadQrCode(Request $request)
     {
-        $userId = Auth::user()->id;
+        $referenceNo = $request->input('referenceNo');
+        $filepath = public_path('qrcodes/qr'.$referenceNo.'.png');
 
-        $circulating = Documents::where('user_id', $userId )
-            ->join('offices', 'receiverOffice_id', 'offices.id')
-            ->where('status', 1)
-            ->orderBy('created_at', 'DESC')
-            ->paginate(20);
-
-        return view('users.documentList.circulatingDocs')->with(['circulating' => $circulating]);
-    }
-
-    public function completedDocs()
-    {
-        $userId = Auth::user()->id;
-
-        $completed = Documents::where('user_id', $userId)
-            ->join('offices', 'receiverOffice_id', 'offices.id')
-            ->where('status', 2)
-            ->orderBy('created_at', 'DESC')
-            ->paginate(20);
-
-        return view('users.documentList.completedDocs')->with(['completed' => $completed]);
-    }
-
-    public function sentBackDocs()
-    {
-        $userId = Auth::user()->id;
-
-        $offices = Offices::all();
-
-        $sentBack = Documents::where('user_id', $userId)
-            ->join('offices', 'receiverOffice_id', 'offices.id')
-            ->where('status', 3)
-            ->orderBy('created_at', 'DESC')->paginate(20);
-
-        return view('users.documentList.sentBackDocs')->with(['sentBack' => $sentBack])->with(['offices' => $offices]);
+        return Response::download($filepath);
     }
 
     public function googleDocu(Request $request)

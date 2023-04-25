@@ -103,7 +103,7 @@ select {
 
     @media screen and (max-width: 700px)
     {
-    .details {
+        .details {
         display: block;
         }
     }
@@ -112,7 +112,7 @@ select {
 <div class="container-fluid mb-3">
     <div class="row">
         <div class="col-md-12">
-            <div class="my-3">
+            <div class="mt-3 mb-1">
                 <div class="row justify-content-between">
                     @isset($totalDocByUser)
                     <div class="col-md-2 m-auto p-3 levitating-div bg-white rounded">
@@ -199,6 +199,11 @@ select {
         </div>
     </div>
 </div>
+@if(session('sndr') )
+    <div class="col-md-6 text-white rounded text-center p-4 bg-primary my-3" style="background-color: rgb(36, 127, 230);">
+        <p class="mb-0">⚠️<em>After clicking the "Generate" button, do not refresh the page to prevent losing the QR code. Click the "Show QR Code" button to get the QR Code.</em></p>
+    </div>
+@endif
 
     <div class="modal fade m-0 p-0" id="printable-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -212,7 +217,7 @@ select {
                                 <p>Document Reference Number:</p>
                                 <h2><strong>{{ session('flashRefNo') }}</strong></h2>
                             </div>
-                            <div class="col-6 p-3 text-center" id="img-only" style="border-left: 1px solid black;"> <!-- 1/2 column width, centered -->
+                            <div class="col-6 p-3 text-center" id="img-only" style="border-left: 1px solid black; width: 50%;"> <!-- 1/2 column width, centered -->
                                 <img src="{{ session('qrcode') }}" alt="QR code">
                             </div>
                         </div>
@@ -222,7 +227,7 @@ select {
                                 <h5>{{ session('sndr') }}</h5>
                             </div>
                             <div class="col-4 text-center" style="border-right: 1px solid black; border-left: 1px solid black;"> <!-- 1/3 column width, centered -->
-                                <p>Office of Destination:</p>
+                                <p>Recipient Office:</p>
                                 <h5>{{ session('recv') }}</h5>
                             </div>
                             <div class="col-4 text-center"> <!-- 1/3 column width, centered -->

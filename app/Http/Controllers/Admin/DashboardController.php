@@ -32,106 +32,23 @@ class DashboardController extends Controller
         $sentBackDocs = Documents::where('status', 5)
                     ->orWhere('status', 11)->count();
 
-        $documents = Offices::leftJoin('documents', 'offices.id', '=', 'documents.senderOffice_id')
-            ->select('offices.id', 'offices.officeName', DB::raw('count(documents.id) as total'))
-            ->groupBy('offices.id', 'offices.officeName')
-            ->get();
+        $eachOfficeCount = Offices::leftJoin('documents', 'offices.id', '=', 'documents.senderOffice_id')
+        ->select('offices.id', 'offices.officeName', DB::raw('COUNT(documents.id) as total'))
+        ->groupBy('offices.id', 'offices.officeName')
+        ->get();
 
-            // Extract the data from the query results
-            $officeNames = $documents->pluck('officeName')->toArray();
-            $totalDocuments = $documents->pluck('total')->toArray();
+        $eachDocTypeCount = DocumentType::leftJoin('documents', 'document_type.id', '=', 'documents.docType')
+        ->select('document_type.id', 'document_type.docType', DB::raw('COUNT(documents.id) as total'))
+        ->groupBy('document_type.id', 'document_type.docType')
+        ->get();
 
-            // Create the chart data as a JSON object
-            $chartData = [
-                'labels' => $officeNames,
-                'datasets' => [
-                    [
-                        'label' => 'Total Documents',
-                        'backgroundColor' => '#007bff',
-                        'data' => $totalDocuments,
-                    ]
-                ]
-            ];
-
-            // Create the chart options as a JSON object
-            $chartOptions = [
-                'scales' => [
-                    'yAxes' => [
-                        [
-                            'grid' => [
-                            'beginAtZero' => true,
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $documentTypes = DocumentType::leftJoin('documents', 'document_type.id', '=', 'documents.docType')
-                ->select('document_type.id', 'document_type.docType', DB::raw('COUNT(documents.id) as total'))
-                ->groupBy('document_type.id', 'document_type.docType')
-                ->get();
-
-        // Extract the data from the query results
-        $docTypes = $documentTypes->pluck('docType')->toArray();
-        $docTypeCounts = $documentTypes->pluck('total')->toArray();
-
-         $docTypeChartData = [
-                'labels' => $docTypes,
-                'datasets' => [
-                    [
-                        'label' => 'Total Documents',
-                        'backgroundColor' => '#007bff',
-                        'data' => $docTypeCounts,
-                    ]
-                ]
-            ];
-
-            // Create the chart options as a JSON object
-            $docTypeChartOptions = [
-                'scales' => [
-                    'yAxes' => [
-                        [
-                            'grid' => [
-                            'beginAtZero' => true,
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $data = [
-            'labels' => ['Documents'],
-            'datasets' => [
-                [
-                    'label' => 'Created',
-                    'backgroundColor' => '#36a2eb',
-                    'data' => [$totalDocs],
-                ],
-                [
-                    'label' => 'Approved',
-                    'backgroundColor' => '#4bc0c0',
-                    'data' => [$approvedDocs],
-                ],
-                [
-                    'label' => 'Rejected',
-                    'backgroundColor' => '#ff6384',
-                    'data' => [$sentBackDocs],
-                ],
-            ]
-        ];
-
-
-        $date = date('Y-m-d');
-        $docsToday = Documents::where('created_at',  $date)->count();
-        $receivedDocs = TrackingHistory::where('action', 1)->groupby('referenceNo')->count();
-
-        return view('admin.dashboard', compact('data', 'documents', 'chartData', 'chartOptions', 'documentTypes', 'docTypeChartData', 'docTypeChartOptions'))
+        return view('admin.dashboard')
         ->with(['totalDocs' => $totalDocs])
+        ->with(['eachOfficeCount' => $eachOfficeCount])
+        ->with(['eachDocTypeCount' => $eachDocTypeCount])
         ->with('sentBack', $sentBackDocs)
         ->with('taggedDocs', $approvedDocs)
-        ->with('circulatingDocs', $circulatingDocs)
-        ->with('receivedDocs', $receivedDocs)
-        ->with('docsToday', $docsToday);
+        ->with('circulatingDocs', $circulatingDocs);
     }
 
     public function adminOffice()
@@ -159,7 +76,9 @@ class DashboardController extends Controller
         }
         else
         {
-            $title_cased = ucwords($validatedData['officeName']);
+            $string = $validatedData->validated()['officeName'];
+
+            $title_cased = ucwords($string);
 
             Offices::insert([
                 'officeName' => $title_cased,
@@ -251,7 +170,9 @@ class DashboardController extends Controller
         }
         else
         {
-            $title_cased = ucwords($validatedData['docType']);
+            $string = $validatedData->validated()['docType'];
+
+            $title_cased = ucwords($string);
 
             DocumentType::insert([
                 'docType' => $title_cased,

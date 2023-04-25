@@ -1,4 +1,4 @@
-<h5 class="text-center">Most Document Type</h5>
+<h5 class="text-center">Top 3 Document Types</h5>
     <div class="bg-white p-2">
         <div class="col-md-12">
             <div class="row">
@@ -22,6 +22,6 @@
         </div>
     <nav class="mt-3">
         <ul class="pagination justify-content-center mb-0">
-            {{ $miscdocumentTypes->links('vendor.pagination.bootstrap-5') }}
+            {{-- {{ $miscdocumentTypes->links('vendor.pagination.bootstrap-5') }} --}}
         </ul>
     </nav>

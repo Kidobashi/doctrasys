@@ -47,10 +47,10 @@
 </div>
 
 @if (count($all) == '0')
-    <p class="display-4">No documents found</p>
+    <p class="display-4">No results found</p>
 @elseif (isset($all) != 0)
     <div id="All">
-        <div class="container neomorphic-bg mb-2">
+        <div class="container neomorphic-bg mb-3">
             <div class="bg-white">
                 <div class="card">
                     <div class="card-body">
@@ -119,7 +119,7 @@
             </div>
         </div>
         <div class="container neomorphic-bg">
-            <div class="card bg-white">
+            <div class="card col-md-12 bg-white">
                 <div class="mx-3 my-1 p-2">
                     <a href="add-document"><button class="btn btn-success float-end" data-toggle="modal"><i class="fas fa-plus"></i></i></button></a>
                     <div class="card-header bg-white">
@@ -137,6 +137,7 @@
                                     <th class="text-center" scope="col">Status</th>
                                     <th class="text-center" scope="col">Details</th>
                                     <th class="text-center" scope="col">Creation Date</th>
+                                    <th class="text-center" scope="col">Download QR Code</th>
                                 </tr>
                             </thead>
                             <tbody id="table-body">
@@ -184,13 +185,19 @@
                                     @endif
                                     <td class="text-center"><a href="{{ url('qrinfo/'.$doc->referenceNo) }}" title="Click for more Information"><i class="fa fa-link" aria-hidden="true"></i></a></td>
                                     <td class="text-center">{{ \Carbon\Carbon::parse($doc->created_at)->format('Y-m-d')}}</td>
+                                    <td>
+                                        <form action="{{ route('download-qr-code') }}" method="get">
+                                            <input type="text" value="{{ $doc->referenceNo }}" name="referenceNo" style="display:none;">
+                                            <button type="submit" class="btn btn-outline-dark" title="Download the QR code">Download</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                     </div>
                 </div>
-                <div class="d-flex card-footer bg-white justify-content-center">
+                <div class="d-flex card-footer bg-white justify-content-center mb-5">
                     <div class="float-right">
                         {{ $all->links('vendor.pagination.bootstrap-5') }}
                     </div>
