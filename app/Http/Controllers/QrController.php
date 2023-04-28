@@ -143,7 +143,9 @@ class QrController extends Controller
         ->with(['primaryReason'=> $primaryReason])
         ->with(['boxArray' => $unserialized])
         ->with('getRecentOffice', $getRecentOffice);
-        } else {
+        }
+        else
+        {
             // user is not logged in, redirect to login page
             return redirect()->route('login');
         }
@@ -217,7 +219,7 @@ class QrController extends Controller
 
         if(isset($getRecentReceiver) && $getRecentReceiver->user_id == Auth::user()->id)
         {
-            return redirect('qrinfo/'.$referenceNo)->with('error', 'As the previous receiver of this document, you cannot receive the same document consecutively.');
+            return redirect('qrinfo/'.$referenceNo)->with('error', 'As the previous receiver/owner of this document, modifying the document status is not allowed.');
         }
         else
         {
@@ -259,7 +261,7 @@ class QrController extends Controller
 
                 Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
-                return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now received by You');
+                return redirect('qrinfo/'.$referenceNo)->with('message', 'Document status updated as "RECEIVED"');
             }
         }
     }
@@ -314,7 +316,7 @@ class QrController extends Controller
 
                 Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
-                return redirect('qrinfo/'.$referenceNo)->with('message', 'This document is now being processed by You');
+                return redirect('qrinfo/'.$referenceNo)->with('message', 'Document status updated as "PROCESSING"');
             }
             else
             {
@@ -379,7 +381,7 @@ class QrController extends Controller
 
                 Mail::send(new DocumentUpdateMailer($user, $referenceNo, $status, $senderOffice, $receiverOffice, $date, $time));
 
-                return redirect('qrinfo/'.$referenceNo)->with('message', 'You have forwarded this Document');
+                return redirect('qrinfo/'.$referenceNo)->with('message', 'Document status updated as "FORWARDED"');
                 }
             }
             else{

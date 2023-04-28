@@ -63,11 +63,19 @@
 
 /* Set the font family for the body element */
 html, body {
-    height: 100%;
+    background-color: rgb(235, 221, 196);
+    height: 100vh;
     width: 100%;
     font-family: 'Montserrat', sans-serif;
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+footer {
+  height: 50px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 /* Style the heading element with Montserrat font */
@@ -109,10 +117,6 @@ p {
   -webkit-user-select: none;
   -ms-user-select: none;
 }
-
-html, body{
-    background-color:#dbdde6;
-}
 .content {
     width: 100%;
     float: right;
@@ -128,44 +132,12 @@ html, body{
   margin-left: 180px;
 }
 
-.side-navbar {
-  position: relative;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow: hidden;
-  z-index: 99;
-}
-
-.side-navbar a {
-  display: block;
-  color: white;
-  margin-top: 5px;
-  padding: 12px;
-  text-decoration: none;
-  font-weight: 800;
-  border-radius: 10px;
-  box-shadow: inset 0 0 0 0 #000000;
-  transition: color .25s ease-in-out, box-shadow .25s ease-in-out;
-}
-
-.side-navbar a.active {
-  background-color: #000000;
-  border-radius: 10px;
-}
-
 .fa-sharp, .side-navbar a:hover:not(.active) {
   box-shadow: inset 550px 0 0 0 #000000;
   color: white;
   border-radius: 10px;
 }
 
-div.content {
-  margin-left: 200px;
-  padding: 1px 16px;
-  height: 100%;
-  padding-bottom: 50px;
-}
 </style>
 @if (session('verified'))
 <script>
@@ -178,10 +150,14 @@ div.content {
 
 @include('layouts.navbars.auth.nav')
 
-  <div class="content">
-        @yield('content')
-  </div>
-
+    <div class="content">
+            @yield('content')
+    </div>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+        <span class="text-muted">&copy; {{ date('Y') }} {{ config('app.name') }}</span>
+        </div>
+    </footer>
   <script>
     @if(Session::has('message'))
     toastr.options =

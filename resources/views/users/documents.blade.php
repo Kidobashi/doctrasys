@@ -3,10 +3,6 @@
 @section('content')
 <style>
 
-#filter, #myDiv2, #myDiv3, #myDiv1{
-    display: none;
-}
-
 </style>
 {{-- This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render --}}
 <div class="container-fluid mb-3 mt-1">
@@ -51,9 +47,9 @@
 @elseif (isset($all) != 0)
     <div id="All">
         <div class="container neomorphic-bg mb-3">
-            <div class="bg-white">
-                <div class="card">
-                    <div class="card-body">
+            {{-- <div class="bg-white"> --}}
+                {{-- <div class="card"> --}}
+                    {{-- <div class="card-body"> --}}
                         <div class="row">
                             <div class="col-md-3">
                                 <form action="" class="search-form">
@@ -114,16 +110,16 @@
                                 </li>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    {{-- </div>
+                </div> --}}
+            {{-- </div> --}}
         </div>
         <div class="container neomorphic-bg">
             <div class="card col-md-12 bg-white">
                 <div class="mx-3 my-1 p-2">
                     <a href="add-document"><button class="btn btn-success float-end" data-toggle="modal"><i class="fas fa-plus"></i></i></button></a>
                     <div class="card-header bg-white">
-                        <h4>List of Documents</h4>
+                        <h4>List of QR Codes</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -197,7 +193,7 @@
                     </table>
                     </div>
                 </div>
-                <div class="d-flex card-footer bg-white justify-content-center mb-5">
+                <div class="d-flex card-footer bg-white justify-content-center mb-3">
                     <div class="float-right">
                         {{ $all->links('vendor.pagination.bootstrap-5') }}
                     </div>

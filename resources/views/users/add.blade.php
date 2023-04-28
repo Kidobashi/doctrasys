@@ -106,6 +106,10 @@ select {
         .details {
         display: block;
         }
+
+        .alternative {
+            display: none;
+        }
     }
 </style>
 
@@ -199,11 +203,9 @@ select {
         </div>
     </div>
 </div>
-@if(session('sndr') )
-    <div class="col-md-6 text-white rounded text-center p-4 bg-primary my-3" style="background-color: rgb(36, 127, 230);">
-        <p class="mb-0">⚠️<em>After clicking the "Generate" button, do not refresh the page to prevent losing the QR code. Click the "Show QR Code" button to get the QR Code.</em></p>
-    </div>
-@endif
+{{-- <div class="alternative" style="height: 59%;">
+
+</div> --}}
 
     <div class="modal fade m-0 p-0" id="printable-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">

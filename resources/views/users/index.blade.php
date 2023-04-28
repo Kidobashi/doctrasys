@@ -6,9 +6,7 @@
 </head>
 <style>
 body, html {
-    overflow: hidden;
     background-color: #eee8e1;
-    /* background: linear-gradient(to right, #68a18b, #7cffcb); */
 }
 .alt-search{
     display: none;
@@ -42,6 +40,7 @@ input {
     border: 15px solid black;
     border-radius: 15px;
 }
+
 @media screen and (max-width: 600px) {
 .alt-search{
     display: block;
@@ -90,6 +89,10 @@ button {
 }
 }
 
+.alternative{
+    display: none;
+}
+
 @media screen and (max-width: 950px) {
 .display-4 {
     font-size: 28px;
@@ -122,6 +125,10 @@ button {
 }
 }
 
+.alternative{
+    display: none;
+}
+
 @media screen and (max-width: 1100px) {
 
 .search {
@@ -151,7 +158,7 @@ button {
 <div class="d-block mt-3">
     <div class="alt-search col-lg-12 col-md-12 col-sm-12">
         <form action="tracking" method="get">
-            <input type="text" name="search" placeholder="🔍 Reference number">
+            <input class="text-center" type="text" name="search" placeholder="🔍 Reference number">
         </form>
     </div>
 </div>
@@ -181,7 +188,8 @@ button {
         </div>
     </div>
 </section>
-{{-- </div> --}}
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 <script>

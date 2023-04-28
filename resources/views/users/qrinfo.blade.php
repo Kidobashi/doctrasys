@@ -1,8 +1,5 @@
 @extends('templates.user')
 @section('content')
-<head>
-    <title>Tracking Information</title>
-</head>
 <style>
 .icon-sz{
     display: flex;
@@ -258,8 +255,7 @@
     }
 }
 </style>
-This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds to render
-<div class="col-md-12 d-flex justify-content-center">
+<div class="col-md-12 d-flex justify-content-center mt-2">
     <div class="col-md-8 row py-4 mx-auto neomorphic-bg" style="border-radius:20px; border:1px solid #d3d3d3;">
         <h2 class="text-center">Document Details</h2>
         <div class="docDetails mt-2 m-0 p-0">
@@ -580,7 +576,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
             {{-- Tracking Portion --}}
             <div class="col-md-9 col-sm-7 mb-5" style="">
                 <!-- 80% width on desktop, 50% width on mobile -->
-                <h3>Present</h3>
+                <h3>Current Status</h3>
                     @if (isset($latestTracking->status))
                         @if ( $latestTracking->status == 1 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1">
@@ -591,14 +587,14 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                 <div class="col-md-2 p-auto bg-info" style="border-radius: 10px;">
                                     <h5 class="text-dark text-center"><strong>Created</strong></h5>
                                 </div>
-                                <p class="p-0 m-0">Date Created: <strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong> {{ $latestTracking->created_at->format('g:i A') }}</p>
+                                <p class="p-0 m-0">Date Created: <strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong> {{ $latestTracking->created_at->format('g:i A') }}</p>
                                 <p class="p-0 m-0">Created by the <strong>{{ $latestTracking->senderOfficeName }}</strong></p>
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 2 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -625,7 +621,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif( $latestTracking->status == 3 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -651,7 +647,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <i class="fas fa-envelope fa-4x" style="color: #28a745;"></i>
                                 </div>
                                 <div class="col-md-12 m-1 text-center">
-                                    <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                    <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                     <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                                 </div>
                             </div>
@@ -676,7 +672,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif( $latestTracking->status == 5 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -730,7 +726,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif( $latestTracking->status == 6 )
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -757,7 +753,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif( $latestTracking->status == 7 )
                         <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -821,7 +817,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif( $latestTracking->status == 8 )
                         <div class="d-flex neomorphic-bg justify-content-between p-auto" style="background-color: #dbdde6; ">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -848,7 +844,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif($latestTracking->status == 9)
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -878,7 +874,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif($latestTracking->status == 10)
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -908,7 +904,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif($latestTracking->status == 11)
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -938,7 +934,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                         @elseif($latestTracking->status == 12)
                         <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
-                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('F j, Y') }}</strong></p>
+                                <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
                             </div>
                             <div class="col-md-1 bg-light text-center icon-sz" style="border-radius: 20px;">
@@ -979,7 +975,7 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                             </div>
                             <div class="col-md-10 neomorphic-bg text-center p-auto">
                                 <h2>Created</h2>
-                                <p class="p-0 m-0"><strong>{{ $getDocumentCreator->created_at->format('F j, Y') }}</strong></p>
+                                <p class="p-0 m-0"><strong>{{ $getDocumentCreator->created_at->format('M j, Y') }}</strong></p>
                                 <p class="p-0 m-0">{{ $getDocumentCreator->created_at->format('g:i A') }}</p>
                             </div>
                         </div>
@@ -995,7 +991,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         <i class="fas fa-flag fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
-                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }}</p>
+                                        <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                     </div>
                                 </div>
                                 <div class="dashed-line">
@@ -1012,7 +1009,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         <i class="fas fa-check fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
-                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }} </p>
+                                        <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                     </div>
                                 </div>
                                 <div class="dashed-line">
@@ -1029,7 +1027,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         <i class="fas fa-spinner fa-spin fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
-                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }} </p>
+                                        <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                     </div>
                                 </div>
                                 <div class="dashed-line">
@@ -1046,7 +1045,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         <i class="fas fa-envelope fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
-                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }} </p>
+                                        <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                     </div>
                                 </div>
                                 <div class="dashed-line">
@@ -1063,7 +1063,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         <i class="fas fa-exclamation-circle fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
-                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }} </p>
+                                        <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                     </div>
                                 </div>
                                 <div class="dashed-line">
@@ -1084,7 +1085,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                         <i class="fas fa-undo fa-spin spin-reverse fa-2x text-secondary"></i>
                                     </div>
                                     <div class="col-md-7">
-                                        <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                        <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }} </p>
+                                        <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                     </div>
                                 </div>
                                 <div class="dashed-line">
@@ -1101,7 +1103,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <i class="fas fa-tasks fa-2x text-white"></i>
                                 </div>
                                 <div class="col-md-7">
-                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }} </p>
+                                    <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                 </div>
                             </div>
                             <div class="dashed-line">
@@ -1118,7 +1121,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <i class="fas fa-check-double fa-2x text-white"></i>
                                 </div>
                                 <div class="col-md-7">
-                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }} </p>
+                                    <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                 </div>
                             </div>
                             <div class="dashed-line">
@@ -1138,7 +1142,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     </div>
                                 </div>
                                 <div class="col-md-7">
-                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }} </p>
+                                    <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                 </div>
                             </div>
                             <div class="dashed-line">
@@ -1155,7 +1160,8 @@ This page took {{ number_format((microtime(true) - LARAVEL_START),3)}} seconds t
                                     <i class="fas fa-undo fa-spin spin-reverse fa-2x text-white"></i>
                                 </div>
                                 <div class="col-md-7">
-                                    <p class="m-auto pt-3">{{ $row->created_at->format('F j, Y') }} {{ $row->created_at->format('g:i A') }}</p>
+                                    <p class="m-auto pt-3">{{ $row->created_at->format('M j, Y') }} </p>
+                                    <p class="m-auto">{{ $row->created_at->format('g:i A') }}</p>
                                 </div>
                             </div>
                             <div class="dashed-line">

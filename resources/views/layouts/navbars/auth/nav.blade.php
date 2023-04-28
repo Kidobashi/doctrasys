@@ -50,9 +50,13 @@ input {
     color: white;
 }
 
-#loginMobile, #myLinks, .mobileDropDown, .mobile-menu-container, .mobile-menu-container a{
+#myLinks, .mobileDropDown, .mobile-menu-container, .mobile-menu-container a{
     display: none;
     z-index: 1;
+}
+
+#loginMobile{
+    display: flex;
 }
 
 #myLinks li {
@@ -103,120 +107,189 @@ input {
     color: green;
 }
 }
+/* Navbar styles */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+}
+
+/* App name styles */
+.app-name {
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* Navigation links styles */
+.nav-links {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin-left: 1rem;
+}
+
+.nav-links li:first-child {
+  margin-left: 0;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+/* Media query for small screens */
+@media only screen and (max-width: 767px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .web-input {
+    display: none;
+  }
+  .extra-search
+  {
+    display: none;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .nav-links li {
+    margin: 1rem 0;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .navbar-search {
+    display: none;
+  }
+  .extra-search
+  {
+    display: none;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .nav-links li {
+    margin: 1rem 0;
+  }
+}
+
 </style>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-success">
-    <div class="container-fluid col-md-12 justify-content-center">
-      <a class="navbar-brand" href="index">
-        <span>{{ config('app.name', 'Laravel') }}</span>
-      </a>
-      @guest
-      <div class="container" id="loginMobile">
-        <div class="row d-flex justify-content-between">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#loginModal">
-                Login
+<nav class="navbar navbar-expand-lg navbar-light bg-success p-2">
+    <div class="container">
+        <div class="d-flex">
+            <button class="navbar-toggler ml-1 my-auto" style="width:14%;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
+            <a class="navbar-brand text-white text-center" href="index">{{ config('app.name', 'Laravel') }}</a>
+        </div>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item mx-2 my-1 text-center">
+            <a class="nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
+              <span class="text-white">Home</span>
+            </a>
+          </li>
+          @auth
+          <li class="nav-item mx-2 my-1 text-center">
+            <a class="nav-link {{ (Request::is('my-qr-codes') ? 'active' : '') }}" href="{{ url('my-qr-codes') }}">
+              <span class="text-white">My QR Codes</span>
+            </a>
+          </li>
+          <li class="nav-item mx-2 my-1 text-center">
+            <a class="nav-link {{ (Request::is('generate-qr-codes') ? 'active' : '') }}" href="{{ url('generate-qr-codes') }}">
+              <span class="text-white">Generate QR Code</span>
+            </a>
+          </li>
+          <li class="nav-item mx-2 my-1 navbar-search text-center">
+            <div class="d-flex pt-0 web-input justify-content-center">
+              <form action="tracking" method="get">
+                <input class="text-center" type="text" name="search" placeholder="🔍 Search reference number...">
+              </form>
+            </div>
+          </li>
+          @endauth
+          @guest
+              <div class="col-md-12">
 
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#registerModal">
-                Register
-            </button>
-        </div>
-      </div>
-      @endguest
-        @auth
-        <div class="dropdown mobileDropDown">
-            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ Auth::user()->name }}
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <p class="p-1 pb-0 pt-2 bg-secondary">Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong></p>
-                {{-- <a href="{{ url('/profile-settings')}}" class="nav-link font-weight-bold p-3">
-                    <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fas fa-cog"></i>Profile Settings</span>
-                </a> --}}
-                <a href="{{ url('/logout')}}" class="nav-link font-weight-bold p-3">
-                    <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fa-solid fa-right-from-bracket"></i>Sign Out</span>
-                </a>
-            </div>
-        </div>
-        @endauth
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item mx-2">
-                <a class="nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
-                    <span class="mx-2 my-2">Tracking</span>
-                </a>
-            </li>
-            @auth
-            <li class="nav-item mx-2">
-                <a class="nav-link {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">
-                    <span class="mx-2 my-2">My Documents</span>
-                </a>
-            </li>
-            @endauth
-            @auth
-            <li class="nav-item mx-2">
-              <a class="nav-link {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
-                  <span class="mx-2 my-2">Generate QR Code</span>
-              </a>
-            </li>
-            @endauth
-            <li class="nav-item mx-2 my-auto col-md-3">
-                <div class="d-flex pt-0 web-input">
-                    <form action="tracking" method="get">
-                        <input type="text" name="search" placeholder=" Search with reference number...">
-                    </form>
-                </div>
-            </li>
-        </ul>
-        <ul class="navbar-nav d-flex flex-row ms-auto me-3">
-            @auth
-            <div class="dropdown">
-                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Assigned in {{ Auth::user()->office->officeName }}">
-                    {{ Auth::user()->name }}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <p class="p-3 pb-0 pt-2"><span>Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong><span></p>
-                    <a href="{{ url('/logout')}}" class="nav-link p-3 font-weight-bold">
-                        <span class="font-weight-bold d-sm-inline text-center text-black"><i class="fa-solid fa-right-from-bracket"></i>Sign Out</span>
-                    </a>
-                </div>
               </div>
-            @endauth
-            @guest
-            <div>
-                <li class="nav-item mx-2">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#registerModal">
-                        Register
-                    </button>
-                </li>
+              <div class="col-md-12">
+
+              </div>
+              <div class="col-md-12">
+
+              </div>
+              <div class="col-md-4">
+
+              </div>
+          @endguest
+          @guest
+          <li class="nav-item mx-2 my-1">
+            <div class="container" id="loginMobile">
+              <div class="row d-flex justify-content-between">
+                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#loginModal">
+                  <strong>Login/Register</strong>
+                </button>
+              </div>
             </div>
-            <div>
-                <li class="nav-item mx-2">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#loginModal">
-                        Login
-                    </button>
-                </li>
+          </li>
+          @endguest
+          @auth
+          <li class="nav-item dropdown ml-4 my-1">
+            <a class="nav-link dropdown-toggle text-white text-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <strong>{{ Auth::user()->name }}</strong>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <p class="dropdown-item p-2 mb-0" href="#">
+                <span class="text-wrap text-center">Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong></span>
+              </p>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ url('/logout')}}" >Logout</a>
             </div>
-            @endguest
+          </li>
+          @endauth
         </ul>
       </div>
     </div>
-  </nav>
-
+</nav>
 @auth
 <nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom bg-success pb-0 mt-5">
     <a class="nav-item nav-link pb-0 mb-0 {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
-        <i class="fa-solid fa-location-dot fa-lg mb-3"></i>
+        <i class="fas fa-location-dot fa-lg mb-3"></i>
         <p class="pb-0 mb-0">Tracking</p>
     </a>
-    <a class="nav-item nav-link pb-0 mb-0  {{ (Request::is('add-document') ? 'active' : '') }}" href="{{ url('add-document') }}">
-        <i class="fa-solid fa-qrcode fa-lg mb-3"></i>
+    <a class="nav-item nav-link pb-0 mb-0  {{ (Request::is('generate-qr-codes') ? 'active' : '') }}" href="{{ url('generate-qr-codes') }}">
+        <i class="fas fa-qrcode fa-lg mb-3"></i>
         <p class="pb-0 mb-0">Generate QR</p>
     </a>
-    <a class="nav-item nav-link pb-0 mb-0 {{ (Request::is('documents') ? 'active' : '') }}" href="{{ url('documents') }}">
-        <i class="fa fa-list fa-lg mb-3" aria-hidden="true"></i>
-        <p class="pb-0 mb-0">My Documents</p>
+    <a class="nav-item nav-link pb-0 mb-0 {{ (Request::is('my-qr-codes') ? 'active' : '') }}" href="{{ url('my-qr-codes') }}">
+        <i class="fas fa-list fa-lg mb-3" aria-hidden="true"></i>
+        <p class="pb-0 mb-0">My QR Codes</p>
     </a>
   </nav>
 @endauth
@@ -233,7 +306,7 @@ input {
         <div class="modal-body text-center">
             <form method="POST" action="/session">
                 @csrf
-                <h3 class="mb-2">Sign in</h3>
+                <h3 class="mb-2">Login</h3>
                 <p>Please enter your email and password to login</p>
                 <div class="form-outline mb-4">
                   <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email" />
@@ -259,7 +332,7 @@ input {
                   <label class="form-check-label" for="form1Example3">&nbsp; Remember password </label>
                 </div>
 
-                <button class="btn btn-success btn-lg btn-block w-30 mb-2 px-5 fs-6" style="border-radius: 18px;" type="submit">Sign In</button>
+                <button class="btn btn-success btn-lg btn-block w-30 mb-2 px-4 fs-6" style="border-radius: 18px;" type="submit">Login</button>
                 <div class="form-outline mb-2">
                     @if (Route::has('password.request'))
                     <a class="btn btn-link" href="{{ route('password.request') }}">
@@ -270,11 +343,7 @@ input {
 
                 <hr class="my-2">
                 <p>Don't have an account?</p>
-                <a href="/register" class="btn btn-outline-success mb-4c" style="border-radius: 18px;" role="button">Sign Up</a>
-                {{-- <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #dd4b39;"
-                  type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button>
-                <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #3b5998;"
-                  type="submit"><i class="fab fa-facebook-f me-2"></i>Sign in with facebook</button> --}}
+                <a data-toggle="modal" data-target="#registerModal" id="registerBtn" class="btn btn-outline-success mb-4c" style="border-radius: 18px;" role="button">Register</a>
                 </form>
         </div>
       </div>
@@ -346,7 +415,7 @@ input {
                     @enderror
                 </div>
 
-                <button class="btn btn-success btn-lg btn-block w-30 mb-2 px-5 fs-6" style="border-radius: 18px;" type="submit">Register</button>
+                <button class="btn btn-success btn-lg btn-block w-30 mb-2 fs-6" style="border-radius: 18px;" type="submit">Register</button>
                 <div class="form-outline mb-2">
                     @if (Route::has('password.request'))
                     <a class="btn btn-link" href="{{ route('password.request') }}">
@@ -356,14 +425,29 @@ input {
                 </div>
 
                 <hr class="mt-2">
-                <p class="mb-0">Already have an account? <a href="/login" style="border-radius: 18px;" role="button">Login here</a></p>
-
-                {{-- <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #dd4b39;"
-                  type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button>
-                <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #3b5998;"
-                  type="submit"><i class="fab fa-facebook-f me-2"></i>Sign in with facebook</button> --}}
+                <p class="mb-0">Already have an account? <a class="btn btn-outline-success" id="loginBtn" class="close" data-dismiss="modal" style="border-radius: 18px;" role="button">Login</a></p>
                 </form>
         </div>
       </div>
     </div>
-  </div>
+</div>
+ <script>
+  $(function() {
+  // hide other modals when a new one is shown
+  $('.modal').on('show.bs.modal', function() {
+    $('.modal').not($(this)).modal('hide');
+  });
+
+  // show register modal after login modal is hidden
+  $('#loginModal').on('hidden.bs.modal', function() {
+    $('#registerModal').modal('show');
+  });
+
+  // show login modal after register modal is hidden
+  $('#registerModal').on('hidden.bs.modal', function() {
+    $('#loginModal').modal('show');
+  });
+});
+
+
+</script>
