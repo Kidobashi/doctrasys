@@ -147,7 +147,7 @@ class QrController extends Controller
         else
         {
             // user is not logged in, redirect to login page
-            return redirect()->route('login');
+            return redirect()->route('index')->with('message', "Login First to Check/Modify Document Status");
         }
 
     }

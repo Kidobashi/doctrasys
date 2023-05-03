@@ -424,5 +424,5 @@
       </div>
     </div>
   </main>
-  
+
   @endsection

@@ -78,17 +78,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //Documents Controller
     Route::get('generate-qr-codes', [DocumentsController::class, 'showOffices'])->name('add-document');
-    // Route::get('add-document', [DocumentsController::class, 'showStats']);
+
     Route::get('download/{token}', [DocumentsController::class, 'fileGenerator'])->name('download');
     Route::post('add-documents', [DocumentsController::class, 'store'])->name('add-documents');
-    // Route::get('add-document', [DocumentsController::class, 'store']);
+
     Route::get('my-qr-codes', [DocumentsController::class, 'userDocs'])->name('documents-list');
     Route::get('/documents/completed', [DocumentsController::class, 'completedDocs']);
     Route::get('/documents/circulating', [DocumentsController::class, 'circulatingDocs']);
     Route::get('/documents/sentBack', [DocumentsController::class, 'sentBackDocs']);
 
     //Qr Controllers
-    // Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo']);
+    Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo']);
     Route::get('forward/{referenceNo}', [QrController::class, 'forward']);
     Route::post('qrinfo/forward/{referenceNo}', [QrController::class, 'forwardDoc']);
     Route::get('receive/{referenceNo}', [QrController::class, 'receive']);
@@ -203,12 +203,11 @@ Route::post('/reset-password', [ChangePasswordController::class, 'changePassword
 Route::get('index', [SearchController::class, 'search']);
 Route::get('tracking', [SearchController::class, 'search']);
 Route::get('index', [DocumentsController::class, 'index'])->name('index');
-Route::get('qrinfo/{referenceNo}', [QrController::class, 'qrInfo'])->name('qrinfo');
 Route::get('/search', [UserManagementController::class, 'index'])->name('admin.search');
 
-Route::get('/test-email', function () {
-    return view('emails.document-update'); // Replace 'test_view' with the name of your view file
-});
+// Route::get('/test-email', function () {
+//     return view('emails.document-update'); // Replace 'test_view' with the name of your view file
+// });
 Route::get('/', [HomeController::class, 'index']);
 Auth::routes();
 

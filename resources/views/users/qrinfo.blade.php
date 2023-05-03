@@ -17,10 +17,7 @@
     height:70px;
     width:70px;
 }
-/* .icon-sz i{
-    position:relative;
 
-} */
 .fa-spin.spin-reverse{
     -webkit-animation-direction:reverse;
      -moz-animation-direction:reverse;
@@ -256,7 +253,7 @@
 }
 </style>
 <div class="col-md-12 d-flex justify-content-center mt-2">
-    <div class="col-md-8 row py-4 mx-auto neomorphic-bg" style="border-radius:20px; border:1px solid #d3d3d3;">
+    <div class="col-md-10 row py-4 mx-auto bg-light" style="border-radius:20px; border:1px solid #d3d3d3;">
         <h2 class="text-center">Document Details</h2>
         <div class="docDetails mt-2 m-0 p-0">
             <div class="d-inline highlights col-md-3 text-center m-0 p-0">
@@ -296,7 +293,7 @@
 </div>
 <div class="col-8 mx-auto">
     @guest
-    <div class="col-md-6 mx-auto text-center neomorphic-bg">
+    <div class="col-md-6 mx-auto text-center bg-light">
         <h3 class="font-italic">Login to modify document</h3>
     </div>
 @endguest
@@ -307,7 +304,7 @@
             <div class="col-md-3 col-sm-5">
                 <h2>Action</h2>
                 @if ($status->status == 1 || $status->status == 4)
-                <div class="neomorphic-bg action-div d-flex justify-content-center">
+                <div class="bg-light p-2 rounded action-div d-flex justify-content-center">
                 {{-- Received Status --}}
                         <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
                             @csrf
@@ -321,7 +318,7 @@
                 @elseif ($status->status == 2)
                     @if($latestTracking->user_id == Auth::user()->id && Auth::user()->assignedOffice != $status->receiverOffice_id)
                     {{-- Process Status --}}
-                    <div class="neomorphic-bg d-flex justify-content-center">
+                    <div class="bg-light p-2 rounded d-flex justify-content-center">
                         <form action="process/{{ $data->referenceNo }}" method="post">
                             @csrf
                             <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
@@ -332,7 +329,7 @@
                         </form>
                     </div>
                     @elseif ($latestTracking->senderOffice == Auth::user()->assignedOffice && $status->receiverOffice_id == Auth::user()->assignedOffice)
-                    <div class="neomorphic-bg">
+                    <div class="bg-light p-2 rounded ">
                     <p class="text-secondary  text-center p-3 pb-0"><em>As the intended receiving office,
                         you have the option to Approve/Reject
                         and/or Return to Sender/Previous Office.</em>
@@ -383,7 +380,7 @@
                         </div>
                     </div>
                     @else
-                    <div class="neomorphic-bg d-flex justify-content-center">
+                    <div class="bg-light p-2 rounded  d-flex justify-content-center">
                         <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is was received by another department.
                             Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
                         </p>
@@ -394,7 +391,7 @@
                 {{-- Return/Forward --}}
                     <div class="text-center justify-content-center">
                         <div class="">
-                            <div class="neomorphic-bg text-center">
+                            <div class="bg-light p-2 rounded text-center">
                                 <form action="rejected/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                     <h6>Is something wrong with the document?</h6>
@@ -427,7 +424,7 @@
                         </div>
 
                         <div class="mt-2">
-                            <div class="neomorphic-bg text-center">
+                            <div class="bg-light p-2 rounded text-center">
                                 <form class="" action="forward/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <h6>Forward Document to next the Office</h6>
@@ -449,7 +446,7 @@
                             </div>
                         </div>
                         @else
-                        <div class="neomorphic-bg d-flex justify-content-center">
+                        <div class="bg-light p-2 rounded d-flex justify-content-center">
                             <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is being processed in another department.
                                 Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
                             </p>
@@ -460,7 +457,7 @@
                         </div>
                     @elseif ($status->status == 5)
                             @if($latestTracking->senderOffice == Auth::user()->assignedOffice)
-                                <div class="neomorphic-bg text-center">
+                                <div class="bg-light p-2 rounded text-center">
                                     <form class="receive" action="return-to-sender/{{ $data->referenceNo }}" method="post">
                                         @csrf
                                         <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
@@ -471,7 +468,7 @@
                                     </form>
                                 </div>
                             @else
-                            <div class="neomorphic-bg d-flex justify-content-center">
+                            <div class="bg-light p-2 rounded d-flex justify-content-center">
                                 <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is being processed in another department.
                                     Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
                                 </p>
@@ -480,7 +477,7 @@
                     @elseif ($status->status == 6)
                         {{-- Report = 7 --}}
                         @if($latestTracking->receiverOffice == Auth::user()->assignedOffice && Auth::user()->id == $getRecentOffice->user_id)
-                        <div class="neomorphic-bg text-center">
+                        <div class="bg-light p-2 rounded text-center">
                                 <form id="resolve-form" action="resolve/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <input class="form-control "type="text" style="display: none;" name='user_id' value="{{ Auth::user()->id }}">
@@ -491,7 +488,7 @@
                                 </form>
                         </div>
                         @else
-                            <div class="neomorphic-bg d-flex justify-content-center">
+                            <div class="bg-light p-2 rounded d-flex justify-content-center">
                                 <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document you requested is being resolved by another department/user.
                                     Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
                                 </p>
@@ -500,7 +497,7 @@
                         @elseif ($status->status == 7)
                         {{-- Report = 6 --}}
                         @if ($latestTracking->senderOffice == Auth::user()->assignedOffice)
-                            <div class="neomorphic-bg text-center">
+                            <div class="bg-light p-2 rounded text-center">
                             <form id="resubmit-form" action="resubmit/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                 <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
@@ -511,15 +508,14 @@
                             </form>
                         </div>
                         @else
-                            <div class="neomorphic-bg d-flex justify-content-center">
+                            <div class="bg-light p-2 rounded d-flex justify-content-center">
                                 <p class="text-secondary  text-center p-3 pb-0"><em>Please note that the document being requested is currerntly being reviewed and recompiled to be resubmitted by another department.
-                                    Please allow us some time to complete the processing. Thank you for your patience and understanding.</em>
                                 </p>
                             </div>
                             @endif
                         @elseif ($status->status == 8)
                         {{-- Report = 8 --}}
-                        {{-- <div class="neomorphic-bg text-center"> --}}
+                        {{-- <div class="bg-light p-2 rounded text-center"> --}}
                                 {{-- Received Status --}}
                             {{-- <form class="receive" action="received/{{ $data->referenceNo }}" method="post">
                                 @csrf
@@ -531,14 +527,14 @@
                         </div> --}}
                         @elseif ($status->status == 9)
                         {{-- Report = 9 --}}
-                        <div class="neomorphic-bg text-center">
+                        <div class="bg-light p-2 rounded text-center">
                             <p class="text-secondary  text-center p-3 pb-0"><em>No further modifications will be made.</em>
                             </p>
                         </div>
                         @elseif ($status->status == 10)
                         {{-- Report = 9 --}}
                             @if (Auth::user()->assignedOffice == $latestTracking->receiverOffice && $data->senderOffice_id == $latestTracking->receiverOffice)
-                            <div class="neomorphic-bg text-center">
+                            <div class="bg-light p-2 rounded text-center">
                                 <form id="approved-and-keep-form" action="approved-and-kept/{{ $data->referenceNo }}" method="post">
                                     @csrf
                                     <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
@@ -549,19 +545,19 @@
                                 </form>
                             </div>
                             @else
-                                <div class="neomorphic-bg text-center">
+                                <div class="bg-light p-2 rounded text-center">
                                     <p class="text-secondary text-center p-3 pb-0"><em>No further modifications will be made.</em>
                                     </p>
                                 </div>
                             @endif
                         @elseif ($status->status == 11)
-                        <div class="neomorphic-bg text-center">
+                        <div class="bg-light p-2 rounded text-center">
                             <p class="text-secondary  text-center p-3 pb-0"><em>No further modifications will be made.</em>
                             </p>
                         </div>
                         @elseif ($status->status == 12)
                         {{-- Report = 9 --}}
-                        <div class="neomorphic-bg text-center">
+                        <div class="bg-light p-2 rounded text-center">
                             <form class="receive" action="receive-to-keep/{{ $data->referenceNo }}" method="post">
                                 @csrf
                                 <input class="form-control "type="text" style="display: none;" name='senderOffice' value="{{ Auth::user()->assignedOffice }}">
@@ -579,11 +575,11 @@
                 <h3>Current Status</h3>
                     @if (isset($latestTracking->status))
                         @if ( $latestTracking->status == 1 )
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1">
                             <div class="col-md-1 bg-light icon-sz text-center" style="border-radius: 20px;">
                                 <i class="fas fa-flag fa-4x text-info"></i>
                             </div>
-                            <div class="col-md-10 neomorphic-bg">
+                            <div class="col-md-10 bg-light p-2 rounded">
                                 <div class="col-md-2 p-auto bg-info" style="border-radius: 10px;">
                                     <h5 class="text-dark text-center"><strong>Created</strong></h5>
                                 </div>
@@ -592,7 +588,7 @@
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 2 )
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -606,7 +602,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-8 neomorphic-bg bg-primary">
+                            <div class="col-md-8 p-2 rounded bg-primary">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-primary text-center"><strong>RECEIVED</strong></h5>
                                 </div>
@@ -619,7 +615,7 @@
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 3 )
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -628,7 +624,7 @@
                                 <i class="fas fa-spinner fa-spin fa-4x text-secondary"></i>
                             </div>
 
-                            <div class="col-md-8 neomorphic-bg bg-secondary">
+                            <div class="col-md-8 p-2 rounded bg-secondary">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-dark text-center"><strong>Processing</strong></h5>
                                 </div>
@@ -641,7 +637,7 @@
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 4 )
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="">
                                 <div class="col-md-1 bg-light text-center icon-sz m-auto" style="border-radius: 10px;">
                                     <i class="fas fa-envelope fa-4x" style="color: #28a745;"></i>
@@ -657,7 +653,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-9 neomorphic-bg bg-success p-auto">
+                            <div class="col-md-9 p-2 rounded bg-success p-auto">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-success text-center"><strong>Forwarded</strong></h5>
                                 </div>
@@ -670,7 +666,7 @@
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 5 )
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -684,7 +680,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-8 neomorphic-bg bg-danger">
+                            <div class="col-md-8 p-2 rounded bg-danger">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-danger text-center"><strong>FOUND ISSUES</strong></h5>
                                 </div>
@@ -724,7 +720,7 @@
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 6 )
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -738,7 +734,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-8 neomorphic-bg bg-secondary p-auto">
+                            <div class="col-md-8 p-2 rounded bg-secondary p-auto">
                                 <div class="col-md-8 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="px-2 text-secondary text-center"><strong>RETURNED TO PREVIOUS OFFICE</strong></h5>
                                 </div>
@@ -751,7 +747,7 @@
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 7 )
-                        <div class="d-flex neomorphic-bg justify-content-between" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -765,7 +761,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-8 neomorphic-bg bg-warning">
+                            <div class="col-md-8 p-2 rounded bg-warning">
                                 <div class="row d-flex justify-content-between">
                                     <div class="col-md-5 bg-white mb-2" style="border-radius: 8px; margin-left: 10px;">
                                         <h5 class="text-warning text-center mb-0"><strong>RESOLVING ISSUE</strong></h5>
@@ -815,7 +811,7 @@
                             </div>
                         </div>
                         @elseif( $latestTracking->status == 8 )
-                        <div class="d-flex neomorphic-bg justify-content-between p-auto" style="background-color: #dbdde6; ">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between p-auto" style="background-color: #dbdde6; ">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -829,7 +825,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-8 neomorphic-bg bg-primary p-auto">
+                            <div class="col-md-8 p-2 rounded bg-primary p-auto">
                                 <div class="col-md-5 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-black text-center"><strong>RESUBMITTED</strong></h5>
                                 </div>
@@ -842,7 +838,7 @@
                             </div>
                         </div>
                         @elseif($latestTracking->status == 9)
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -856,7 +852,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-8 neomorphic-bg bg-success">
+                            <div class="col-md-8 p-2 rounded bg-success">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-success text-center"><strong>APPROVED</strong></h5>
                                 </div>
@@ -872,7 +868,7 @@
                             </div>
                         </div>
                         @elseif($latestTracking->status == 10)
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -886,7 +882,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-8 neomorphic-bg bg-success">
+                            <div class="col-md-8 p-2 rounded bg-success">
                                 <div class="col-md-4 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-success text-center"><strong>APPROVED AND SENT TO ORIGIN</strong></h5>
                                 </div>
@@ -902,7 +898,7 @@
                             </div>
                         </div>
                         @elseif($latestTracking->status == 11)
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -916,7 +912,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-8 neomorphic-bg bg-danger">
+                            <div class="col-md-8 p-2 rounded bg-danger">
                                 <div class="col-md-8 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-danger text-center"><strong>REJECTED AND SENT TO ORIGIN</strong></h5>
                                 </div>
@@ -932,7 +928,7 @@
                             </div>
                         </div>
                         @elseif($latestTracking->status == 12)
-                        <div class="d-flex neomorphic-bg justify-content-between mb-1" style="background-color: #dbdde6">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between mb-1" style="background-color: #dbdde6">
                             <div class="col-md-1 m-1 text-center">
                                 <p class="m-0 p-0"><strong>{{ $latestTracking->created_at->format('M j, Y') }}</strong></p>
                                 <p class="m-0 p-0">{{ $latestTracking->created_at->format('g:i A') }}</p>
@@ -946,7 +942,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            <div class="col-md-8 neomorphic-bg bg-danger">
+                            <div class="col-md-8 p-2 rounded bg-danger">
                                 <div class="col-md-8 p-auto bg-white" style="border-radius: 10px;">
                                     <h5 class="text-danger text-center"><strong>REJECTED AND SENT TO ORIGIN</strong></h5>
                                 </div>
@@ -963,7 +959,7 @@
                         </div>
                         @endif
                     @elseif (isset($latestTracking->status) === false)
-                        <div class="d-flex neomorphic-bg justify-content-between">
+                        <div class="d-flex bg-light p-2 rounded justify-content-between">
                             <div class="py-4 m-auto">
                                 <div>
                                     <div class="d-flex justify-content-center align-items-center">
@@ -973,7 +969,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-10 neomorphic-bg text-center p-auto">
+                            <div class="col-md-10 bg-light p-2 rounded text-center p-auto">
                                 <h2>Created</h2>
                                 <p class="p-0 m-0"><strong>{{ $getDocumentCreator->created_at->format('M j, Y') }}</strong></p>
                                 <p class="p-0 m-0">{{ $getDocumentCreator->created_at->format('g:i A') }}</p>
@@ -986,8 +982,8 @@
                     @foreach ($trackingHistory as $row)
                         @if ($row->status == 1)
                             <div class="d-flex mb-5">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                    <div class="col-md-4 neomorphic-bg bg-info alt-icon-sz">
+                                <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                    <div class="col-md-4 rounded bg-info alt-icon-sz">
                                         <i class="fas fa-flag fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
@@ -997,15 +993,15 @@
                                 </div>
                                 <div class="dashed-line">
                                 </div>
-                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                <div class="col-md-7 tracking-details bg-light p-2 rounded">
                                     <p>Initiated by the <strong>{{ $row->senderOfficeName }}</strong></p>
                                     <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 2)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                    <div class="col-md-4 neomorphic-bg alt-icon-sz bg-primary">
+                                <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                    <div class="col-md-4 rounded alt-icon-sz bg-primary">
                                         <i class="fas fa-check fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
@@ -1015,15 +1011,15 @@
                                 </div>
                                 <div class="dashed-line">
                                 </div>
-                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                <div class="col-md-7 tracking-details bg-light p-2 rounded">
                                     <p>Received by <strong>{{ $row->senderOfficeName }}</strong></p>
                                     <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 3)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                    <div class="col-md-4 neomorphic-bg bg-secondary alt-icon-sz">
+                                <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                    <div class="col-md-4 rounded bg-secondary alt-icon-sz">
                                         <i class="fas fa-spinner fa-spin fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
@@ -1033,15 +1029,15 @@
                                 </div>
                                 <div class="dashed-line">
                                 </div>
-                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                <div class="col-md-7 tracking-details bg-light p-2 rounded">
                                     <p>Processed by <strong>{{ $row->senderOfficeName }}</strong></p>
                                     <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 4)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                    <div class="col-md-4 neomorphic-bg bg-success alt-icon-sz">
+                                <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                    <div class="col-md-4 rounded bg-success alt-icon-sz">
                                         <i class="fas fa-envelope fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
@@ -1051,15 +1047,15 @@
                                 </div>
                                 <div class="dashed-line">
                                 </div>
-                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                <div class="col-md-7 tracking-details bg-light p-2 rounded">
                                     <p>Forwarded by the <strong>{{ $row->senderOfficeName }}</strong></p>
                                     <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 5)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                    <div class="col-md-4 neomorphic-bg bg-danger alt-icon-sz">
+                                <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                    <div class="col-md-4 rounded bg-danger alt-icon-sz">
                                         <i class="fas fa-exclamation-circle fa-2x text-white"></i>
                                     </div>
                                     <div class="col-md-7">
@@ -1069,7 +1065,7 @@
                                 </div>
                                 <div class="dashed-line">
                                 </div>
-                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                <div class="col-md-7 tracking-details bg-light p-2 rounded">
                                     <p class="m-0">Reported by the <strong>{{ $row->senderOfficeName }}</strong></p>
                                     <p class="m-0">Sent back to the <strong>{{ $row->receiverOfficeName }}</strong></p>
                                      @if(isset($documentWithIssue->others))
@@ -1080,8 +1076,8 @@
                             </div>
                         @elseif ($row->status == 6)
                             <div class="d-flex">
-                                <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                    <div class="col-md-4 neomorphic-bg alt-icon-sz">
+                                <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                    <div class="col-md-4 rounded alt-icon-sz">
                                         <i class="fas fa-undo fa-spin spin-reverse fa-2x text-secondary"></i>
                                     </div>
                                     <div class="col-md-7">
@@ -1091,15 +1087,15 @@
                                 </div>
                                 <div class="dashed-line">
                                 </div>
-                                <div class="col-md-7 tracking-details neomorphic-bg">
+                                <div class="col-md-7 tracking-details bg-light p-2 rounded">
                                     <p class="p-auto m-0">Sent back by <strong>{{ $row->senderOfficeName }}</strong> to the <strong>{{ $row->receiverOfficeName }}</strong></p>
                                     <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                                 </div>
                             </div>
                         @elseif ($row->status == 7)
                         <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                <div class="col-md-4 neomorphic-bg bg-warning alt-icon-sz">
+                            <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                <div class="col-md-4 rounded bg-warning alt-icon-sz">
                                     <i class="fas fa-tasks fa-2x text-white"></i>
                                 </div>
                                 <div class="col-md-7">
@@ -1109,15 +1105,15 @@
                             </div>
                             <div class="dashed-line">
                             </div>
-                            <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
+                            <div class="col-md-7 tracking-details bg-light p-2 rounded text-wrap">
                                 <p class="p-auto m-0">Reviewed and Recompiled by the <strong>{{ $row->senderOfficeName }}</strong></p>
                                 <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                             </div>
                         </div>
                         @elseif ($row->status == 8)
                         <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                <div class="col-md-4 neomorphic-bg bg-primary alt-icon-sz">
+                            <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                <div class="col-md-4 rounded bg-primary alt-icon-sz">
                                     <i class="fas fa-check-double fa-2x text-white"></i>
                                 </div>
                                 <div class="col-md-7">
@@ -1127,15 +1123,15 @@
                             </div>
                             <div class="dashed-line">
                             </div>
-                            <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
+                            <div class="col-md-7 tracking-details bg-light p-2 rounded text-wrap">
                                 <p class="p-auto m-0">Resubmitted by the<strong>{{ $row->senderOfficeName }}</strong></p>
                                 <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                             </div>
                         </div>
                         @elseif ($row->status == 10)
                         <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                <div class="col-md-4 neomorphic-bg bg-success alt-icon-sz">
+                            <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                <div class="col-md-4 rounded bg-success alt-icon-sz">
                                     <div class="icon-wrapper">
                                         <i class="fas fa-undo fa-3x text-white"></i>
                                         <i class="fas fa-check fa-2x text-white"></i>
@@ -1148,15 +1144,15 @@
                             </div>
                             <div class="dashed-line">
                             </div>
-                            <div class="col-md-7 tracking-details neomorphic-bg text-wrap">
+                            <div class="col-md-7 tracking-details bg-light p-2 rounded text-wrap">
                                 <p class="p-auto m-0">Approved and Sent back to the originator, <strong>{{ $row->receiverOfficeName }}</strong> by the receipient office <strong>{{ $row->senderOfficeName }}</strong></p>
                                 <p class="m-0 p-0"><cite>&mdash;<strong> {{ $row->userName }}</strong></cite></p>
                             </div>
                         </div>
                         @elseif($row->status == 12)
                         <div class="d-flex">
-                            <div class="col-md-3 p-2 m-2 neomorphic-bg text-center history-left-details">
-                                <div class="col-md-4 neomorphic-bg bg-danger alt-icon-sz">
+                            <div class="col-md-3 p-2 m-2 bg-light p-2 rounded text-center history-left-details">
+                                <div class="col-md-4 rounded bg-danger alt-icon-sz">
                                     <i class="fas fa-undo fa-spin spin-reverse fa-2x text-white"></i>
                                 </div>
                                 <div class="col-md-7">
@@ -1166,7 +1162,7 @@
                             </div>
                             <div class="dashed-line">
                             </div>
-                            <div class="col-md-7 tracking-details neomorphic-bg">
+                            <div class="col-md-7 tracking-details bg-light p-2 rounded">
                                 <p class="m-0">Rejected by the <strong>{{ $row->senderOfficeName }}</strong></p>
                                 <p class="m-0">Sent back to the <strong>{{ $row->receiverOfficeName }}</strong></p>
 
@@ -1183,7 +1179,11 @@
         </div>
     </div>
     @endauth
-
+    {{-- <footer class="footer py-3 bg-light mt-5">
+        <div class="container text-center">
+        <span class="text-muted">&copy; {{ date('Y') }} {{ config('app.name') }}</span>
+        </div>
+    </footer> --}}
   <script>
     const select = document.getElementById("forward-select");
     const button = document.getElementById("forward-btn");
@@ -1214,6 +1214,49 @@
 
   </script>
   <script>
+    const forms = document.querySelectorAll('form');
+
+    // Add a submit event listener to all forms
+    forms.forEach(form => {
+        form.addEventListener('submit', event => {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+
+            // Get the action or link from the form element
+            const action = form.action;
+
+            // Show the SweetAlert pop-up
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to submit this form.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Proceed'
+            }).then((result) => {
+                if (result.isConfirmed)
+                {
+                    // The user confirmed, so submit the form
+                    form.submit();
+                    Swal.fire({
+                        text: "Status Changed Successfully.",
+                        icon: "success",
+                    });
+                }
+                else{
+                    // The user canceled, so do nothing
+                    Swal.fire({
+                        text: "No Changes made.",
+                        icon: "error",
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+  <!-- <script>
     const forms = document.querySelectorAll('form');
 
     // Loop through each form and add a submit event listener
@@ -1350,8 +1393,8 @@
         }
             });
         });
-    </script>
-    <script>
+    </script> -->
+    <!-- <script>
         document.getElementById("reject-return-to-sender-form").addEventListener("submit", function(event) {
 
         // Prevent the form from submitting and the page from refreshing
@@ -1455,7 +1498,7 @@
         }
             });
         });
-    </script>
+    </script> -->
     <script type="text/javascript">
         $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
     </script>

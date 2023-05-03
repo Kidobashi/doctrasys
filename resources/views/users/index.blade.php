@@ -1,16 +1,25 @@
 @extends('templates.user')
-
-@section('content')
-<head>
-    <title>Tracking</title>
-</head>
 <style>
-body, html {
+/* body, html {
     background-color: #eee8e1;
-}
-.alt-search{
+} */
+/* .alt-search{
     display: none;
-}
+} */
+
+.transparent-input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid black;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+  }
+  .transparent-input:focus {
+    outline: none;
+    border-color: blue;
+    font-size: 24px;
+  }
 
 .script {
     display:block;
@@ -23,17 +32,7 @@ body, html {
 
 .center-home-container{
     display:flex;
-    margin-top: 150px;
-}
-
-input {
-    font-size: 15px;
-    width: 520px;
-    padding:7.5px;
-    border-radius: 5px;
-    background-color: rgb(238, 225, 225);
-    border:0;
-    outline:0;
+    margin-top: 20px;
 }
 
 .bordered-image {
@@ -42,9 +41,9 @@ input {
 }
 
 @media screen and (max-width: 600px) {
-.alt-search{
-    display: block;
-}
+/* .alt-search{
+    display: flex;
+} */
 
 .script{
     display: block;
@@ -57,11 +56,12 @@ input {
 
     .center-home-container{
     display:flex;
-    margin-top: 30px;
+    margin-top: 20px;
 }
-    .alt-search{
+/* .alt-search{
     display: block;
-}
+    width: %;
+} */
 input {
     width: 100%;
     position: relative;
@@ -88,18 +88,13 @@ button {
     display: block;
 }
 }
-
-.alternative{
-    display: none;
-}
-
 @media screen and (max-width: 950px) {
 .display-4 {
     font-size: 28px;
     justify-content: center;
 }
 .search {
-    /* position: relative; */
+    position: relative;
     display: block;
     justify-content: center;
 }
@@ -133,7 +128,6 @@ button {
 
 .search {
     position: relative;
-    left: 10px;
 }
 
 .center-home-div , .bordered-image, .scan-ins{
@@ -155,27 +149,33 @@ button {
 }
 }
 </style>
-<div class="d-block mt-3">
-    <div class="alt-search col-lg-12 col-md-12 col-sm-12">
-        <form action="tracking" method="get">
-            <input class="text-center" type="text" name="search" placeholder="🔍 Reference number">
-        </form>
+@section('content')
+<div class="container mt-3">
+    <div class="col-lg-6 p-1 mx-auto">
+      <form action="tracking" method="get">
+        <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><button class="btn"><i class="fa fa-search fa-3x"></i></button></span>
+            </div>
+            <input type="text" class="form-control transparent-input rounded" placeholder="Reference Number...">
+          </div>
+      </form>
     </div>
-</div>
-<div class="script mt-5">
+  </div>
+
+<div class="script">
     @if(session()->has('success'))
         <p class="display-4">No 'results' found</td></p>
     @elseif (Request::is('index') || Request::is('tracking'))
         <p class="display-5"></p>
     @endif
 </div>
-<section>
+{{-- <section> --}}
     <div class="container center-home-container">
-        <div class="col-md-6 d-flex flex-column align-items-center justify-content-center center-home-div">
-            <img class="bordered-image" src="{{ asset('images/home-qr.png') }}" alt="CMU Logo">
-            <h1 class="scan-ins">[ Scan ]</h1>
+        <div class="col-md-6 col-sm-0 col-xs-0 d-flex flex-column align-items-center justify-content-center center-home-div d-lg-block d-md-block d-xs-none d-sm-block">
+           <img class="bordered-image" src="{{ asset('images/home-qr.png') }}" alt="CMU Logo">
         </div>
-        <div class="col-md-6 d-flex align-items-center justify-content-center with-semicircle-div">
+        <div class="col-md-6 col-sm-12 col-xs-12 d-flex align-items-center justify-content-center">
             <div class="p-4 bg-warning rounded">
                 <div class="d-block btn bg-success text-white">
                     <h1>Welcome! This is the Central Mindanao University</h1>
@@ -187,14 +187,14 @@ button {
             </div>
         </div>
     </div>
-</section>
+{{-- </section> --}}
 
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
-<script>
-setTimeout(function(){
-  $('#divID').remove();
-}, 4000);
-</script>
+<footer class="footer py-3 bg-light mt-5">
+    <div class="container text-center">
+    <span class="text-muted">&copy; {{ date('Y') }} {{ config('app.name') }}</span>
+    </div>
+</footer>
 @endsection

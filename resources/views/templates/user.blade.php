@@ -34,12 +34,12 @@
 
     <script src="https://kit.fontawesome.com/7e4de09da3.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Biryani&family=Raleway:wght@600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <!-- <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css"> -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css">
 
@@ -69,13 +69,6 @@ html, body {
     font-family: 'Montserrat', sans-serif;
     background-size: cover;
     background-repeat: no-repeat;
-}
-
-footer {
-  height: 50px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
 }
 
 /* Style the heading element with Montserrat font */
@@ -153,11 +146,6 @@ p {
     <div class="content">
             @yield('content')
     </div>
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container text-center">
-        <span class="text-muted">&copy; {{ date('Y') }} {{ config('app.name') }}</span>
-        </div>
-    </footer>
   <script>
     @if(Session::has('message'))
     toastr.options =
@@ -195,7 +183,7 @@ p {
             toastr.warning("{{ session('warning') }}");
     @endif
   </script>
-<script src="/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
+<!-- <script src="/node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script> -->
 
   <script>
     $(document).ready(function () {

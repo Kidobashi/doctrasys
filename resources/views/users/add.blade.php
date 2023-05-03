@@ -119,11 +119,11 @@ select {
             <div class="mt-3 mb-1">
                 <div class="row justify-content-between">
                     @isset($totalDocByUser)
-                    <div class="col-md-2 m-auto p-3 levitating-div bg-white rounded">
+                    <div class="col-md-1 m-auto p-3 levitating-div bg-white rounded">
                         <h2 class="font-weight-bolder mb-0">
                             {{ $totalDocByUser }}
                         </h2>
-                        <p class="text-sm mb-0 text-capitalize">Documents Created</p>
+                        <p class="text-sm mb-0 text-capitalize text-wrap">Documents Created</p>
                     </div>
                     @endisset
                     @foreach ($eachDocTypeCount as $eachDoc)
@@ -131,7 +131,7 @@ select {
                         <h2 class="font-weight-bolder mb-0">
                             {{ $eachDoc->total }}
                         </h2>
-                        <p class="text-sm mb-0 text-capitalize">{{ $eachDoc->docType }}</p>
+                        <p class="text-sm mb-0 text-capitalize text-wrap">{{ $eachDoc->docType }}</p>
                     </div>
                     @endforeach
                 </div>
@@ -140,7 +140,7 @@ select {
     </div>
 </div>
 <div class="container-fluid col-lg-6 col-md-6 levitating-div">
-    <div class="row neomorphic-bg">
+    <div class="row bg-light p-3 rounded">
         <span><h1 class="display-6 text-center"><strong>Generate&nbsp;QR Code</strong></h1></span>
             <div class="card-body">
                 <div class="details col-md-12 justify-content-center">
@@ -214,25 +214,25 @@ select {
                 <div class="container">
                     @if(session('sndr') )
                     <div class="container mdl-container m-0" id="mdl-con">
-                        <div class="row first-row p-3" style="border-bottom: 1px solid black; display: flex; justify-content: center; align-items: center;">
-                            <div class="col-6 p-3 text-center"> <!-- 1/2 column width, centered -->
-                                <p>Document Reference Number:</p>
+                        <div class="row d-xs-block first-row p-3">
+                            <div class="p-3 text-center"> <!-- 1/2 column width, centered -->
+                                <p>Reference Number:</p>
                                 <h2><strong>{{ session('flashRefNo') }}</strong></h2>
                             </div>
-                            <div class="col-6 p-3 text-center" id="img-only" style="border-left: 1px solid black; width: 50%;"> <!-- 1/2 column width, centered -->
+                            <div class="p-3 text-center" id="img-only"> <!-- 1/2 column width, centered -->
                                 <img src="{{ session('qrcode') }}" alt="QR code">
                             </div>
                         </div>
-                        <div class="row second-row p-3" style="display: flex; justify-content: center; align-items: center;">
-                            <div class="col-4 text-center"> <!-- 1/3 column width, centered -->
+                        <div class="row d-xs-block d-md-flex d-lg-flex d-sm-flex second-row p-3">
+                            <div class="text-center"> <!-- 1/3 column width, centered -->
                                 <p>Office of Origin:</p>
                                 <h5>{{ session('sndr') }}</h5>
                             </div>
-                            <div class="col-4 text-center" style="border-right: 1px solid black; border-left: 1px solid black;"> <!-- 1/3 column width, centered -->
+                            <div class="text-center"> <!-- 1/3 column width, centered -->
                                 <p>Recipient Office:</p>
                                 <h5>{{ session('recv') }}</h5>
                             </div>
-                            <div class="col-4 text-center"> <!-- 1/3 column width, centered -->
+                            <div class="text-center"> <!-- 1/3 column width, centered -->
                                 <p>Document Type:</p>
                                 <h5>{{ session('dctyp') }}</h5>
                             </div>
@@ -255,7 +255,11 @@ select {
         </div>
     </div>
 </div>
-
+<footer class="footer py-3 bg-light mt-5">
+    <div class="container text-center">
+    <span class="text-muted">&copy; {{ date('Y') }} {{ config('app.name') }}</span>
+    </div>
+</footer>
 <!-- Button to trigger modal -->
 
   <!-- Modal -->

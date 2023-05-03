@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentsController extends Controller
 {
@@ -133,7 +134,7 @@ class DocumentsController extends Controller
             $flashRefNo = $validatedData['referenceNo'];
             $flashDocType = DocumentType::findOrFail($validatedData['docType'])->docType;
 
-            $qrs = QrCode::format('png')->size('200')->merge('../public/images/cmulogo.png')->generate(url('qrinfo/'.$flashRefNo));
+            $qrs = QrCode::format('png')->size('200')->errorCorrection('H')->generate(url('qrinfo/'.$flashRefNo));
             $filename = 'qr'.$flashRefNo.'.png';
             $filePath = public_path('qrcodes/') . $filename;
             file_put_contents($filePath, $qrs);
@@ -195,59 +196,38 @@ class DocumentsController extends Controller
     }
 
     public function userDocs(Request $request)
-    {
-        $userId = Auth::user()->id;
+{
+    // Define the user ID and fetch necessary models
+    $userId = Auth::user()->id;
+    $offices = Offices::where('status', 1)->get(['id', 'officeName']);
+    $allDocTypes = DocumentType::where('status', 1)->get(['id', 'docType']);
 
-        $offices = Offices::where('status', 1)->get();
-
-        $allDocTypes = DocumentType::where('status', 1)->get();
-
-        $query = $request->input('search');
-
-        if ($query) {
-            $all = Documents::where('user_id', $userId)
-                ->where('referenceNo', 'LIKE', '%' . $query . '%')
-                ->paginate(20);
-            if ($all->isEmpty()) {
-                return back()->with('error', 'No results found');
-            }
-        } else {
-            $all = Documents::where('user_id', $userId)
-            ->orderBy('documents.created_at', $request->get('sort', 'desc'))
-            ->paginate(20);
-        }
-
-        $totalDoc = Documents::where('user_id', $userId)->count();
-
-        $totalApproved = Documents::where('user_id', $userId)
-        ->where(function ($query) {
-            $query->where('status', 9)->orWhere('status', 10);
-        })
-        ->count();
-
-        $totalProcessing = Documents::where('user_id', $userId)
-        ->where(function ($query) {
-            $query->where('status', 1)->orWhere('status', 2)->orWhere('status', 3)
-            ->orWhere('status', 4)->orWhere('status', 5)->orWhere('status', 6)
-            ->orWhere('status', 7)->orWhere('status', 8);
-        })
-        ->count();
-
-        $totalRejected = Documents::where('user_id', $userId)
-        ->where(function ($query) {
-            $query->where('status', 11);
-        })
-        ->count();
-
-
-        return view('users.documents')->with(['all' => $all])
-        ->with(['offices' => $offices])
-        ->with(['allDocTypes' => $allDocTypes])
-        ->with('totalDoc', $totalDoc)
-        ->with('totalApproved', $totalApproved)
-        ->with('totalProcessing', $totalProcessing)
-        ->with('totalRejected', $totalRejected);
+    // Build the documents query with optional search parameter
+    $documents = Documents::where('user_id', $userId);
+    if ($query = $request->input('search')) {
+        $documents->where('referenceNo', 'LIKE', "%$query%");
     }
+
+    // Apply sorting and pagination, returning error if no results
+    $all = $documents->orderBy('created_at', $request->get('sort', 'desc'))
+                     ->paginate(20);
+    if ($all->isEmpty() && $query) {
+        return back()->with('error', 'No results found');
+    }
+
+    // Fetch totals using a single query with subqueries for each status
+    $totals = Documents::selectRaw("
+            COUNT(*) AS total_doc,
+            SUM(status IN (9,10)) AS total_approved,
+            SUM(status IN (1,2,3,4,5,6,7,8)) AS total_processing,
+            SUM(status = 11) AS total_rejected
+        ")
+        ->where('user_id', $userId)
+        ->first();
+    // dd($totals);
+    // Return the view with all necessary data
+    return view('users.documents', compact('all', 'offices', 'allDocTypes', 'totals'));
+}
 
     public function downloadQrCode(Request $request)
     {

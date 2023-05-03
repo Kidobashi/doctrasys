@@ -1,3 +1,6 @@
+<?php
+  // phpinfo();
+?>
 <style>
 
 nav a{
@@ -200,14 +203,71 @@ input {
 
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-success p-2">
-    <div class="container">
-        <div class="d-flex">
-            <button class="navbar-toggler ml-1 my-auto" style="width:14%;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-md navbar-light bg-success">
+    <div class="container-fluid col-lg-10 col-xs-12 justify-content-between">
+            <button class="navbar-toggler order-md-2" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon text-white"></span>
+            </button>
+            <a class="navbar-brand mx-auto order-md-1 text-white" href="index">{{ config('app.name', 'Laravel') }}</a>
+        <div class="collapse navbar-collapse order-md-3" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item mx-3">
+                <a class="nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
+                    <span class="text-white">Home</span>
+                </a>
+            </li>
+            @auth
+            <li class="nav-item mx-3">
+                <a class="nav-link {{ (Request::is('my-qr-codes') ? 'active' : '') }}" href="{{ url('my-qr-codes') }}">
+                    <span class="text-white">My QR Codes</span>
+                </a>
+            </li>
+            <li class="nav-item mx-3">
+                <a class="nav-link {{ (Request::is('generate-qr-codes') ? 'active' : '') }}" href="{{ url('generate-qr-codes') }}">
+                    <span class="text-white">Generate QR Code</span>
+                </a>
+            </li>
+            @endauth
+            </ul>
+            @guest
+            <ul class="navbar-nav ml-auto mt-2 mx-3 float-end">
+                <li class="nav-item ml-auto">
+                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#loginModal">
+                        <strong>Login/Register</strong>
+                    </button>
+                </li>
+            </ul>
+            @endguest
+            @auth
+            <li class="nav-item dropdown ml-4 my-1 float-right">
+                <a class="nav-link dropdown-toggle text-white text-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <strong>{{ Auth::user()->name }}</strong>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
+                <p class="dropdown-item p-2 mb-0" href="#">
+                    <span class="text-wrap">Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong></span>
+                </p>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ url('/logout')}}" >Logout</a>
+                </div>
+            </li>
+            @endauth
+        </div>
+    </div>
+</nav>
+
+
+{{-- <nav class="navbar navbar-expand-lg navbar-light bg-success p-2">
+    <div class="container d-xs-flex justify-content-between">
+        <div>
+            <button class="navbar-toggler ml-1 my-auto mr-2" style="width:40px; height: 40px;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand text-white text-center" href="index">{{ config('app.name', 'Laravel') }}</a>
         </div>
+        <div>
+            <a class="navbar-brand text-white" href="index">{{ config('app.name', 'Laravel') }}</a>
+        </div>
+    </div>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item mx-2 my-1 text-center">
@@ -234,39 +294,14 @@ input {
             </div>
           </li>
           @endauth
-          @guest
-              <div class="col-md-12">
-
-              </div>
-              <div class="col-md-12">
-
-              </div>
-              <div class="col-md-12">
-
-              </div>
-              <div class="col-md-4">
-
-              </div>
-          @endguest
-          @guest
-          <li class="nav-item mx-2 my-1">
-            <div class="container" id="loginMobile">
-              <div class="row d-flex justify-content-between">
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#loginModal">
-                  <strong>Login/Register</strong>
-                </button>
-              </div>
-            </div>
-          </li>
-          @endguest
           @auth
           <li class="nav-item dropdown ml-4 my-1">
             <a class="nav-link dropdown-toggle text-white text-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <strong>{{ Auth::user()->name }}</strong>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
               <p class="dropdown-item p-2 mb-0" href="#">
-                <span class="text-wrap text-center">Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong></span>
+                <span class="text-wrap">Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong></span>
               </p>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{{ url('/logout')}}" >Logout</a>
@@ -274,10 +309,21 @@ input {
           </li>
           @endauth
         </ul>
-      </div>
+        </div>
     </div>
-</nav>
-@auth
+    @guest
+    <div class="container">
+
+          <div class="container" id="loginMobile">
+            <div class="row d-flex justify-content-center">
+              <button type="button" class="btn btn-light" data-toggle="modal" data-target="#loginModal">
+                <strong>Login/Register</strong>
+              </button>
+            </div>
+          </div>
+    </div>
+</nav> --}}
+<!-- @auth
 <nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom bg-success pb-0 mt-5">
     <a class="nav-item nav-link pb-0 mb-0 {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
         <i class="fas fa-location-dot fa-lg mb-3"></i>
@@ -292,13 +338,13 @@ input {
         <p class="pb-0 mb-0">My QR Codes</p>
     </a>
   </nav>
-@endauth
+@endauth -->
 {{-- Login Modal --}}
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header d-flex justify-content-end p-1">
-          <button type="button" class="btn bg-white text-danger m-0" style="border: 1px solid black;" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn bg-white text-danger m-0 close" style="border: 1px solid black;" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true"><i class="fas fa-times fa-2x m-0 p-0" aria-hidden="true"></i>
             </span>
           </button>
@@ -355,7 +401,7 @@ input {
       <div class="modal-content">
         <div class="modal-header d-flex justify-content-end p-1">
           {{-- <h5 class="modal-title" id="exampleModalLongTitle">Msdfasdfsditle</h5> --}}
-          <button type="button" class="btn bg-white text-danger m-0" style="border: 1px solid black;" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn bg-white text-danger m-0 close" style="border: 1px solid black;" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true"><i class="fas fa-times fa-2x m-0" aria-hidden="true"></i>
             </span>
           </button>
@@ -385,8 +431,8 @@ input {
                         <option value="" selected disabled>Select Assigned Office
                             @foreach ($offices as $row)
                             <option style="font-size:1.2rem;" value="{{ $row->id }}">{{ $row->officeName }}</option>
-                        </option>
                             @endforeach
+                          </option>
                     </select>
                     @error('assignedOffice')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -448,6 +494,4 @@ input {
     $('#loginModal').modal('show');
   });
 });
-
-
 </script>
