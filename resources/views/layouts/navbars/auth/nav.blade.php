@@ -208,11 +208,11 @@ input {
             <button class="navbar-toggler order-md-2" type="button" data-toggle="collapse" data-target="#navbarNav">
                 <span class="navbar-toggler-icon text-white"></span>
             </button>
-            <a class="navbar-brand mx-auto order-md-1 text-white" href="index">{{ config('app.name', 'Laravel') }}</a>
+            <a class="navbar-brand mx-auto order-md-1 text-white" href="/">{{ config('app.name', 'Laravel') }}</a>
         <div class="collapse navbar-collapse order-md-3" id="navbarNav">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item mx-3">
-                <a class="nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
+                <a class="nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('/') }}">
                     <span class="text-white">Home</span>
                 </a>
             </li>
@@ -228,16 +228,14 @@ input {
                 </a>
             </li>
             @endauth
-            </ul>
             @guest
-            <ul class="navbar-nav ml-auto mt-2 mx-3 float-end">
-                <li class="nav-item ml-auto">
-                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#loginModal">
-                        <strong>Login/Register</strong>
-                    </button>
-                </li>
-            </ul>
+            <li class="nav-item mx-3">
+                <button type="button" class="btn btn-light px-1" data-toggle="modal" data-target="#loginModal">
+                    <strong>Login/Register</strong>
+                </button>
+            </li>
             @endguest
+            </ul>
             @auth
             <li class="nav-item dropdown ml-4 my-1 float-right">
                 <a class="nav-link dropdown-toggle text-white text-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -256,73 +254,6 @@ input {
     </div>
 </nav>
 
-
-{{-- <nav class="navbar navbar-expand-lg navbar-light bg-success p-2">
-    <div class="container d-xs-flex justify-content-between">
-        <div>
-            <button class="navbar-toggler ml-1 my-auto mr-2" style="width:40px; height: 40px;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-        <div>
-            <a class="navbar-brand text-white" href="index">{{ config('app.name', 'Laravel') }}</a>
-        </div>
-    </div>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item mx-2 my-1 text-center">
-            <a class="nav-link {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
-              <span class="text-white">Home</span>
-            </a>
-          </li>
-          @auth
-          <li class="nav-item mx-2 my-1 text-center">
-            <a class="nav-link {{ (Request::is('my-qr-codes') ? 'active' : '') }}" href="{{ url('my-qr-codes') }}">
-              <span class="text-white">My QR Codes</span>
-            </a>
-          </li>
-          <li class="nav-item mx-2 my-1 text-center">
-            <a class="nav-link {{ (Request::is('generate-qr-codes') ? 'active' : '') }}" href="{{ url('generate-qr-codes') }}">
-              <span class="text-white">Generate QR Code</span>
-            </a>
-          </li>
-          <li class="nav-item mx-2 my-1 navbar-search text-center">
-            <div class="d-flex pt-0 web-input justify-content-center">
-              <form action="tracking" method="get">
-                <input class="text-center" type="text" name="search" placeholder="🔍 Search reference number...">
-              </form>
-            </div>
-          </li>
-          @endauth
-          @auth
-          <li class="nav-item dropdown ml-4 my-1">
-            <a class="nav-link dropdown-toggle text-white text-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <strong>{{ Auth::user()->name }}</strong>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
-              <p class="dropdown-item p-2 mb-0" href="#">
-                <span class="text-wrap">Assigned Office: <strong>{{ Auth::user()->office->officeName }}</strong></span>
-              </p>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{{ url('/logout')}}" >Logout</a>
-            </div>
-          </li>
-          @endauth
-        </ul>
-        </div>
-    </div>
-    @guest
-    <div class="container">
-
-          <div class="container" id="loginMobile">
-            <div class="row d-flex justify-content-center">
-              <button type="button" class="btn btn-light" data-toggle="modal" data-target="#loginModal">
-                <strong>Login/Register</strong>
-              </button>
-            </div>
-          </div>
-    </div>
-</nav> --}}
 <!-- @auth
 <nav class="d-flex justify-content-center nav mobile-menu-container nav-justified fixed-bottom bg-success pb-0 mt-5">
     <a class="nav-item nav-link pb-0 mb-0 {{ (Request::is('index') ? 'active' : '') }}" href="{{ url('index') }}">
@@ -350,13 +281,13 @@ input {
           </button>
         </div>
         <div class="modal-body text-center">
-            <form method="POST" action="/session">
+            <form method="POST" action="{{ route('authenticate') }}">
                 @csrf
                 <h3 class="mb-2">Login</h3>
                 <p>Please enter your email and password to login</p>
                 <div class="form-outline mb-4">
                   <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email" />
-                  @error('email')
+                    @error('email')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

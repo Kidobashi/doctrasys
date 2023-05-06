@@ -55,7 +55,7 @@
                     </div>
                     <div class="col-md-9 d-lg-flex d-md-flex d-sm-block d-xs-block justify-content-end">
                         <div class="col-md-2 d-flex m-auto">
-                            <select class="form-control col-md-1" id="officeDropdown" onchange="filterDocuments('office')">
+                            <select class="form-control col-md-1" id="officeDropdown" onchange="filterDocumentsByOffice()">
                                 <option value="all">Filter by Office</option>
                                 <option value="all">Unfilter</option>
                                 @foreach ($offices as $row)
@@ -66,7 +66,7 @@
                         </div>
                         <div class="col-md-3 d-flex m-auto">
                             <select class="form-control col-md-1" id="documentTypeDropdown"
-                                onchange="filterDocuments('document-type')">
+                                onchange="filterDocumentsByDocumentType()">
                                 <option value="all">Filter by Document Type</option>
                                 <option value="all">Unfilter</option>
                                 @foreach ($allDocTypes as $row)
@@ -76,7 +76,7 @@
                             </select>
                         </div>
                         <div class="col-md-2 d-flex m-auto">
-                            <select class="form-control col-md-1" id="statusDropdown" onchange="filterDocuments('status')">
+                            <select class="form-control col-md-1" id="statusDropdown" onchange="filterDocumentsByStatus()">
                                 <option value="all">Filter by Status</option>
                                 <option value="all">Unfilter</option>
                                 <option value="1">Circulating</option>

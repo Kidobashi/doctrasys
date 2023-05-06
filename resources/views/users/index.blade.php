@@ -157,7 +157,7 @@ button {
             <div class="input-group-prepend">
               <span class="input-group-text"><button class="btn"><i class="fa fa-search fa-3x"></i></button></span>
             </div>
-            <input type="text" class="form-control transparent-input rounded" placeholder="Reference Number...">
+            <input type="text" class="form-control transparent-input rounded" name="search" placeholder="Reference Number...">
           </div>
       </form>
     </div>
@@ -173,7 +173,7 @@ button {
 {{-- <section> --}}
     <div class="container center-home-container">
         <div class="col-md-6 col-sm-0 col-xs-0 d-flex flex-column align-items-center justify-content-center center-home-div d-lg-block d-md-block d-xs-none d-sm-block">
-           <img class="bordered-image" src="{{ asset('images/home-qr.png') }}" alt="CMU Logo">
+           <img class="bordered-image" src="{{ url('images/home-qr.png') }}" alt="WELCOME" style="width: 300px; height:300px;">
         </div>
         <div class="col-md-6 col-sm-12 col-xs-12 d-flex align-items-center justify-content-center">
             <div class="p-4 bg-warning rounded">
@@ -181,7 +181,7 @@ button {
                     <h1>Welcome! This is the Central Mindanao University</h1>
                     <h3>Document Tracking System</h3>
                     <div>
-                     <img src="{{ asset('images/cmulogo.png') }}" alt="CMU Logo" width="140">
+                     <img src="{{ asset('images/cmulogo.png') }}" alt="CMU Logo" width="140" style="width: 140px; height:140px;">
                     </div>
                 </div>
             </div>

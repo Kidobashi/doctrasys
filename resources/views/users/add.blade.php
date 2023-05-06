@@ -210,7 +210,6 @@ select {
     <div class="modal fade m-0 p-0" id="printable-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
-
                 <div class="container">
                     @if(session('sndr') )
                     <div class="container mdl-container m-0" id="mdl-con">
@@ -220,10 +219,10 @@ select {
                                 <h2><strong>{{ session('flashRefNo') }}</strong></h2>
                             </div>
                             <div class="p-3 text-center" id="img-only"> <!-- 1/2 column width, centered -->
-                                <img src="{{ session('qrcode') }}" alt="QR code">
+                                <img src="{{ session('qrcode') }}" alt="QR code" width="200" height="200" style="width: 200px; height:200px;">
                             </div>
                         </div>
-                        <div class="row d-xs-block d-md-flex d-lg-flex d-sm-flex second-row p-3">
+                        <div class="row d-xs-block d-md-flex d-lg-flex d-sm-flex .d-print-flex second-row p-3">
                             <div class="text-center"> <!-- 1/3 column width, centered -->
                                 <p>Office of Origin:</p>
                                 <h5>{{ session('sndr') }}</h5>
@@ -241,7 +240,7 @@ select {
                   @endif
 
                     <div class="modal-footer modal-btn-container m-0 p-0">
-                        <div style="display: flex; justify-content: space-between;">
+                        <div class="d-lg-flex d-md-flex d-sm-block d-xs-block justify-content-between justify-content-sm-center justify-content-xs-center text-xs-center">
                             <button class="btn btn-primary" id="download-btn" style="margin-right: 10px;">Download</button>
                             <button class="btn btn-success" id="print-btn" style="margin-right: 10px;" onclick="printDiv()">Print</button>
                             <button type="button" class="btn btn-outline-success" style="margin-right: 10px;" id="dl-img">Download (QR Code Image Only)</button>
@@ -286,7 +285,111 @@ $('#post-form').submit(function() {
 });
 </script>
 <script>
+$(document).ready(function() {
+    const message = '{{ session('message') }}';
+    const submitBtn = $('#submit-doc-btn');
+    const helpBtn = $('#help-btn');
+    const printableBtn = $('#printable-mdl-btn');
+    const createBtn = $('#create-btn');
 
+    if (message) {
+        submitBtn.hide();
+        helpBtn.hide();
+        printableBtn.toggle();
+        createBtn.toggle();
+    }
+});
+
+function guideAlert(message) {
+    alert(message);
+}
+
+function printDiv() {
+    // Get the print CSS file and append it to the head
+    const printCss = document.createElement('link');
+    printCss.rel = 'stylesheet';
+    printCss.type = 'text/css';
+    printCss.href = '{{ asset('css/app.css') }}';
+    document.head.appendChild(printCss);
+
+    // Trigger the print dialog
+    window.print();
+
+    // Remove the print CSS file from the head
+    document.head.removeChild(printCss);
+}
+
+const qrImgDlBtn = document.getElementById('dl-img');
+
+qrImgDlBtn.addEventListener('click', function() {
+    // Get the div element and the image element
+    const filename = "{{ session('flashRefNo') }}";
+    const div = document.getElementById('img-only');
+    const img = div.getElementsByTagName('img')[0];
+    const canvas = document.createElement('canvas');
+
+    // Create a new anchor element for downloading
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Draw the image on the canvas
+    const context = canvas.getContext('2d');
+    context.drawImage(img, 0, 0);
+
+    const base64 = canvas.toDataURL('image/png');
+
+    const downloadLink = document.createElement('a');
+
+    // Set the href attribute of the anchor element to the image source
+    downloadLink.href = base64;
+
+    // Set the download attribute of the anchor element to the image name
+    downloadLink.download = filename;
+
+    // Append the anchor element to the div
+    document.body.appendChild(downloadLink);
+
+    // Simulate a click on the anchor element to start the download
+    downloadLink.click();
+
+    // Remove the anchor element from the div
+    div.removeChild(downloadLink);
+});
+
+const myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+    keyboard: false,
+    backdrop: 'static',
+    show: false,
+});
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.js"></script>
+<script>
+const downloadBtn = document.getElementById('download-btn');
+const contentDiv = document.getElementById('mdl-con');
+const fileRefNo = "{{ session('flashRefNo') }}";
+
+downloadBtn.addEventListener('click', () => {
+  const flashEl = document.createElement('div');
+  flashEl.innerText = fileRefNo;
+
+  const filename = `${fileRefNo.toString().replace(/\W+/g, '-').toLowerCase()}.pdf`;
+  const options = {
+    filename: filename,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { format: 'letter', orientation: 'portrait' },
+  };
+
+  html2pdf()
+    .from(contentDiv)
+    .set(options)
+    .save();
+
+  document.body.removeChild(flashEl);
+});
+</script>
+{{-- <script>
     $(document).ready(function()
     {
         if ('{{ session('message') }}')
@@ -389,5 +492,5 @@ $('#post-form').submit(function() {
     backdrop: 'static',
     show: false,
     })
-</script>
+</script> --}}
 @endsection

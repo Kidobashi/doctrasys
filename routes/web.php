@@ -194,21 +194,21 @@ Route::get('/logout', [SessionsController::class, 'destroy'])->name('logout');
 Route::get('/register', [RegisterController::class, 'create']);
 Route::post('/register', [RegisterController::class, 'store']);
 Route::get('/login', [SessionsController::class, 'create']);
-Route::post('/session', [SessionsController::class, 'authenticate']);
+Route::post('/session', [SessionsController::class, 'authenticate'])->name('authenticate');
 Route::get('/login/forgot-password', [ResetController::class, 'create']);
 Route::post('/forgot-password', [ResetController::class, 'sendEmail']);
 Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
 Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
 //Search Controllers
-Route::get('index', [SearchController::class, 'search']);
+Route::get('/', [SearchController::class, 'search']);
 Route::get('tracking', [SearchController::class, 'search']);
-Route::get('index', [DocumentsController::class, 'index'])->name('index');
+Route::get('/', [DocumentsController::class, 'index'])->name('index');
 Route::get('/search', [UserManagementController::class, 'index'])->name('admin.search');
 
 // Route::get('/test-email', function () {
 //     return view('emails.document-update'); // Replace 'test_view' with the name of your view file
 // });
-Route::get('/', [HomeController::class, 'index']);
+// Route::get('/', [HomeController::class, 'index']);
 Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

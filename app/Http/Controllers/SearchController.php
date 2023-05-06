@@ -29,45 +29,7 @@ class SearchController extends Controller
         }
         else
         {
-            return redirect('index')->with('success', 'No Results Found');
+            return redirect('/')->with('success', 'No Results Found');
         }
-    }
-
-    public function getSearch(Request $request){
-
-        $search = $request['search'];
-
-        $data = Documents::where('referenceNo', $search)->first();
-        $exist = Documents::findOrFail($data);
-
-        return redirect('qrinfo/'.$search);
-    }
-
-    public function dateFilter(Request $request)
-    {
-        $searchDate = $request['dateSearch'];
-        $creator =  Auth::user()->name;
-
-        $data = Documents::where([['senderName', $creator],['created_at' ,$searchDate]])
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->orderBy('created_at', 'asc')
-        ->get()
-        ->unique('referenceNo');
-
-        return view('users.searchByDate')->with(['data' => $data]);
-    }
-
-    public function rcvOfficeFilter(Request $request)
-    {
-        $searchOffice = $request['receiverOffice'];
-        $creator =  Auth::user()->name;
-
-        $data = Documents::where([['senderName', $creator],['created_at' ,$searchOffice]])
-        ->join('offices', 'receiverOffice', 'offices.id')
-        ->orderBy('created_at', 'asc')
-        ->get()
-        ->unique('referenceNo');
-
-        return view('users.filterByReceivingOffice')->with(['data' => $data]);
     }
 }

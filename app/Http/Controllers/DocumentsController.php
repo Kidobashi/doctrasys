@@ -139,6 +139,7 @@ class DocumentsController extends Controller
             $filePath = public_path('qrcodes/') . $filename;
             file_put_contents($filePath, $qrs);
 
+            // public_path('qrcodes/'.$filename);
             session()->flash('qrcode', asset('qrcodes/' . $filename));
 
             return redirect()->back()->with('message', "Successfully Added!")

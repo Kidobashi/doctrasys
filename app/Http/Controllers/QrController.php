@@ -34,14 +34,11 @@ class QrController extends Controller
             ->where('assignedOffice', Auth::user()->assignedOffice)
             ->first();
 
-
-
         $documents_query = Documents::where('referenceNo', $referenceNo);
         $document_id = $documents_query->pluck('id')->first();
 
         // Fetch all offices that should appear as a dropdown selection.
         $selectOffice = Offices::where('status', '1')->get();
-
 
         // Fetch all offices from DB.
         $offices = Offices::all();
@@ -147,7 +144,7 @@ class QrController extends Controller
         else
         {
             // user is not logged in, redirect to login page
-            return redirect()->route('index')->with('message', "Login First to Check/Modify Document Status");
+            return redirect()->route('/')->with('message', "Login First to Check/Modify Document Status");
         }
 
     }
