@@ -11,40 +11,12 @@ Descirption
 
 CMU Doctrasys is a web application created to track documents circulating throughout Central Mindanao University. This web application can also be used using a smartphone with a web browser.
 
-Creating Documents with QR CODE
-![image](https://user-images.githubusercontent.com/57261353/187146740-b6607cff-0ab7-45a2-b643-a97122300506.png)
+Samples
 
-Example of a generated PDF with QR code
-![image](https://user-images.githubusercontent.com/57261353/188940670-ff399325-8a9c-47ea-ba42-fc46d9b950f1.png)
+![342520945_3473614706251318_3062691838237750593_n](https://github.com/Kidobashi/doctrasys/assets/57261353/71def942-7890-42c8-b30e-7a7aa70b1790)
 
-Client Document List
-![image](https://user-images.githubusercontent.com/57261353/187146973-60941034-bfd0-4f7a-9487-f19e997d1a7e.png)
+![348920269_1012729453218399_7030566072533971611_n (1)](https://github.com/Kidobashi/doctrasys/assets/57261353/02e27452-84d2-414b-b246-ea176538586d)
 
-Search bar for tracking documents
-![image](https://user-images.githubusercontent.com/57261353/187147200-c2735284-1aef-4307-a92b-b7b6ab1d15fe.png)
-![image](https://user-images.githubusercontent.com/57261353/187147260-10169ece-d125-4985-9850-49f3a8c75756.png)
-
-Tracking Information/Document is only mmodifiable by users having the same office assignment and the intended receiver
-![image](https://user-images.githubusercontent.com/57261353/187147807-8bbd3754-9542-4f44-a1ca-fe234135b57c.png)
-![image](https://user-images.githubusercontent.com/57261353/187322811-79152ac3-354b-4bbb-bc53-7f8bdd775b72.png)
-
-
-Example...
-With error, office and/or user does not match
-![image](https://user-images.githubusercontent.com/57261353/187147897-d2ce9f36-3199-4125-b9fc-7a1099f27305.png)
-
-Administrator Side
-
-Dashboard(On Going)
-![image](https://user-images.githubusercontent.com/57261353/187148702-ff7002a4-0bc5-4547-8b94-53775388dd06.png)
-
-User Management
-![image](https://user-images.githubusercontent.com/57261353/187148817-d03cccb7-585e-4ea3-a012-9e41629018b6.png)
-
-Offices
-![image](https://user-images.githubusercontent.com/57261353/187148903-13d1f7b3-8fbc-4e1a-b706-235d9b7038b1.png)
-
-
-
-
-
+![346141832_266854152387260_7302013696553439886_n](https://github.com/Kidobashi/doctrasys/assets/57261353/e4d58a55-edbc-4135-9ca0-cbcbc40c4e74)
+![346148843_555818083158847_7606235393765175712_n](https://github.com/Kidobashi/doctrasys/assets/57261353/3de16857-3fd6-4496-bf5e-c92ca4ec598b)
+![337775496_615445190440259_32753131299537768_n](https://github.com/Kidobashi/doctrasys/assets/57261353/879ec70a-83a3-4fa9-aa08-6347f817b36f)
